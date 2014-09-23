@@ -1,6 +1,6 @@
 豆瓣电台 node-webkit版
 
-download: http://pan.baidu.com/s/1mgwqUJe
+download: [mac版](http://pan.baidu.com/s/1mgwqUJe)
 
 <img src="assets/images/dbfm1.png" width="400" height=200 />
 
@@ -22,4 +22,4 @@ download: http://pan.baidu.com/s/1mgwqUJe
     - 安装node-webkit
     - 进入根目录，npm install
     - 执行`nw ./`
-    - 解码器可能有问题，可以使用下载的app中的node-webkit和ffmpegsumo.so， 参考https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.
+    - 解码器可能有问题，可以使用下载的app中的node-webkit和ffmpegsumo.so， 参考[node-webkit wiki](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.)
