@@ -1,0 +1,52 @@
+<polymer-element name="x-view">
+    <template>
+        <style>
+            div {
+                white-space: nowrap;
+            }
+
+            div a {
+                display: inline-block;
+                text-decoration: none;
+                font-size: 14px;
+                cursor: pointer;
+                margin-left: 5px;
+            }
+
+            div a:hover {
+                text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+            }
+        </style>
+        <div>
+            <a class="iconfont" title="最小化" on-click="{{min}}">&#xe635;</a>
+            <a class="iconfont" title="打开控制台" on-click="{{showDevTools}}">&#xe638;</a>
+            <a class="iconfont" title="关闭" on-click="{{close}}">&#xe619;</a>
+        </div>
+    </template>
+    <script>
+        Polymer('x-view',{
+            ready : function() {
+                var self = this
+                var gui = require('nw.gui')
+                self.win = gui.Window.get()
+                self.win.setResizable(false)
+            },
+
+            min : function() {
+                this.win.minimize()
+            },
+
+            showDevTools : function() {
+                this.win.isDevToolsOpen() ? this.win.closeDevTools() : this.win.showDevTools()
+            },
+
+            close : function() {
+                this.win.close()
+            },
+
+            restore : function() {
+                this.win.restore()
+            }
+        })
+    </script>
+</polymer-element>

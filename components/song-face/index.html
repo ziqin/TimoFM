@@ -1,0 +1,72 @@
+<polymer-element name="song-face" attributes="info">
+	<template>
+		<style>
+			:host {
+				position: relative;
+                background: rgba(255,255,255,0.7)
+			}
+			a, img {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+
+			a {
+				position: absolute;
+				left: 0;
+				top: 0;
+				cursor: pointer;
+			}
+		</style>
+        <a url="http://music.douban.com{{info.album}}" on-click={{jump2douban}}>
+            <img src={{info.picture}} />
+        </a>
+	</template>
+    <script src="./colibri.js"></script>
+	<script>
+		Polymer('song-face', {
+            info : FM.status.song,
+			ready : function() {
+				var self = this
+
+                //切换class hover, 触发css动画滑动
+				this.addEventListener('mouseover', function() {
+                    self.delay && clearTimeout(self.delay)
+                    self.delay = setTimeout(function() {
+                        self.classList.toggle('hover')
+                    },500)
+				})
+
+                this.addEventListener('mouseout', function() {
+                    self.delay && clearTimeout(self.delay)
+                })
+
+                FM.obs.on('SONG:UPDATE', function(song) {
+                    self.info = song
+                    self.updateColor(self.info.picture)
+                })
+
+                self.updateColor(self.info.picture)
+			},
+
+            //图片变换后，获取主要颜色
+            updateColor : function(src) {
+                if(!src) return
+                var img = new Image( )
+                img.onload = function ( ) {
+                    var colors =  Colibri.extractImageColors( img, 'css' )
+                    FM.obs.emit('COLOR:UPDATE', colors)
+                }
+                img.crossOrigin = 'Anonymous'
+                img.src = src
+            },
+
+            //跳出到豆瓣
+            jump2douban : function(e) {
+                var a = e.currentTarget
+                var open = require('open')
+                open(a.getAttribute('url'))
+            }
+		})
+	</script>
+</polymer-element>

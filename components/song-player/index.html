@@ -1,0 +1,182 @@
+<link rel="import" href="../x-audio/index.html">
+
+<polymer-element name="song-player" attributes="song">
+	<template>
+		<style>
+
+			.progress {
+                position: relative;
+				margin: 0 20px 30px;
+				height: 2px;
+				padding: 1px;
+				background: #999;
+				border-radius: 2px;
+			}
+
+            .progress div {
+                position: relative;
+            }
+
+            .progress span {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                width: 0;
+                height: 2px;
+                background: #fff;
+            }
+
+            .progress time {
+                position: absolute;
+                bottom: 10px;
+                font-size: 10px;
+            }
+
+            .progress .pt {
+                left: 0
+            }
+
+            .progress .dt {
+                right: 0
+            }
+
+			.player-ctrl {
+				text-align: center;
+			}
+
+			.player-ctrl span {
+				display: inline-block;
+				width: 30px;
+				height: 30px;
+				margin: 0 10px;
+				cursor: pointer;
+				font-size: 22px;
+                transition: -webkit-transform 0.2s ease-in;
+			}
+            
+            .player-ctrl span:hover {
+                text-shadow: 0 0 2px rgba(255,255,255,0.8);
+                -webkit-transform: scale(1.2);
+            }
+
+			.player-ctrl .star {
+				color: #f00;
+			}
+		</style>
+
+		<x-audio></x-audio>
+		<div class="progress" style="background: {{colors.content[1]}};color:{{colors.content[1]}}">
+            <time class="pt">{{time.pmt}}</time>
+            <time class="dt">{{time.dmt }}</time>
+            <div>
+                <span style="width:{{time.percent}}%;background:{{colors.background}}"></span>
+            </div>
+        </div>
+
+        <div class="player-ctrl" style="color: {{colors.content[1]}}">
+          <span title="不再收听" class="iconfont" on-click="{{neverPlayAgain}}">&#xe624;</span>
+          <span title="{{song.like? '取消红心':'加红心'}}" class="{{song.like ? 'star':''}} iconfont" on-click="{{star}}">&#xe631 </span>
+          <span title="{{playing? '暂停' : '播放'}}" class="iconfont" on-click="{{togglePlay}}">{{playing ? '&#xe60b;' : '&#xe603;'}}</span>
+          <span title="下一首" class="iconfont" on-click="{{skip}}">&#xe607;</span>
+        </div>
+    </template>
+    <script>
+    Polymer('song-player', {
+        time : {},
+        song : FM.status.song,
+        ready : function() {
+            var self = this
+
+            self.player = self.shadowRoot.querySelector('x-audio').player
+
+            FM.obs.on('SONG:UPDATE', function(e) {
+                self.song = e
+            })
+
+            FM.obs.on('COLOR:UPDATE', function(e) {
+                self.colors = e
+            })
+
+            self.player.addEventListener('timeupdate', function() {
+                var pt = self.player.currentTime
+                var dt = self.player.duration
+                self.time = {
+                    percent : (self.player.currentTime/self.player.duration)*100,
+                    pmt : self.formatTime(pt),
+                    dmt : self.formatTime(dt)
+                }
+            })
+
+            self.player.addEventListener('ended', function() {
+                console.log('ended')
+                FM.playlist.next()
+            })
+
+            self.player.addEventListener('pause', function() {
+                console.log('pause')
+                self.playing = false
+            })
+
+            self.player.addEventListener('playing', function() {
+                console.log('playing')
+                self.playing = true
+            })
+        },
+
+        formatTime : function(n) {
+            var m = Math.ceil(n/60)
+            var s = Math.ceil(n%60)
+            m = m < 10 ? '0' + m : m
+            s = s < 10 ? '0' + s : s
+            return m + ':' + s
+        },
+
+        //切换播放状态
+        togglePlay : function() {
+            var self = this
+            if(self.playing) {
+                self.player.pause()
+            } else {
+                self.player.play()
+            }
+            self.playing = !self.playing
+        },
+
+        //下一首
+        skip : function() {
+            var self = this
+            FM.appSDK.skip({
+                channel_id : FM.status.channel.id,
+                sid : FM.status.song.sid
+            }, function(err, songs) {
+                FM.playlist.reset(songs)
+            })
+        },
+
+        //不再播放
+        neverPlayAgain : function() {
+            var self = this
+            FM.appSDK.never_play_again({
+                channel_id : FM.status.channel.id,
+                sid : FM.status.song.sid
+            },function(err, songs) {
+                FM.playlist.reset(songs)
+            })
+        },
+
+        //加红心
+        star : function(e) {
+            var self = this
+            var btn = e.currentTarget
+            var method = self.song.like ? 'unstar' : 'star'
+            FM.appSDK[method]({
+                channel_id : FM.status.channel.id,
+                sid : FM.status.song.sid
+            }, function(err, songs) {
+                self.song.like = !self.song.like
+//                FM.playlist.replaceRest(songs)
+            })
+        }
+    })
+    </script>
+</polymer-element>

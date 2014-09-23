@@ -1,0 +1,53 @@
+<polymer-element name="x-about" attributes="version">
+	<template>
+		<style>
+		    :host {
+                display: block;
+                width: 100%;
+                height: 100vh;
+                line-height:110vh;
+                vertical-align: middle;
+                text-align: center;
+                font-size: 2.0vw;
+            }
+
+            .about {
+                display:inline-block;
+                margin-top: 10vh;
+                line-height: 20px;
+                text-align: left;
+            }
+
+            li {
+                list-style: none;
+                margin: 10px 0;
+            }
+
+            span {
+                white-space: nowrap;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+		</style>
+		<div class="about">
+            <li>版本：dbfm v{{version}}</li>
+            <li>源码：<span on-click="{{goToLink}}"  href="https://github.com/sapjax/dbfm">Github</span></li>
+            <li>作者：<span on-click="{{goToLink}}" href="http://weibo.com/sapjax">@压缩包子</span></li>
+		</div>
+	</template>
+	<script>
+	Polymer('x-about',{
+        version : '1.0.0',
+        goToLink : function(e) {
+            var btn = e.currentTarget
+            var open = require('open')
+            open(btn.getAttribute('href'))
+        },
+
+        //自动更新
+        autoUpdate : function() {
+            //TODO
+        }
+	})
+	</script>
+</polymer-element>

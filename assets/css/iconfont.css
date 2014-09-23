@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'iconfont';
+    src:url('http://at.alicdn.com/t/font_1411443538_3889718.woff') format('woff') /* chrome、firefox */
+}
+
+body /deep/ ::-webkit-scrollbar {
+    opacity: 0.5;
+    background: rgba(255,255,255,0.5);
+    width: 2px;
+    border-radius: 4px;
+}
+
+body /deep/  ::-webkit-scrollbar-thumb {
+    background: rgba(100,100,100,0.8);
+    border-radius: 4px;
+}
+body /deep/  ::-webkit-scrollbar-thumb:hover {
+    /*background: #000000;*/
+}
+
+body /deep/ .iconfont{font-family:"iconfont"; }

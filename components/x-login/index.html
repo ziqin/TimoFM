@@ -1,0 +1,169 @@
+<polymer-element name="x-login">
+	<template>
+		<style>
+            :host {
+                display: block;
+                width: 100%;
+                height: 100vh;
+            }
+            .form {
+                text-align: center;
+                padding-top: 30vh;
+            }
+
+            .user-info {
+                text-align: center;
+                padding-top: 30vh;
+            }
+
+            .user-info span {
+                margin-bottom: 5px;
+                font-size: 2.5vw;
+            }
+
+            button {
+                width: 80px;
+                height: 25px;
+                margin-top: 20px;
+                margin-bottom:5px;
+                cursor: pointer;
+                border: none;
+                background: rgba(255,255,255,0.4);
+                border:1px solid rgba(100,100,100,0.1);
+            }
+
+            button:hover, button:focus {
+                outline: none;
+                background: rgba(255,255,255,0.8);
+            }
+
+		    input {
+                height:30px;
+                width: 70%;
+                text-indent: 10px;
+                margin-bottom: 10px;
+                outline: none;
+                border:1px solid rgba(100,100,100,0.1);
+                background: rgba(255,255,255,0.4);
+                color: #000;
+                font-size: 3.5vh;
+            }
+
+            input:focus {
+                background: rgba(255,255,255,0.8)
+            }
+
+            #submit {
+                padding: 5px 0;
+                margin: 20px auto 0;
+            }
+
+            .captcha_pic {
+                text-align: center;
+                font-size: 2vw;
+                height: 30px;
+                line-height: 30px;
+                color: #999;
+            }
+
+            .captcha_pic img {
+                width: 70%;
+                cursor: pointer;
+            }
+
+            [href] {
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            
+            .errTip {
+                margin-top: 10vh;
+            }
+		</style>
+        <template if={{userInfo}}>
+            <div class="user-info">
+                <span href="http://douban.fm/" on-click="{{goToLink}}">{{userInfo.user_name}}</span>
+                <br />
+                <button on-click="{{logout}}">注 销</button>
+            </div>
+        </template>
+        <template if="{{!userInfo}}">
+            <div class="form">
+                <input type="text" placeholder="邮箱 / 用户名" name="email" value="" />
+                <input type="password" placeholder="密码" name="password" value="" />
+                <button type="submit" id="submit" on-click="{{login}}">登  录</button>
+                <div class="errTip">{{err}}</div>
+            </div>
+        </template>
+	</template>
+	<script>
+	Polymer('x-login',{
+        userInfo : null,
+        ready : function() {
+            var self = this
+            var cache = localStorage.getItem('CACHE:USER')
+            if(cache) {
+                self.userInfo = JSON.parse(cache)
+                self.login()
+            }
+        },
+
+        login : function() {
+            var self = this
+
+            //已经存在登录信息，不登录
+            if(self.userInfo && self.isExpired()) {
+                FM.appSDK.storage(self.userInfo)
+            } else {
+                var option = {
+                    email : self.getOptionValue('email'),
+                    password : self.getOptionValue('password')
+                }
+                FM.appSDK.login(option, function(err, result) {
+                    if(err) console.error(err)
+                    if(result.r == 0) {
+                        result.password = option.password
+                        self.userInfo = result
+                        localStorage.setItem('CACHE:USER', JSON.stringify(result))
+                        FM.obs.emit('LOGIN:UPDATE')
+                        self.err = false
+                    } else {
+                        self.logout()
+                        self.err = result.err
+                    }
+                })
+                return false;
+            }
+        },
+
+        //退出登录
+        logout : function() {
+            var self = this
+            self.userInfo= null
+            localStorage.removeItem('CACHE:USER')
+            FM.appSDK.logout()
+        },
+
+        //判断登录信息是否过期
+        isExpired : function() {
+            return ~~this.userInfo.expire > Date.now()/1000
+        },
+
+        //获取参数值
+        getOptionValue : function(name) {
+            var value = this.userInfo && this.userInfo[name]
+            var input = this.shadowRoot.querySelector('[name="'+ name + '"]')
+            if(input) {
+                value = input.value
+            }
+            return value
+        },
+
+        goToLink : function(e) {
+            var btn = e.currentTarget
+            var open = require('open')
+            open(btn.getAttribute('href'))
+        }
+	})
+	</script>
+</polymer-element>

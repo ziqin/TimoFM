@@ -1,0 +1,144 @@
+<polymer-element name="x-search" attributes="">
+	<template>
+		<style>
+		    :host {
+                display: block;
+                height: 100vh;
+                text-align: center;
+            }
+
+            ul, li {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .search {
+                padding:2vh;
+                height: 96vh;
+                overflow: auto;
+            }
+
+            .search li {
+                position: relative;
+                height: 20vh;
+                line-height: 20vh;
+                margin: 2vh 0;
+                cursor: pointer;
+                text-align: left;
+                background: rgba(100,100,100,0.5);
+            }
+
+            .search li img {
+                position: absolute;
+                top: 1vh;
+                left: 1vh;
+                height: 18vh;
+                width: 18vh;
+            }
+
+            .search li h3 {
+                position: absolute;
+                left: 21vh;
+                top: 1vh;
+                right: 1vh;
+                margin: 0;
+                height: 7vh;
+                line-height: 7vh;
+                font-size: 5vh;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .search li p {
+                position: absolute;
+                left: 21vh;
+                top: 9vh;
+                bottom: 1vh;
+                right: 1vh;
+                margin: 0;
+                padding: 0;
+                font-size: 3.5vh;
+                line-height: 5vh;
+                display: -webkit-box;
+                -webkit-line-clamp : 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            input[type="search"] {
+                width: 100%;
+                padding: 0 10px;
+                height: 10vh;
+                border:1px solid rgba(100,100,100,0.1);
+                background: rgba(255,255,255,0.4);
+                outline: none;
+            }
+
+            input[type="search"]:focus {
+                background: rgba(255,255,255,0.8);
+            }
+		</style>
+        <div class="search">
+            <style>
+            </style>
+           <input type="search" id="searchInput" placeholder="搜索兆赫"  on-keyup="{{search}}" />
+            <ul>
+                <template repeat="{{item in channels}}">
+                    <li on-click="{{selectChannel}}" id="{{item.id}}">
+                        <img src="{{item.cover}}" />
+                        <h3>{{item.name}}</h3>
+                        <p>{{item.intro}}</p>
+                    </li>
+                </template>
+            </ul>
+        </div>
+	</template>
+	<script>
+	Polymer('x-search',{
+        currentId : FM.status.channel.id,
+        ready : function() {
+            var self = this
+            FM.obs.on('COLOR:UPDATE', function(e) {
+                self.colors = e
+            })
+        },
+
+        search : function(e) {
+            var self = this
+            var isEnterKey = e.keyCode == 13
+            var keyword = this.$.searchInput.value.trim()
+            if(isEnterKey && keyword) {
+                FM.webSDK.search({
+                    query : keyword
+                }, function(err, channels) {
+                    if(channels) {
+                        self.channels = channels
+                    }
+                })
+            }
+        },
+
+        selectChannel : function(e) {
+            var li = e.currentTarget
+            var id = li.id
+            var name = li.querySelector('h3').textContent
+            if(id == this.currentId) {
+                return
+            }
+            FM.appSDK.songs({
+                channel_id : id
+            }, function(err, songs) {
+                if(err) console.error(err)
+                FM.playlist.reset(songs)
+                FM.status.channel = {
+                    id : id,
+                    name : name
+                }
+            })
+            this.currentId = id
+        }
+	})
+	</script>
+</polymer-element>

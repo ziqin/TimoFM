@@ -1,0 +1,47 @@
+<polymer-element name="x-audio" attributes="song">
+    <template>
+        <style>
+            :host {
+                display: block;
+                position: absolute;
+                left: 10px;
+                bottom: 20vh;
+                width: 0;
+                height: 0;
+                overflow: hidden;
+                z-index: -1;
+                visibility: hidden;
+            }
+
+            audio {
+                width: 10px;
+                height: 10px;
+                visibility: hidden;
+            }
+        </style>
+        <audio  autoplay preload>
+            <source src="{{song.url}}" type="audio/mpeg" volume="1.0">
+            Your browser does not support the audio element.
+        </audio>
+    </template>
+    <script>
+        Polymer('x-audio',{
+            song : FM.status.song,
+            ready : function() {
+                var self = this
+                self.player = self.shadowRoot.querySelector('audio')
+
+                FM.obs.on('SONG:UPDATE', function(song) {
+                    self.song = song
+                    //加上延迟，防止js执行和html渲染慢导致歌曲src还没有更新就已经重新load了
+                    //TODO 可以考虑使用mountain Observer监测dom的src变化
+                    setTimeout(self.next.bind(self), 200)
+                })
+            },
+
+            next : function() {
+                this.player.load()
+            }
+        })
+    </script>
+</polymer-element>

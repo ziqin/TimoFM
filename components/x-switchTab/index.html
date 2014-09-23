@@ -1,0 +1,33 @@
+<polymer-element name="x-switchTab" attributes="eventType activeClass">
+	<template>
+		<content id="nav" select=".nav"></content>
+        <content id="content" select=".content"></content>
+	</template>
+	<script>
+	Polymer('x-switchTab',{
+        eventType : 'click',
+        activeClass : 'active',
+		ready : function() {
+            var self = this
+			var nav = this.$.nav.getDistributedNodes()[0]
+            var content = this.$.content.getDistributedNodes()[0]
+			var navItems = Array.prototype.slice.call(nav.children, 0)
+			var contentItems = Array.prototype.slice.call(content.children, 0)
+
+            navItems.forEach(function(item, i) {
+                item.addEventListener(self.eventType, function() {
+                    item.classList.add(self.activeClass)
+                    contentItems.forEach(function(o, index) {
+                        if(i == index) {
+                            o.classList.add(self.activeClass)
+                        } else {
+                            navItems[index].classList.remove(self.activeClass)
+                            o.classList.remove(self.activeClass)
+                        }
+                    })
+                })
+            })
+		}
+	})
+	</script>
+</polymer-element>
