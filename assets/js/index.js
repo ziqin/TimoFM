@@ -17,10 +17,17 @@ FM.obs = new Observer()
 FM.webSDK = new webSDK();
 //豆瓣API app
 FM.appSDK = new appSDK()
-//播放状态缓存
-FM.status = getCacheStatus()
 //播放列表
 FM.playlist = new playlist()
+
+//初始化状态
+function init() {
+	FM.status = getCacheStatus()
+	if(!FM.status.song.url) {
+		fetchSongs()
+	}
+}
+init()
 
 //播放列表变化时，触发歌曲更新事件
 Object.observe(FM.playlist, function(changes){
@@ -90,15 +97,6 @@ function fetchSongs () {
 	})
 }
 
-//初始化状态
-function init() {
-	FM.status = getCacheStatus()
-	if(!FM.status.song.url) {
-		fetchSongs()
-	}
-}
-
-init()
 
 
 
