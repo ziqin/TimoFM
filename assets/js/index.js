@@ -20,7 +20,7 @@ FM.appSDK = new appSDK()
 //播放状态缓存
 FM.status = getCacheStatus()
 //播放列表
-FM.playlist = new playlist([FM.status.song])
+FM.playlist = new playlist()
 
 //播放列表变化时，触发歌曲更新事件
 Object.observe(FM.playlist, function(changes){
@@ -43,7 +43,25 @@ Object.observe(FM.status, function(changes) {
 	});
 })
 
+//歌曲状态更新后，写入缓存
 FM.obs.on('STATUS:UPDATE', setCacheStatus)
+
+//登录后拉取列表
+FM.obs.on('LOGIN:UPDATE', fetchSongs)
+
+//列表空了之后，重新拉取
+FM.obs.on('SONG:EMPTY', fetchSongs)
+
+//歌曲更新时更新状态
+FM.obs.on('SONG:UPDATE', function(song) {
+	FM.status.song = song
+})
+
+//颜色变更后，重新设置界面颜色
+FM.obs.on('COLOR:UPDATE', function(colors) {
+	document.body.style.background = colors.background
+	document.body.style.color = colors.content[0]
+})
 
 //从缓存读取上次关闭时的状态
 function getCacheStatus() {
@@ -72,30 +90,15 @@ function fetchSongs () {
 	})
 }
 
-//登录后拉取列表
-FM.obs.on('LOGIN:UPDATE', fetchSongs)
+//初始化状态
+function init() {
+	FM.status = getCacheStatus()
+	if(!FM.status.song.url) {
+		fetchSongs()
+	}
+}
 
-//列表空了之后，重新拉取
-FM.obs.on('SONG:EMPTY', fetchSongs)
-
-//歌曲更新时更新状态
-FM.obs.on('SONG:UPDATE', function(song) {
-	FM.status.song = song
-})
-
-//颜色变更后，重新设置界面颜色
-FM.obs.on('COLOR:UPDATE', function(colors) {
-	document.body.style.background = colors.background
-	document.body.style.color = colors.content[0]
-})
-
-window.addEventListener('polymer-ready', function() {
-	document.body.classList.add('ready')
-})
-
-
-
-
+init()
 
 
 
