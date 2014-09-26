@@ -1,6 +1,6 @@
 {
   "name": "dbfm",
-  "version" : "1.0.0",
+  "version": "1.0.0",
   "main": "index.html",
   "window": {
     "frame": false,
@@ -20,9 +20,10 @@
     "plugin": true
   },
   "dependencies": {
-    "dbfm-app-sdk": "0.0.1",
-    "dbfm-web-sdk": "0.0.1",
+    "dbfm-app-sdk": "0.0.3",
+    "dbfm-web-sdk": "0.0.3",
     "open": "0.0.5",
-    "request": "^2.44.0"
+    "request": "^2.44.0",
+    "safe-parse": "0.0.0"
   }
 }

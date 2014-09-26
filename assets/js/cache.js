@@ -1,3 +1,5 @@
+var safeParse = require('safe-parse')
+
 //从缓存读取上次关闭时的状态
 function Cache(storageObject) {
 	this._storageObject = storageObject
@@ -7,13 +9,7 @@ Cache.prototype = {
 
 	get : function(name, defaultValue) {
 		var cache = this._storageObject.getItem(name)
-		if(cache) {
-			try{
-				cache = JSON.parse(cache)
-			} catch(e) {
-				cache = defaultValue
-			}
-		}
+		cache = safeParse(cache)
 		return cache || defaultValue
 	},
 

@@ -1,5 +1,8 @@
 豆瓣电台 node-webkit版
 
+##### download
+    - 频繁更新中，暂不提供下载，版本稳定后再提供
+
 <img src="assets/images/dbfm1.png" width="400" height=200 />
 
 <img src="assets/images/dbfm3.png" width="400"  height=200  />
