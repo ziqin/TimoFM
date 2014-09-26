@@ -1,155 +1,155 @@
 <link rel="import" href="../x-switchTab/index.html" />
 <polymer-element name="x-channel" attributes="publicChannels personalChannels genreChannels">
-	<template>
-		<style>
-            :host {
-                display: block;
-                font-size: 2vw;
-                height: 100vh;
-            }
+<template>
+    <style>
+        :host {
+            display: block;
+            font-size: 2vw;
+            height: 100vh;
+        }
 
-            * {
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
 
-            x-switchTab {
-                display: block;
-                padding: 1vw;
-            }
+        x-switchTab {
+            display: block;
+            padding: 1vw;
+        }
 
-            .nav {
-                border-bottom: 1px solid rgba(200, 200, 200, 0.3);
-            }
+        .nav {
+            border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+        }
 
-            .nav li {
-                position: relative;
-                height: 8vh;
-                line-height: 8vh;
-                width: 12vw;
-                margin-right: -0.25em;
-                display: inline-block;
-                list-style: none;
-                cursor: pointer;
-                text-align: center;
-                -webkit-transform: scale(0.8);
-                transition: opacity 1s, transform 1s
+        .nav li {
+            position: relative;
+            height: 8vh;
+            line-height: 8vh;
+            width: 12vw;
+            margin-right: -0.25em;
+            display: inline-block;
+            list-style: none;
+            cursor: pointer;
+            text-align: center;
+            -webkit-transform: scale(0.8);
+            transition: opacity 1s, transform 1s
 
-            }
+        }
 
-            .nav li.active {
-                background: rgba(200, 200, 200, 0.3);
-                z-index: 2;
-                -webkit-transform: scale(1);
-            }
+        .nav li.active {
+            background: rgba(200, 200, 200, 0.3);
+            z-index: 2;
+            -webkit-transform: scale(1);
+        }
 
-            .nav li + li {
-                margin-left: 1vw;
-            }
+        .nav li + li {
+            margin-left: 1vw;
+        }
 
-            .content {
-                position: relative;
-                width: 100%;
-            }
+        .content {
+            position: relative;
+            width: 100%;
+        }
 
-            .content ul {
-                margin-top: 2vh;
-                height: 85vh;
-                overflow: auto;
-                text-align: justify;
-            }
+        .content ul {
+            margin-top: 2vh;
+            height: 85vh;
+            overflow: auto;
+            text-align: justify;
+        }
 
-		    .content > ul {
-                position: absolute;
-                left: 0;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                z-index: 1;
-                opacity: 0
-            }
+        .content > ul {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            opacity: 0
+        }
 
-            .content > .active {
-                -webkit-transition: opacity 0.4s ease-in;
-                transition: opacity 0.4s ease-in;
-                opacity: 1;
-                z-index: 2
-            }
+        .content > .active {
+            -webkit-transition: opacity 0.4s ease-in;
+            transition: opacity 0.4s ease-in;
+            opacity: 1;
+            z-index: 2
+        }
 
-            .content ul li {
-                display: inline-block;
-                height: 8vh;
-                line-height: 8vh;
-                width: 46%;
-                margin: 1.6vh 0 0 0;
-                padding: 0.5vw;
-                background: rgba(200, 200, 200, 0.3);
-                text-align: center;
-                cursor: pointer;
-            }
+        .content ul li {
+            display: inline-block;
+            height: 8vh;
+            line-height: 8vh;
+            width: 46%;
+            margin: 1.6vh 0 0 0;
+            padding: 0.5vw;
+            background: rgba(200, 200, 200, 0.3);
+            text-align: center;
+            cursor: pointer;
+        }
 
-            .content ul li:hover,.content ul li.active {
-                -webkit-transition: all 0.4s ease-in;
-                transition: all 0.4s ease-in;
-                background: rgba(100, 100, 100, 0.5);
-                color: #fff;
-            }
+        .content ul li:hover,.content ul li.active {
+            -webkit-transition: all 0.4s ease-in;
+            transition: all 0.4s ease-in;
+            background: rgba(100, 100, 100, 0.5);
+            color: #fff;
+        }
 
-            .content ul li.goBack {
-                border-radius: 16vh 0 0 0;
-            }
-            
-            .content ul li.align-fixed {
-                height:0;
-                width: 100%;
-                margin: 0;
-                padding: 0;
-                line-height: 0;
-            }
-		</style>
-        <x-switchTab>
-            <ul class="nav">
-                <li class="active">公共频道</li>
-                <li>个人频道</li>
-                <li>流派频道</li>
+        .content ul li.goBack {
+            border-radius: 16vh 0 0 0;
+        }
+
+        .content ul li.align-fixed {
+            height:0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            line-height: 0;
+        }
+    </style>
+    <x-switchTab>
+        <ul class="nav">
+            <li class="active">公共频道</li>
+            <li>个人频道</li>
+            <li>流派频道</li>
+        </ul>
+        <div class="content">
+            <ul class="active public-channels">
+                <template repeat="{{item in publicChannels}}">
+                    <li id="{{item.id}}" class="{{item.id == channelId ? 'active' : ''}}"
+                        on-click="{{selectChannel}}">{{item.name}}</li>
+                </template>
+                <li class="align-fixed"></li>
             </ul>
-            <div class="content">
-                <ul class="active public-channels">
-                    <template repeat="{{item in publicChannels}}">
-                        <li id="{{item.id}}" class="{{item.id == channelId ? 'active' : ''}}"
-                            on-click="{{selectChannel}}">{{item.name}}</li>
-                    </template>
-                    <li class="align-fixed"></li>
-                </ul>
-                <ul class="personal-channels">
-                    <template repeat="{{item in personalChannels}}">
-                        <li id="{{item.id}}" class="{{item.id == channelId ? 'active' : ''}}"
-                            on-click="{{selectChannel}}">{{item.name}}</li>
-                    </template>
-                    <template if="{{!gotFavChannels}}">
-                        <li on-click="{{getFavChannels}}">我收藏的频道</li>
-                    </template>
-                    <li class="align-fixed"></li>
-                </ul>
-                <ul class="genre-channels">
-                    <template if="{{showGenreDetail}}">
-                        <li class="goBack" on-click="{{goBack}}">&#60;回到流派</li>
-                    </template>
-                    <template if="{{!showGenreDetail}}" repeat="{{genreList}}">
-                        <li id="{{id}}" on-click="{{selectGenre}}">{{name}}</li>
-                    </template>
-                    <template if="{{showGenreDetail}}" repeat="{{item in genreChannels}}">
-                        <li id="{{item.id}}" class="{{item.id == channelId ? 'active' : ''}}"
-                            on-click="{{selectChannel}}">{{item.name}}</li>
-                    </template>
-                    <li class="align-fixed"></li>
-                </ul>
-            </div>
-        </x-switchTab>
-	</template>
-	<script>
-	Polymer('x-channel',{
+            <ul class="personal-channels">
+                <template repeat="{{item in personalChannels}}">
+                    <li id="{{item.id}}" class="{{item.id == channelId ? 'active' : ''}}"
+                        on-click="{{selectChannel}}">{{item.name}}</li>
+                </template>
+                <template if="{{!gotFavChannels}}">
+                    <li on-click="{{getFavChannels}}">我收藏的频道</li>
+                </template>
+                <li class="align-fixed"></li>
+            </ul>
+            <ul class="genre-channels">
+                <template if="{{showGenreDetail}}">
+                    <li class="goBack" on-click="{{goBack}}">&#60;回到流派</li>
+                </template>
+                <template if="{{!showGenreDetail}}" repeat="{{genreList}}">
+                    <li id="{{id}}" on-click="{{selectGenre}}">{{name}}</li>
+                </template>
+                <template if="{{showGenreDetail}}" repeat="{{item in genreChannels}}">
+                    <li id="{{item.id}}" class="{{item.id == channelId ? 'active' : ''}}"
+                        on-click="{{selectChannel}}">{{item.name}}</li>
+                </template>
+                <li class="align-fixed"></li>
+            </ul>
+        </div>
+    </x-switchTab>
+</template>
+<script>
+    Polymer('x-channel',{
         channelId : FM.status.channel.id,
         publicChannels : [],
         personalChannels : [],
@@ -163,7 +163,7 @@
 
         //公共频道
         getPublicChannels : function() {
-           return FM.webSDK.public_channels()
+            return FM.webSDK.public_channels()
         },
 
         //流派频道
@@ -198,12 +198,12 @@
             FM.appSDK.songs({
                 channel_id : id
             }, function(err, songs) {
-               if(err) console.error(err)
-               FM.playlist.reset(songs)
-               FM.status.channel = {
-                   id : id,
-                   name : li.textContent
-               }
+                if(err) console.error(err)
+                FM.playlist.reset(songs)
+                FM.status.channel = {
+                    id : id,
+                    name : li.textContent
+                }
             })
             this.channelId = id
         },
@@ -224,6 +224,6 @@
         goBack : function() {
             this.showGenreDetail = false
         }
-	})
-	</script>
+    })
+</script>
 </polymer-element>

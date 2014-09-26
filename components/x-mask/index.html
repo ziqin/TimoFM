@@ -11,6 +11,7 @@
                 z-index: 1000;
                 -webkit-transition: opacity 1s ease-in;
                 transition: opacity 1s ease-in;
+                pointer-events:none;
             }
         </style>
     </template>
@@ -18,7 +19,15 @@
         Polymer('x-mask',{
             enteredView : function() {
                 var self = this
-                this.style.opacity = 0
+                if(FM.playlist.length) {
+                    self.hide()
+                } else {
+                    FM.obs.on('SONG:UPDATE', self.hide.bind(self))
+                }
+            },
+            hide : function() {
+                var self = this
+                self.style.opacity = 0
                 setTimeout(function() {
                     self.style.display = 'none'
                 },1000)

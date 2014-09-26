@@ -1,53 +1,61 @@
 <polymer-element name="song-face" attributes="info">
-	<template>
-		<style>
-			:host {
-				position: relative;
+    <template>
+        <style>
+            :host {
+                position: relative;
+                box-shadow: 0 0 5px rgba(100,100,100,0.5);
                 background: rgba(255,255,255,0.7)
-			}
-			a, img {
-				display: block;
-				width: 100%;
-				height: 100%;
-			}
+            }
+            a, img {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
 
-			a {
-				position: absolute;
-				left: 0;
-				top: 0;
-				cursor: pointer;
-			}
-		</style>
+            a {
+                position: absolute;
+                left: 0;
+                top: 0;
+                cursor: pointer;
+            }
+        </style>
         <a url="http://music.douban.com{{info.album}}" on-click={{jump2douban}}>
             <img src={{info.picture}} />
         </a>
-	</template>
+    </template>
     <script src="./colibri.js"></script>
-	<script>
-		Polymer('song-face', {
+    <script>
+        Polymer('song-face', {
             info : FM.status.song,
-			ready : function() {
-				var self = this
+            ready : function() {
+                var self = this
 
                 //切换class hover, 触发css动画滑动
-				this.addEventListener('mouseover', function() {
+                this.addEventListener('mouseover', function() {
                     self.delay && clearTimeout(self.delay)
                     self.delay = setTimeout(function() {
                         self.classList.toggle('hover')
                     },500)
-				})
+                })
 
                 this.addEventListener('mouseout', function() {
                     self.delay && clearTimeout(self.delay)
                 })
 
+                //歌曲更新后，更新颜色
                 FM.obs.on('SONG:UPDATE', function(song) {
                     self.info = song
                     self.updateColor(self.info.picture)
                 })
 
+                //颜色变更后，重新设置界面颜色
+                FM.obs.on('COLOR:UPDATE', function(colors) {
+                    document.body.style.background = colors.background
+                    document.body.style.color = colors.content[0]
+                })
+
                 self.updateColor(self.info.picture)
-			},
+            },
 
             //图片变换后，获取主要颜色
             updateColor : function(src) {
@@ -67,6 +75,6 @@
                 var open = require('open')
                 open(a.getAttribute('url'))
             }
-		})
-	</script>
+        })
+    </script>
 </polymer-element>

@@ -1,0 +1,23 @@
+<polymer-element name="song-noti">
+    <script>
+        Polymer('song-noti', {
+            ready : function() {
+                var self = this
+                FM.obs.on('SONG:UPDATE', function(song) {
+                    self.noti(song)
+                })
+            },
+
+            noti : function(song) {
+                var noti = new Notification(song.title,{
+                    icon : song.picture,
+                    body : song.artist + '    ' + song.albumtitle
+                })
+
+                noti.onclick = function() {
+                    FM.obs.emit('NOTI:CLICK')
+                }
+            }
+        })
+    </script>
+</polymer-element>

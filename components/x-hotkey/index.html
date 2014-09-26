@@ -1,0 +1,35 @@
+<polymer-element name="x-hotkey">
+    <template>
+    </template>
+    <script>
+        Polymer('x-hotkey',{
+            ready : function() {
+                this.gui = require('nw.gui');
+
+                function active() {
+                   FM.obs.emit('KEY:' + this.key)
+                }
+
+                function failed(msg) {
+                    console.log(this)
+                    console.error(msg)
+                }
+
+                this.register("MediaPrevTrack", active, failed)
+                this.register("MediaNextTrack", active, failed)
+                this.register("MediaStop", active, failed)
+                this.register("MediaPlayPause", active, failed)
+            },
+
+            register : function(key, active, failed) {
+                var shortcut = new this.gui.Shortcut({
+                    key : key,
+                    active : active,
+                    failed : failed
+                })
+                this.gui.App.unregisterGlobalHotKey(shortcut)
+                this.gui.App.registerGlobalHotKey(shortcut)
+            }
+        })
+    </script>
+</polymer-element>

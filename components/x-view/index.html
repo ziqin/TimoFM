@@ -27,9 +27,11 @@
         Polymer('x-view',{
             ready : function() {
                 var self = this
-                var gui = require('nw.gui')
-                self.win = gui.Window.get()
-                self.win.setResizable(false)
+                self.gui = require('nw.gui')
+                self.win = self.gui.Window.get()
+                self.addTray()
+
+                FM.obs.on('NOTI:CLICK', self.restore.bind(self))
             },
 
             min : function() {
@@ -41,11 +43,33 @@
             },
 
             close : function() {
+                this.tray.remove()
+                this.tray = null
                 this.win.close()
             },
 
             restore : function() {
                 this.win.restore()
+            },
+
+            addTray : function() {
+                var self = this
+                var gui = self.gui
+                var tray = new gui.Tray({
+                    title : 'dbfm'
+                })
+
+                var menu = new gui.Menu()
+                menu.append(new gui.MenuItem({ label: 'Open' }));
+                menu.append(new gui.MenuItem({ label: 'Quit' }));
+
+                menu.items[0].click = self.restore.bind(self)
+                menu.items[1].click = self.close.bind(self)
+
+
+                tray.menu = menu
+                tray.on('click',self.restore.bind(self))
+                self.tray = tray
             }
         })
     </script>

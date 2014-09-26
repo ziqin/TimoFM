@@ -2,6 +2,10 @@ function Playlist(list) {
 	this._list = list || []
 }
 Playlist.prototype = {
+	get list() {
+		return this._list
+	},
+
 	get current() {
 		return this._list[0]
 	},

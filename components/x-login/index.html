@@ -101,9 +101,9 @@
         userInfo : null,
         ready : function() {
             var self = this
-            var cache = localStorage.getItem('CACHE:USER')
+            var cache = FM.cache.get('CACHE:USER')
             if(cache) {
-                self.userInfo = JSON.parse(cache)
+                self.userInfo = cache
                 self.login()
             }
         },
@@ -112,7 +112,7 @@
             var self = this
 
             //已经存在登录信息，不登录
-            if(self.userInfo && self.isExpired()) {
+            if(self.userInfo && !self.isExpired()) {
                 FM.appSDK.storage(self.userInfo)
             } else {
                 var option = {
@@ -124,7 +124,7 @@
                     if(result.r == 0) {
                         result.password = option.password
                         self.userInfo = result
-                        localStorage.setItem('CACHE:USER', JSON.stringify(result))
+                        FM.cache.set('CACHE:USER', result)
                         FM.obs.emit('LOGIN:UPDATE')
                         self.err = false
                     } else {
@@ -140,13 +140,13 @@
         logout : function() {
             var self = this
             self.userInfo= null
-            localStorage.removeItem('CACHE:USER')
+            FM.cache.remove('CACHE:USER')
             FM.appSDK.logout()
         },
 
         //判断登录信息是否过期
         isExpired : function() {
-            return ~~this.userInfo.expire > Date.now()/1000
+            return ~~this.userInfo.expire < Date.now()/1000
         },
 
         //获取参数值

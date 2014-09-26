@@ -1,25 +1,28 @@
 {
-	"name": "dbfm",
-	"main": "index.html",
-	"window": {
-		"frame": false,
-		"width": 600,
-		"height": 300,
-		"min-width": 300,
-		"min-height": 150,
-		"max-width": 800,
-		"max-height": 400,
-		"as_desktop": true,
-		"resizable": false,
-		"toolbar": false
-	},
-	"chromium-args": "--ignore-gpu-blacklist",
-	"webkit": {
-		"plugin": true
-	},
-	"dependencies": {
-		"dbfm-app-sdk": "0.0.1",
-		"dbfm-web-sdk": "0.0.1",
-		"open": "0.0.5"
-	}
+  "name": "dbfm",
+  "version" : "1.0.0",
+  "main": "index.html",
+  "window": {
+    "frame": false,
+    "width": 600,
+    "height": 300,
+    "min-width": 300,
+    "min-height": 150,
+    "max-width": 800,
+    "max-height": 400,
+    "toolbar": false,
+    "transparent": true
+  },
+  "as_desktop": true,
+  "resizable": false,
+  "chromium-args": "--ignore-gpu-blacklist",
+  "webkit": {
+    "plugin": true
+  },
+  "dependencies": {
+    "dbfm-app-sdk": "0.0.1",
+    "dbfm-web-sdk": "0.0.1",
+    "open": "0.0.5",
+    "request": "^2.44.0"
+  }
 }

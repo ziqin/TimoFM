@@ -1,0 +1,71 @@
+<polymer-element name="song-lrc">
+   <template>
+       <style>
+           :host {
+               font-size: 10px;
+           }
+           div {
+               padding-bottom: 10px;
+           }
+       </style>
+        <div>{{currentWord}}</div>
+   </template>
+    <script>
+        Polymer('song-lrc', {
+            lrc : {},
+            api : 'http://geci.me/api/lyric/',
+            ready : function() {
+                var self = this
+                FM.obs.on('SONG:UPDATE', function(song) {
+                    self.fetchLrc(song)
+                })
+
+                FM.obs.on('TIME:UPDATE', function(playTime) {
+                    var songId = FM.status.song.sid
+                    var lines = self.lrc[songId]
+                    if(!lines || !lines.length) {
+                        self.currentWord = '暂无歌词'
+                    } else {
+                        for(i = 0; i<lines.length; i++) {
+                            if(playTime < lines[i].time) {
+                                self.currentWord = lines[i].word
+                                return
+                            }
+                        }
+                    }
+                })
+            },
+
+            fetchLrc : function(song) {
+                var self = this
+                var request = require('request')
+                var url = self.api + encodeURIComponent(song.title) + '/' + encodeURIComponent(song.artist)
+                request(url, function(err, res, body) {
+                    if(err) return console.error(err)
+                    body = JSON.parse(body)
+                    if(body.result && body.result[0] && body.result[0].lrc) {
+                        var uri = body.result[0].lrc
+                        request(uri, function(err, res, body) {
+                            if(err) return console.error(err)
+                            self.lrc[song.sid] = self.parseLrc(body)
+                        })
+                    } else {
+                        self.lrc[song.sid] = self.parseLrc('')
+                    }
+                })
+            },
+
+            parseLrc : function(lrc) {
+                var lines = []
+                lrc.replace((/\[(\d+)\:(\d+?(\.)?\d+)\](.+)/g), function($0, m, s, dot, word) {
+                    var time = parseInt(m)*60 + parseFloat(s)
+                    lines.push({
+                        time : time,
+                        word : word
+                    })
+                })
+                return lines
+            }
+        })
+    </script>
+</polymer-element>

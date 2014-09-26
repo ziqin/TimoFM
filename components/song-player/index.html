@@ -1,9 +1,11 @@
 <link rel="import" href="../x-audio/index.html">
+<link rel="import" href="../x-hotkey/index.html">
+<link rel="import" href="../song-lrc/index.html">
+<link rel="import" href="../song-noti/index.html">
 
 <polymer-element name="song-player" attributes="song">
 	<template>
 		<style>
-
 			.progress {
                 position: relative;
 				margin: 0 20px 30px;
@@ -65,6 +67,9 @@
 		</style>
 
 		<x-audio></x-audio>
+        <x-hotkey></x-hotkey>
+        <!--<song-lrc></song-lrc>-->
+        <song-noti></song-noti>
 		<div class="progress" style="background: {{colors.content[1]}};color:{{colors.content[1]}}">
             <time class="pt">{{time.pmt}}</time>
             <time class="dt">{{time.dmt }}</time>
@@ -105,6 +110,7 @@
                     pmt : self.formatTime(pt),
                     dmt : self.formatTime(dt)
                 }
+                FM.obs.emit('TIME:UPDATE', pt)
             })
 
             self.player.addEventListener('ended', function() {
@@ -121,6 +127,11 @@
                 console.log('playing')
                 self.playing = true
             })
+
+            FM.obs.on('KEY:MediaPrevTrack', self.neverPlayAgain.bind(self))
+            FM.obs.on('KEY:MediaNextTrack', self.skip.bind(self))
+            FM.obs.on('KEY:MediaStop', self.togglePlay.bind(self))
+            FM.obs.on('KEY:MediaPlayPause', self.togglePlay.bind(self))
         },
 
         formatTime : function(n) {
@@ -145,22 +156,24 @@
         //下一首
         skip : function() {
             var self = this
+            FM.playlist.next()
             FM.appSDK.skip({
                 channel_id : FM.status.channel.id,
                 sid : FM.status.song.sid
             }, function(err, songs) {
-                FM.playlist.reset(songs)
+//                FM.playlist.reset(songs)
             })
         },
 
         //不再播放
         neverPlayAgain : function() {
             var self = this
+            FM.playlist.next()
             FM.appSDK.never_play_again({
                 channel_id : FM.status.channel.id,
                 sid : FM.status.song.sid
             },function(err, songs) {
-                FM.playlist.reset(songs)
+//                FM.playlist.reset(songs)
             })
         },
 
