@@ -73,8 +73,8 @@ body {
 
 .sidebar .content > *.active {
     opacity: 1;
-    transition: all 0.4s ease-in;
-    webkit-transition: all 0.4s ease-in;
+    transition: all 0.3s ease-in;
+    webkit-transition: all 0.3s ease-in;
     -webkit-transform: scale(1);
     z-index: 2;
 }
@@ -121,7 +121,9 @@ x-view {
     src:url('http://at.alicdn.com/t/font_1411638144_663203.woff') format('woff');
 }
 
-body /deep/ .iconfont{font-family:"iconfont";}
+body /deep/ .iconfont{
+    font-family:"iconfont";
+}
 
 body /deep/ ::-webkit-scrollbar {
     opacity: 0.5;

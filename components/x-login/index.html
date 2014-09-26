@@ -89,8 +89,8 @@
         </template>
         <template if="{{!userInfo}}">
             <div class="form">
-                <input type="text" placeholder="邮箱 / 用户名" name="email" value="" />
-                <input type="password" placeholder="密码" name="password" value="" />
+                <input type="text" placeholder="邮箱" name="email" value="" on-keydown="{{keydown}}" />
+                <input type="password" placeholder="密码" name="password" value="" on-keydown="{{keydown}}" />
                 <button type="submit" id="submit" on-click="{{login}}">登  录</button>
                 <div class="errTip">{{err}}</div>
             </div>
@@ -115,10 +115,8 @@
             if(self.userInfo && !self.isExpired()) {
                 FM.appSDK.storage(self.userInfo)
             } else {
-                var option = {
-                    email : self.getOptionValue('email'),
-                    password : self.getOptionValue('password')
-                }
+                var option = self.getValidOptions()
+                if(!option) return
                 FM.appSDK.login(option, function(err, result) {
                     if(err) console.error(err)
                     if(result.r == 0) {
@@ -147,6 +145,33 @@
         //判断登录信息是否过期
         isExpired : function() {
             return ~~this.userInfo.expire < Date.now()/1000
+        },
+
+        //获取输入的邮箱和密码
+        getValidOptions : function() {
+            var self = this
+            var email = self.getOptionValue('email')
+            var password = self.getOptionValue('password')
+            if(!email) {
+                self.err = '请输入账号'
+                return false
+            }
+            if(!password) {
+                self.err = '请输入密码'
+                return false
+            }
+            return {
+                email : email,
+                password : password
+            }
+        },
+
+        //回车登录
+        keydown : function(e) {
+            var self = this
+            if(e.keyCode == 13) {
+                self.login()
+            }
         },
 
         //获取参数值
