@@ -6,14 +6,14 @@
 <polymer-element name="song-player" attributes="song">
 	<template>
 		<style>
-			.progress {
+            .progress {
                 position: relative;
-				margin: 0 20px 30px;
-				height: 2px;
-				padding: 1px;
-				background: #999;
-				border-radius: 2px;
-			}
+                margin: 0 20px 30px;
+                height: 2px;
+                padding: 1px;
+                background: #999;
+                border-radius: 2px;
+            }
 
             .progress div {
                 position: relative;
@@ -42,28 +42,28 @@
                 right: 0
             }
 
-			.player-ctrl {
-				text-align: center;
-			}
+            .player-ctrl {
+                text-align: center;
+            }
 
-			.player-ctrl span {
-				display: inline-block;
-				width: 30px;
-				height: 30px;
-				margin: 0 10px;
-				cursor: pointer;
-				font-size: 22px;
+            .player-ctrl span {
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                margin: 0 10px;
+                cursor: pointer;
+                font-size: 22px;
                 transition: -webkit-transform 0.2s ease-in;
-			}
-            
+            }
+
             .player-ctrl span:hover {
                 text-shadow: 0 0 2px rgba(255,255,255,0.8);
                 -webkit-transform: scale(1.2);
             }
 
-			.player-ctrl .star {
-				color: #f00;
-			}
+            .player-ctrl .star {
+                color: #f00;
+            }
 		</style>
 
 		<x-audio></x-audio>
