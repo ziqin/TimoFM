@@ -1,7 +1,5 @@
 豆瓣电台 node-webkit版
 
-download: [mac版](http://pan.baidu.com/s/1mgwqUJe)
-
 <img src="assets/images/dbfm1.png" width="400" height=200 />
 
 <img src="assets/images/dbfm3.png" width="400"  height=200  />
@@ -11,15 +9,20 @@ download: [mac版](http://pan.baidu.com/s/1mgwqUJe)
 <img src="assets/images/dbfm6.png" width="400"  height=200  />
 
 ##### todo
-    - 频谱
-    - 快捷键(貌似不可行)
+    - bug修复，稳定性增强
+    - 全局快捷键
+    - 设置(快捷键配置，是否显示歌词，桌面通知，频谱，设置导入导出)
     - 频道收藏
+    - 桌面通知
+    - 频谱
     - 歌词
-    - 下载
+    - 任务栏图标根据红心变化
+    - 自动检查更新
+    - 优化字体显示
     
 
 ##### 开发 (https://github.com/rogerwang/node-webkit/wiki/How-to-run-apps)
     - 安装node-webkit
-    - 进入根目录，npm install
+    - 进入源码根目录，npm install
     - 执行`nw ./`
     - 解码器可能有问题，可以使用下载的app中的node-webkit和ffmpegsumo.so， 参考[node-webkit wiki](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.)

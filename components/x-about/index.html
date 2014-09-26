@@ -63,8 +63,8 @@
 		</style>
 		<ul class="about">
             <li>版本：dbfm v{{version}}</li>
-            <li>源码：<span on-click="{{goToLink}}"  href="https://github.com/sapjax/dbfm">Github</span></li>
-            <li>作者：<span on-click="{{goToLink}}" href="http://weibo.com/sapjax">@压缩包子</span></li>
+            <li>源码：<span on-click="{{goToLink}}"  href="{{github}}">Github</span></li>
+            <li>作者：<span on-click="{{goToLink}}" href="{{weibo}}">{{weiboNick}}</span></li>
             <template if="{{!checkd}}">
                 <li><span class="update {{checking ? 'checking' : ''}}" on-click="{{checkUpdate}}">
                     <i class="iconfont">&#xe63b;</i>检查更新</span>
@@ -81,6 +81,9 @@
 	<script>
 	Polymer('x-about',{
         version : '0.0.0',
+        github : 'https://github.com/sapjax/dbfm',
+        weibo : 'http://weibo.com/sapjax',
+        weiboNick : '@压缩包子',
         localUrl : './package.json',
         remoteUrl : 'https://raw.githubusercontent.com/sapjax/dbfm/master/package.json',
         ready : function() {
