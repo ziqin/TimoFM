@@ -29,9 +29,14 @@
                 var self = this
                 self.gui = require('nw.gui')
                 self.win = self.gui.Window.get()
-                self.addTray()
+//                self.addTray()
 
+                console.log(self.win.cookies)
+
+                FM.obs.on('SONG:UPDATE', self.addTray.bind(self))
                 FM.obs.on('NOTI:CLICK', self.restore.bind(self))
+
+                self.showDevTools()
             },
 
             min : function() {
@@ -43,8 +48,10 @@
             },
 
             close : function() {
-                this.tray.remove()
-                this.tray = null
+                if(this.tray) {
+                    this.tray.remove()
+                    this.tray = null
+                }
                 this.win.close()
             },
 
@@ -54,9 +61,13 @@
 
             addTray : function() {
                 var self = this
+                self.tray && self.tray.remove()
                 var gui = self.gui
+                var icon = self.getIcon()
                 var tray = new gui.Tray({
-                    title : 'dbfm'
+                    title : '',
+                    icon : icon.icon,
+                    alticon: icon.alticon
                 })
 
                 var menu = new gui.Menu()
@@ -70,7 +81,21 @@
                 tray.menu = menu
                 tray.on('click',self.restore.bind(self))
                 self.tray = tray
-            }
+            },
+
+            getIcon : function() {
+                if(FM.status.song.like) {
+                    return {
+                        icon : './assets/images/red_tray.png',
+                        alticon: './assets/images/red_tray@2x.png'
+                    }
+                } else {
+                    return {
+                        icon : './assets/images/blank_tray.png',
+                        alticon: './assets/images/blank_tray@2x.png'
+                    }
+                }
+            },
         })
     </script>
 </polymer-element>

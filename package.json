@@ -11,7 +11,8 @@
     "max-width": 800,
     "max-height": 400,
     "toolbar": false,
-    "transparent": true
+    "transparent": true,
+	"resizable" : false
   },
   "as_desktop": true,
   "resizable": false,
@@ -20,10 +21,9 @@
     "plugin": true
   },
   "dependencies": {
-    "dbfm-app-sdk": "0.0.3",
-    "dbfm-web-sdk": "0.0.3",
+    "dbfm-app-sdk": "0.0.4",
+    "dbfm-web-sdk": "0.0.4",
     "open": "0.0.5",
-    "request": "^2.44.0",
-    "safe-parse": "0.0.0"
+    "request": "^2.44.0"
   }
 }

@@ -19,7 +19,7 @@
         Polymer('x-mask',{
             enteredView : function() {
                 var self = this
-                if(FM.playlist.length) {
+                if(FM.status.song.url) {
                     self.hide()
                 } else {
                     FM.obs.on('SONG:UPDATE', self.hide.bind(self))

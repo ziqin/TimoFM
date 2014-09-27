@@ -70,10 +70,10 @@
                     <i class="iconfont">&#xe63b;</i>检查更新</span>
                 </li>
             </template>
-            <template if="{{noUpdate}}">
+            <template if="{{noUpdate && !checking}}">
                 <li>已经是最新版本</li>
             </template>
-            <template if="{{newVersion}}">
+            <template if="{{newVersion && !checking}}">
                 <li><span on-click="{{goToLink}}" href="https://github.com/sapjax/dbfm">发现新版本{{newVersion}}</span></li>
             </template>
 		</ul>

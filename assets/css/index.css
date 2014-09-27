@@ -32,7 +32,7 @@ body {
 
 .sidebar .nav {
     background: rgba(200, 200, 200, 0.5);
-    box-shadow: 0 1px 0 #f00;
+    box-shadow: 1px 1px 2px rbga(0,0,0,0.1);
     display: block;
     height: 80vh;
     padding-bottom: 10vh;

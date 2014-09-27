@@ -114,6 +114,8 @@
             //已经存在登录信息，不登录
             if(self.userInfo && !self.isExpired()) {
                 FM.appSDK.storage(self.userInfo)
+                //token过期后,自动重新登陆
+                setTimeout(self.login.bind(self), self.timeLeft)
             } else {
                 var option = self.getValidOptions()
                 if(!option) return
@@ -142,9 +144,10 @@
             FM.appSDK.logout()
         },
 
-        //判断登录信息是否过期
+        //判断登录信息是否即将过期，十分钟之内过期
         isExpired : function() {
-            return ~~this.userInfo.expire < Date.now()/1000
+            this.timeLeft = ~~this.userInfo.expire*1000 - Date.now()
+            return this.timeLeft < 60*1000*10
         },
 
         //获取输入的邮箱和密码

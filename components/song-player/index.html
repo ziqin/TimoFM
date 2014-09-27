@@ -157,12 +157,12 @@
         skip : function() {
             var self = this
             FM.playlist.next()
-            FM.appSDK.skip({
-                channel_id : FM.status.channel.id,
-                sid : FM.status.song.sid
-            }, function(err, songs) {
+//            FM.appSDK.skip({
+//                channel_id : FM.status.channel.id,
+//                sid : FM.status.song.sid
+//            }, function(err, songs) {
 //                FM.playlist.reset(songs)
-            })
+//            })
         },
 
         //不再播放
