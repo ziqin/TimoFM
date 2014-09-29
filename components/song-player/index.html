@@ -1,6 +1,5 @@
 <link rel="import" href="../x-audio/index.html">
 <link rel="import" href="../x-hotkey/index.html">
-<link rel="import" href="../song-lyric/index.html">
 <link rel="import" href="../song-noti/index.html">
 
 <polymer-element name="song-player" attributes="song">
@@ -63,11 +62,12 @@
             .player-ctrl .star {
                 color: #f00;
             }
+
+
 		</style>
 
 		<x-audio></x-audio>
         <x-hotkey></x-hotkey>
-        <song-lyric></song-lyric>
         <song-noti></song-noti>
 		<div class="progress c1 bg2">
             <time class="pt">{{time.pmt}}</time>

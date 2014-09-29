@@ -4,10 +4,16 @@
             div {
                 position: relative;
                 height: 20vh;
-                margin: 2vh 0;
+                margin: 2vh 1.5vh 2vh 0;
                 cursor: pointer;
                 text-align: left;
-                background: rgba(255,255,255,0.5);
+                background: rgba(255,255,255,0.1);
+                box-shadow: 0 0 1px rgba(0,0,0,0.15);
+            }
+
+            div:hover,div.active {
+                background: rgba(255,255,255,0.2);
+                -webkit-transition: background 0.2s ease-in;
             }
 
             img {
@@ -82,21 +88,22 @@
                 display: inline-block;
                 height: 8vh;
                 line-height: 8vh;
-                width: 46%;
+                width: 17vw;
                 margin: 1.6vh 0 0 0;
                 padding: 0.5vw;
-                background: rgba(255, 255, 255, 0.5);
+                background: rgba(255, 255, 255, 0.1);
                 text-align: center;
                 cursor: pointer;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                box-shadow: none;
             }
 
             .small:hover,.small.active {
                 -webkit-transition: all 0.4s ease-in;
                 transition: all 0.4s ease-in;
-                background: rgba(200, 200, 200, 0.5);
+                background: rgba(200, 200, 200, 0.2);
                 color: #fff;
             }
 

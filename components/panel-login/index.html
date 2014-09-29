@@ -13,12 +13,13 @@
 
             .user-info {
                 text-align: center;
-                padding-top: 30vh;
+                padding-top: 15vh;
+                font-size: 2.1vw;
             }
 
-            .user-info span {
-                margin-bottom: 5px;
-                font-size: 2.5vw;
+            .user-info p {
+                margin: 0 0 5px 0;
+                text-align: center;
             }
 
             .user-info img {
@@ -89,10 +90,11 @@
 		</style>
         <template if={{userInfo}}>
             <div class="user-info">
-                <img src="{{userInfo.avatar}}" />
-                <br />
-                <span href="http://douban.fm/" on-click="{{goToLink}}">{{userInfo.user_name}}</span>
-                <br />
+                <img src="{{userInfo.icon}}" />
+                <p><span href="http://douban.fm/" on-click="{{goToLink}}">{{userInfo.user_name}}</span></p>
+                <p><span href="http://douban.fm/mine#!type=played" on-click="{{goToLink}}">累积收听:{{userInfo .played_num}}</span></p>
+                <p><span href="http://douban.fm/mine#!type=liked" on-click="{{goToLink}}">加红心:{{userInfo.liked_num}}</span></p>
+                <p><span href="http://douban.fm/mine#!type=banned" on-click="{{goToLink}}">不再收听:{{userInfo .banned_num}}</span></p>
                 <button on-click="{{logout}}">注 销</button>
             </div>
         </template>
@@ -114,9 +116,6 @@
             if(cache) {
                 self.userInfo = cache
                 self.login()
-                if(!cache.avatar) {
-                    self.setAvatar()
-                }
             }
         },
 
@@ -139,7 +138,7 @@
                         self.userInfo = result
                         FM.cache.set('CACHE:USER', result)
                         FM.obs.emit('LOGIN:UPDATE')
-                        self.setAvatar()
+                        self.addUserInfo()
                         self.err = false
                     } else {
                         self.logout()
@@ -150,12 +149,13 @@
             }
         },
 
-        //获取并设置头像
-        setAvatar : function() {
+        addUserInfo : function() {
             var self = this
-            FM.appSDK.avatar(function(err, avatar) {
-                if(err)  return console.error(err)
-                self.userInfo.avatar = avatar
+            FM.appSDK.user_info({}, function(err, body) {
+                if(err) return console.error(err)
+                for(i in body) {
+                    self.userInfo[i] = body[i]
+                }
                 FM.cache.set('CACHE:USER', self.userInfo)
             })
         },

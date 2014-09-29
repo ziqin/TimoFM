@@ -1,39 +1,109 @@
 <polymer-element name="song-lyric">
    <template>
        <style>
-           :host {
-               font-size: 10px;
-           }
            div {
-               padding-bottom: 10px;
+               position: absolute;
+               width: 100%;
+               height: 100%;
+               top: 0;
+               left: 0;
+               text-shadow: 1px 1px 5px #000;
+               color: #fff;
+               text-align: center;
+               letter-spaceing: 1px;
+               background: rgba(0,0,0,0);
            }
+
+           .has-lyric {
+               background: rgba(0,0,0,0.4);
+               -webkit-transition: background 0.5s ease-in;
+           }
+
+           p {
+               position: absolute;
+               top: 70vh;
+               height: 10vh;
+               padding: 0 3vw;
+               width: 44vw;
+               margin: 0;
+               line-height: 10vh;
+               font-size: 13px;
+               text-align: center;
+               opacity: 0;
+               -webkit-transition: all 0.5s ease-in;
+           }
+
+           p.no-lrc {
+               opacity: 1;
+               top: 45vh;
+           }
+
+           p.prev {
+               top: 35vh;
+               opacity: 0.6;
+           }
+
+           p.current {
+               font-size: 15px;
+               top: 45vh;
+               opacity: 1;
+           }
+
+           p.next {
+               top: 55vh;
+               opacity: 0.6;
+           }
+
+           p.pass {
+               top: 20vh;
+           }
+
+
        </style>
-        <div>{{currentWord}}</div>
+        <div class="{{lrc.length > 0 ? 'has-lyric' : ''}}">
+            <template if="{{!lrc.length}}">
+                <p class="no-lrc">暂无歌词</p>
+            </template>
+            <template repeat="{{lrc}}">
+                <p data-time="{{time}}" class="{{class}}">{{word}}</p>
+            </template>
+        </div>
    </template>
     <script>
         Polymer('song-lyric', {
-            lrc : {},
+            song: FM.status.song,
+            lrc : [],
             ready : function() {
                 var self = this
                 FM.obs.on('SONG:UPDATE', function(song) {
+                    self.lrc = []
                     self.fetchLrc(song)
                 })
 
                 FM.obs.on('TIME:UPDATE', function(playTime) {
-                    var songId = FM.status.song.sid
-                    var lines = self.lrc[songId]
-                    if(!lines || !lines.length) {
-                        self.currentWord = '暂无歌词'
-                    } else {
+                    if(self.lrc.length) {
+                        var lines = self.lrc
                         for(i = 0; i<lines.length; i++) {
                             if(playTime < lines[i].time) {
-                                self.currentWord = lines[i -1 < 0 ? 0 : i -1].word
+                                lines[i].class = 'next'
+                                if(lines[i-1]) {
+                                    lines[i-1].class = 'current'
+                                }
+                                if(lines[i-2]) {
+                                    lines[i-2].class = 'prev'
+                                }
+                                if(lines[i-3]) {
+                                    lines[i-3].class = 'pass'
+                                }
                                 return
                             }
                         }
                     }
                 })
-                self.fetchLrc(FM.status.song)
+
+                setTimeout(function() {
+                    self.fetchLrc(self.song)
+                },200)
             },
 
             fetchLrc : function(song) {
@@ -42,8 +112,9 @@
                     song_id : song.sid
                 }, function(err, lyric) {
                     if(err) return console.error(err)
-                    lyric = lyric || ''
-                    self.lrc[song.sid] = self.parseLrc(lyric)
+                    if(song.id == self.song.id) {
+                       self.lrc = self.parseLrc(lyric || '')
+                    }
                 })
             },
 
