@@ -5,7 +5,7 @@ var observer = require('./assets/js/observer')
 var cache = require('./assets/js/cache')
 
 //全局对象
-FM = { debug : false }
+FM = { debug : false}
 //消息控制器
 FM.obs = new observer()
 //豆瓣API web
@@ -39,12 +39,6 @@ Object.observe(FM.playlist, function(changes){
 
 //播放器状态变化时，触发状态更新事件
 Object.observe(FM.status, function(changes) {
-	changes.forEach(function(change) {
-		if(change.name == 'channel') {
-			FM.obs.emit('CHANNEL:UPDATE', FM.status.channel)
-		}
-	});
-	//保存状态
 	FM.cache.set('CACHE:STATUS', FM.status)
 })
 

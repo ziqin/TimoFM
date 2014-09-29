@@ -1,4 +1,4 @@
-<polymer-element name="song-lrc">
+<polymer-element name="song-lyric">
    <template>
        <style>
            :host {
@@ -11,9 +11,8 @@
         <div>{{currentWord}}</div>
    </template>
     <script>
-        Polymer('song-lrc', {
+        Polymer('song-lyric', {
             lrc : {},
-            api : 'http://geci.me/api/lyric/',
             ready : function() {
                 var self = this
                 FM.obs.on('SONG:UPDATE', function(song) {
@@ -28,30 +27,23 @@
                     } else {
                         for(i = 0; i<lines.length; i++) {
                             if(playTime < lines[i].time) {
-                                self.currentWord = lines[i].word
+                                self.currentWord = lines[i -1 < 0 ? 0 : i -1].word
                                 return
                             }
                         }
                     }
                 })
+                self.fetchLrc(FM.status.song)
             },
 
             fetchLrc : function(song) {
                 var self = this
-                var request = require('request')
-                var url = self.api + encodeURIComponent(song.title) + '/' + encodeURIComponent(song.artist)
-                request(url, function(err, res, body) {
+                FM.appSDK.lyric({
+                    song_id : song.sid
+                }, function(err, lyric) {
                     if(err) return console.error(err)
-                    body = JSON.parse(body)
-                    if(body.result && body.result[0] && body.result[0].lrc) {
-                        var uri = body.result[0].lrc
-                        request(uri, function(err, res, body) {
-                            if(err) return console.error(err)
-                            self.lrc[song.sid] = self.parseLrc(body)
-                        })
-                    } else {
-                        self.lrc[song.sid] = self.parseLrc('')
-                    }
+                    lyric = lyric || ''
+                    self.lrc[song.sid] = self.parseLrc(lyric)
                 })
             },
 

@@ -19,6 +19,14 @@
                 cursor: pointer;
             }
         </style>
+        <div id="cssTmpl" style="display: none">
+            .bg,.active,body /deep/ .bg { background: %(bg)}
+            .bg1,body /deep/ .bg1 { background: %(c1)}
+            .bg2,body /deep/ .bg2 { background: %(c2)}
+            .c1, body /deep/ .c1 {color: %(c1)}
+            .c2, body /deep/ .c2 {color: %(c2)}
+            .cb, body /deep/ .cb {color: %(bg)}
+        </div>
         <a url="http://music.douban.com{{info.album}}" on-click={{jump2douban}}>
             <img src={{info.picture}} />
         </a>
@@ -48,13 +56,28 @@
                     self.updateColor(self.info.picture)
                 })
 
-                //颜色变更后，重新设置界面颜色
+                //颜色变更后，重新生成style内容
                 FM.obs.on('COLOR:UPDATE', function(colors) {
-                    document.body.style.background = colors.background
-                    document.body.style.color = colors.content[0]
+                    var colorStyle = document.querySelector('#colorStyle')
+                    if(!colorStyle) {
+                        colorStyle = document.createElement('style')
+                        colorStyle.id = 'colorStyle'
+                        document.body.appendChild(colorStyle)
+                    }
+                    colorStyle.innerHTML = self.getColorText(colors)
                 })
 
                 self.updateColor(self.info.picture)
+            },
+
+            //生成颜色样式
+            getColorText : function(colors) {
+                var tmpl = this.$.cssTmpl.textContent
+                return this.stringStsupplant(tmpl, {
+                    bg : colors.background,
+                    c1 : colors.content[0],
+                    c2 : colors.content[1]
+                })
             },
 
             //图片变换后，获取主要颜色
@@ -67,6 +90,13 @@
                 }
                 img.crossOrigin = 'Anonymous'
                 img.src = src
+            },
+
+            //替换字符串模板
+            stringStsupplant : function(tmpl, data) {
+                return tmpl.replace(/%\((\w+)\)/g, function($0, $1) {
+                    return data[$1] || ''
+                })
             },
 
             //跳出到豆瓣

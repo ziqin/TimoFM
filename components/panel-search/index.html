@@ -1,0 +1,87 @@
+<polymer-element name="panel-search" attributes="">
+	<template>
+		<style>
+            :host {
+                display: block;
+                height: 100vh;
+                text-align: center;
+            }
+
+            ul, li {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .search {
+                padding:2vh;
+                height: 96vh;
+                overflow: auto;
+            }
+
+            input[type="search"] {
+                width: 100%;
+                padding: 0 10px;
+                height: 10vh;
+                border:1px solid rgba(100,100,100,0.1);
+                background: rgba(255,255,255,0.4);
+                outline: none;
+            }
+
+            input[type="search"]:focus {
+                background: rgba(255,255,255,0.8);
+            }
+		</style>
+        <div class="search">
+           <input type="search" id="searchInput" placeholder="搜索专辑"  on-keyup="{{search}}" value="{{keyword}}" />
+            <ul>
+                <template repeat="{{item in channels}}">
+                    <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
+                </template>
+            </ul>
+        </div>
+	</template>
+	<script>
+	Polymer('panel-search',{
+        page: 0,
+        selectedId : FM.status.channel.id,
+        ready : function() {
+            var self = this
+            FM.obs.on('CHANNEL:UPDATE', function(channel) {
+                self.selectedId = channel.id
+            })
+
+            self.restoreSearch()
+        },
+
+        //从music.douban.com 搜索专辑
+        search : function(e) {
+            var self = this
+            var isEnterKey = e.keyCode == 13
+            var keyword = this.$.searchInput.value.trim()
+            if(isEnterKey && keyword) {
+                FM.appSDK.music_search({
+                    search_text : keyword,
+                    start : self.page*15
+                }, function(err, channels) {
+                    if(channels) {
+                        self.channels = channels
+                        FM.cache.set('CACHE:SEARCHED_SUBJECTS',{
+                            channels : channels,
+                            keyword : keyword
+                        })
+                    }
+                })
+            }
+        },
+        //回复搜索状态
+        restoreSearch : function() {
+            var searchCache = FM.cache.get('CACHE:SEARCHED_SUBJECTS')
+            if(searchCache) {
+                this.channels = searchCache.channels
+                this.keyword = searchCache.keyword
+            }
+        }
+	})
+	</script>
+</polymer-element>

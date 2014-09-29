@@ -25,11 +25,11 @@
                 font-size: 2vw;
             }
 		</style>
-        <div style="color: {{colors.content[0]}}">
+        <div>
             <h1>{{song.title}}</h1>
             <h2>{{song.artist}}</h2>
             <h3>{{song.albumtitle}}</h3>
-            <h3>当前频道：{{channel.name}}</h3>
+            <h3>频道：{{channel.name}}</h3>
         </div>
 	</template>
 	<script>
@@ -40,10 +40,6 @@
            var self = this
            FM.obs.on('SONG:UPDATE', function(song) {
                self.song = song
-           })
-
-           FM.obs.on('COLOR:UPDATE', function(colors) {
-               self.colors = colors
            })
 
            FM.obs.on('CHANNEL:UPDATE', function(channel) {

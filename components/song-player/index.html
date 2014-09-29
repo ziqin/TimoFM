@@ -1,6 +1,6 @@
 <link rel="import" href="../x-audio/index.html">
 <link rel="import" href="../x-hotkey/index.html">
-<link rel="import" href="../song-lrc/index.html">
+<link rel="import" href="../song-lyric/index.html">
 <link rel="import" href="../song-noti/index.html">
 
 <polymer-element name="song-player" attributes="song">
@@ -25,7 +25,6 @@
                 top: 0px;
                 width: 0;
                 height: 2px;
-                background: #fff;
             }
 
             .progress time {
@@ -68,17 +67,17 @@
 
 		<x-audio></x-audio>
         <x-hotkey></x-hotkey>
-        <!--<song-lrc></song-lrc>-->
+        <song-lyric></song-lyric>
         <song-noti></song-noti>
-		<div class="progress" style="background: {{colors.content[1]}};color:{{colors.content[1]}}">
+		<div class="progress c1 bg2">
             <time class="pt">{{time.pmt}}</time>
             <time class="dt">{{time.dmt }}</time>
             <div>
-                <span style="width:{{time.percent}}%;background:{{colors.background}}"></span>
+                <span class="bg" style="width:{{time.percent}}%;"></span>
             </div>
         </div>
 
-        <div class="player-ctrl" style="color: {{colors.content[1]}}">
+        <div class="player-ctrl c2">
           <span title="不再收听" class="iconfont" on-click="{{neverPlayAgain}}">&#xe624;</span>
           <span title="{{song.like? '取消红心':'加红心'}}" class="{{song.like ? 'star':''}} iconfont" on-click="{{star}}">&#xe631 </span>
           <span title="{{playing? '暂停' : '播放'}}" class="iconfont" on-click="{{togglePlay}}">{{playing ? '&#xe60b;' : '&#xe603;'}}</span>
@@ -91,15 +90,10 @@
         song : FM.status.song,
         ready : function() {
             var self = this
-
             self.player = self.shadowRoot.querySelector('x-audio').player
 
             FM.obs.on('SONG:UPDATE', function(e) {
                 self.song = e
-            })
-
-            FM.obs.on('COLOR:UPDATE', function(e) {
-                self.colors = e
             })
 
             self.player.addEventListener('timeupdate', function() {
@@ -157,12 +151,6 @@
         skip : function() {
             var self = this
             FM.playlist.next()
-//            FM.appSDK.skip({
-//                channel_id : FM.status.channel.id,
-//                sid : FM.status.song.sid
-//            }, function(err, songs) {
-//                FM.playlist.reset(songs)
-//            })
         },
 
         //不再播放
@@ -173,7 +161,7 @@
                 channel_id : FM.status.channel.id,
                 sid : FM.status.song.sid
             },function(err, songs) {
-//                FM.playlist.reset(songs)
+                if(err) return console.error(err)
             })
         },
 
@@ -186,8 +174,8 @@
                 channel_id : FM.status.channel.id,
                 sid : FM.status.song.sid
             }, function(err, songs) {
+                if(err) return console.error(err)
                 self.song.like = !self.song.like
-//                FM.playlist.replaceRest(songs)
             })
         }
     })

@@ -10,16 +10,16 @@
     <link rel="import" href="components/song-face/index.html" />
     <link rel="import" href="components/song-player/index.html" />
     <link rel="import" href="components/song-info/index.html" />
-    <link rel="import" href="components/x-channel/index.html" />
-    <link rel="import" href="components/x-search/index.html" />
-    <link rel="import" href="components/x-login/index.html" />
-    <link rel="import" href="components/x-setting/index.html" />
-    <link rel="import" href="components/x-about/index.html" />
+    <link rel="import" href="components/panel-channel/index.html" />
+    <link rel="import" href="components/panel-search/index.html" />
+    <link rel="import" href="components/panel-login/index.html" />
+    <link rel="import" href="components/panel-setting/index.html" />
+    <link rel="import" href="components/panel-about/index.html" />
     <link rel="import" href="components/x-mask/index.html" />
     <link rel="import" href="components/x-view/index.html" />
     <script src="assets/js/index.js"></script>
   </head>
-  <body style="-webkit-app-region: drag">
+  <body style="-webkit-app-region: drag" class="bg c1">
     <div id="wrapper">
       <x-switchTab class="sidebar">
         <ul class="nav">
@@ -30,11 +30,11 @@
           <li title="关于" class="iconfont">&#xe62e;</li>
         </ul>
         <div class="content">
-          <x-channel class="active"></x-channel>
-          <x-search></x-search>
-          <x-login></x-login>
-          <x-setting></x-setting>
-          <x-about></x-about>
+          <panel-channel class="active"></panel-channel>
+          <panel-search></panel-search>
+          <panel-login></panel-login>
+          <panel-setting></panel-setting>
+          <panel-about></panel-about>
         </div>
       </x-switchTab>
       <main>

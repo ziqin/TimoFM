@@ -1,0 +1,161 @@
+<polymer-element name="panel-setting" attributes="">
+	<template>
+		<style>
+            :host {
+                display: block;
+                height: 100vh;
+                width: 100%;
+            }
+
+            .setting {
+                padding: 0 1vw;
+                height: 100vh;
+                overflow: auto;
+                font-size: 12px;
+                display: none;
+            }
+
+            section {
+                margin:5vh 0;
+            }
+
+            h3 {
+                margin: 0;
+                padding: 1vw;
+                border-bottom: 1px solid;
+                text-align: right;
+            }
+
+            section div {
+                margin-top: 5vh;
+            }
+
+            label {
+                display: block;
+                margin: 2vh 0;
+            }
+
+            label span {
+                display: inline-block;
+                text-align: right;
+                width: 50%;
+                margin-right: 5%;
+            }
+
+            input {
+                width: 40%;
+                height: 20px;
+                border: 1px solid rgba(0,0,0,0.2);
+                background: rgba(255,255,255,0.4);
+                text-indent: 5px;
+                outline: none;
+            }
+
+            input:focus {
+                background: rgba(255,255,255,0.8);
+            }
+
+            input[type="checkbox"] {
+                width: auto;
+                vertical-align: middle;
+            }
+
+            .backup {
+                text-align: center;
+                padding-bottom: 10vh;
+            }
+
+            button {
+                width: 80px;
+                height: 25px;
+                margin: 0 2vw;
+                cursor: pointer;
+                border: none;
+                background: rgba(255,255,255,0.4);
+                border:1px solid rgba(100,100,100,0.1);
+            }
+
+            button:hover, button:focus {
+                outline: none;
+                background: rgba(255,255,255,0.8);
+            }
+
+            .no-result {
+                text-align: center;
+                margin-top: 48vh;
+            }
+            
+            .no-result span {
+                font-size: 20px;
+                margin-right: 10px;
+                vertical-align: middle;
+            }
+		</style>
+        <div class="no-result"><span class="iconfont">&#xe646;</span>coming soon!</div>
+		<div class="setting">
+            <section class="hot-key">
+                <h3>热键设置</h3>
+                <div>
+                    <label><span>暂停/播放</span><input name="pause" placeholder="无" /></label>
+                    <label><span>加红心/取消红心</span><input name="star" placeholder="无" /></label>
+                    <label><span>不再播放</span><input name="noplay" placeholder="无" /></label>
+                    <label><span>下一首</span><input name="next" placeholder="无" /></label>
+                    <label><span>打开控制台</span><input name="showDevTools" placeholder="无" /></label>
+                    <label><span>隐藏/显示主窗口</span><input name="show" placeholder="无" /></label>
+                    <label><span>清空所有缓存</span><input name="clean" placeholder="无" /></label>
+                    <label><span>启用媒体键(MAC)</span><input type="checkbox" checked /></label>
+                </div>
+            </section>
+            <section>
+                <h3>其他设置</h3>
+                <div>
+                    <label><span>启用桌面通知</span><input type="checkbox" name="notification" checked /></label>
+                    <label><span>显示歌词</span><input type="checkbox" name="showLrc" /></label>
+                </div>
+            </section>
+            <section>
+                <h3>备份设置</h3>
+                <div class="backup">
+                    <button class="import">导入</button>
+                    <button class="export">导出</button>
+                </div>
+            </section>
+		</div>
+	</template>
+	<script>
+	Polymer('panel-setting',{
+        path : './setting.json',
+        ready : function() {
+            var self = this
+//            self.readConfig(self.path)
+        },
+
+        //配置改变后，自动保存
+        configChanged : function() {
+            FM.config = this.config
+            this.saveConfig(this.path, this.config)
+        },
+
+        //读取配置
+        readConfig : function(path) {
+            var self = this
+            var fs = require('fs')
+            if(fs.existsSync(path)) {
+                fs.readFile(path, function(err, data) {
+                    if(err)  return console.error(err)
+                    self.config = JSON.parse(data.toString())
+                })
+            }
+        },
+
+        //写入配置
+        saveConfig : function(path, config) {
+            var self = this
+            var fs = require('fs')
+            fs.writeFile(path, JSON.stringify(config), function(err) {
+                if(err) return console.error(err)
+            })
+        }
+	})
+	</script>
+</polymer-element>

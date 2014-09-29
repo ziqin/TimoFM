@@ -30,13 +30,9 @@
                 self.gui = require('nw.gui')
                 self.win = self.gui.Window.get()
 //                self.addTray()
-
-                console.log(self.win.cookies)
-
-                FM.obs.on('SONG:UPDATE', self.addTray.bind(self))
+//                FM.obs.on('SONG:UPDATE', self.addTray.bind(self))
                 FM.obs.on('NOTI:CLICK', self.restore.bind(self))
-
-                self.showDevTools()
+//                self.showDevTools()
             },
 
             min : function() {

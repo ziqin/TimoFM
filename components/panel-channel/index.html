@@ -1,0 +1,222 @@
+<link rel="import" href="../x-switchTab/index.html" />
+<link rel="import" href="../x-channel/index.html" />
+<polymer-element name="panel-channel" attributes="publicChannels personalChannels genreChannels">
+<template>
+    <style>
+        :host {
+            display: block;
+            font-size: 2vw;
+            height: 100vh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        x-switchTab {
+            display: block;
+            padding: 1vw;
+        }
+
+        .nav {
+            border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+        }
+
+        .nav li {
+            position: relative;
+            height: 8vh;
+            line-height: 8vh;
+            width: 12vw;
+            margin-right: -0.25em;
+            display: inline-block;
+            list-style: none;
+            cursor: pointer;
+            text-align: center;
+            -webkit-transform: scale(0.8);
+            transition: opacity 1s, transform 1s
+
+        }
+
+        .nav li.active {
+            background: rgba(200, 200, 200, 0.3);
+            z-index: 2;
+            -webkit-transform: scale(1);
+        }
+
+        .nav li + li {
+            margin-left: 1vw;
+        }
+
+        .content {
+            position: relative;
+            width: 100%;
+        }
+
+        section {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            height: 85vh;
+            overflow: auto;
+            margin-top: 2vh;
+            opacity: 0;
+            text-align: justify;
+            -webkit-transform: scale(0.95);
+        }
+
+        section.active {
+            -webkit-transform: scale(1);
+            -webkit-transition: all 0.4s ease-in;
+            transition: all 0.4s ease-in;
+            opacity: 1;
+            z-index: 2
+        }
+
+        input[type="search"] {
+            width: 100%;
+            padding: 0 10px;
+            height: 10vh;
+            border:1px solid rgba(100,100,100,0.1);
+            background: rgba(255,255,255,0.4);
+            outline: none;
+        }
+
+        input[type="search"]:focus {
+            background: rgba(255,255,255,0.8);
+        }
+
+        .no-result {
+            font-size: 12px;
+            text-align: center;
+            line-height: 75vh;
+        }
+    </style>
+    <x-switchTab>
+        <ul class="nav">
+            <li class="active">固定兆赫</li>
+            <li>收藏兆赫</li>
+            <li>兆赫搜索</li>
+        </ul>
+        <div class="content">
+            <section class="small active">
+                <template repeat="{{item in personalChannels}}">
+                    <x-channel channel="{{item}}" small="true" active="{{item.id == selectedId}}"></x-channel>
+                </template>
+                <template repeat="{{item in publicChannels}}">
+                    <x-channel channel="{{item}}" small="true" active="{{item.id == selectedId}}"></x-channel>
+                </template>
+            </section>
+            <section class="small">
+                <template if={{favChannels.length}} repeat="{{item in favChannels}}">
+                   <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
+                </template>
+                <template if="{{!favChannels.length}}">
+                    <div class="no-result">还没有收藏兆赫</div>
+                </template>
+            </section>
+            <section class="search">
+                <input type="search" id="searchInput" placeholder="搜索兆赫" value="{{searchKey}}" on-keyup="{{search}}" />
+                <ul>
+                    <template repeat="{{item in searchChannels}}">
+                        <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
+                    </template>
+                </ul>
+            </section>
+        </div>
+    </x-switchTab>
+</template>
+<script>
+    Polymer('panel-channel',{
+        publicChannels : [],
+        personalChannels : [],
+        favChannels : [],
+
+        selectedId : FM.status.channel.id,
+
+        ready : function() {
+            var self = this
+            this.publicChannels = this.getPublicChannels()
+            this.personalChannels = this.getPersonalChannels()
+            this.favChannels = this.getFavChannels()
+            this.restoreSearch()
+
+            //频道被选择时
+            FM.obs.on('CHANNEL:UPDATE', function(channel) {
+                this.selectedId = channel.id
+            })
+
+            //频道被收藏时
+            FM.obs.on('CHANNEL:FAV', function(channel) {
+                var isFav =  self.favChannels.some(function(item) {
+                    return channel.id == item.id
+                })
+                if(!isFav) {
+                    self.favChannels.push(channel)
+                    self.setFavChannels()
+                }
+            })
+
+            //频道被取消收藏时
+            FM.obs.on('CHANNEL:UNFAV', function(channel) {
+                self.favChannels = self.favChannels.filter(function(item) {
+                   return item.id != channel.id
+                })
+                self.setFavChannels()
+            })
+        },
+
+        //公共频道
+        getPublicChannels : function() {
+            return FM.webSDK.public_channels()
+        },
+
+        //私人频道
+        getPersonalChannels : function() {
+            return FM.webSDK.personal_channels()
+        },
+
+        //TODO 获取收藏的频道，因为api接口的问题，暂时只存在本地，不能同步到豆瓣服务器
+        getFavChannels : function() {
+            return FM.cache.get('CACHE:FAV_CHANNELS') || []
+        },
+
+        setFavChannels : function() {
+            FM.cache.set('CACHE:FAV_CHANNELS', this.favChannels)
+        },
+
+        //搜索兆赫
+        search : function(e) {
+            var self = this
+            var isEnterKey = e.keyCode == 13
+            var keyword = this.$.searchInput.value.trim()
+            if(isEnterKey && keyword) {
+                FM.webSDK.search({
+                    query : keyword
+                }, function(err, channels) {
+                    if(channels) {
+                        self.searchChannels = channels
+                        FM.cache.set('CACHE:SEARCHED_CHANNELS', {
+                            keyword : keyword,
+                            channels :channels
+                        })
+                    }
+                })
+            }
+        },
+
+        //回复搜索状态
+        restoreSearch : function() {
+            var searchCache = FM.cache.get('CACHE:SEARCHED_CHANNELS')
+            if(searchCache) {
+                this.searchChannels = searchCache.channels
+                this.searchKey = searchCache.keyword
+            }
+        }
+    })
+</script>
+</polymer-element>

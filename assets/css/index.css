@@ -47,10 +47,6 @@ body {
     text-align: center;
 }
 
-.sidebar .nav li.active {
-    background: rgba(100, 100, 100, 0.2);
-}
-
 .sidebar .content {
     bottom: 0;
     left: 10vw;
@@ -118,7 +114,7 @@ x-view {
 
 @font-face {
     font-family: 'iconfont';
-    src:url('http://at.alicdn.com/t/font_1411638144_663203.woff') format('woff');
+    src:url('http://at.alicdn.com/t/font_1411965609_4799533.woff') format('woff');
 }
 
 body /deep/ .iconfont{
