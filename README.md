@@ -1,4 +1,4 @@
-豆瓣电台 node-webkit版
+豆瓣电台 node-webkit版，界面风格大量照搬了kfstorm（http://www.kfstorm.com/blog）的电台设计
 
 ##### download
     - mac版(http://pan.baidu.com/s/1pJ7GvRt)
