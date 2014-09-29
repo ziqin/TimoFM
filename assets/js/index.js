@@ -57,4 +57,7 @@ function fetchSongs () {
 FM.obs.on('LOGIN:UPDATE', fetchSongs)
 
 //重置播放列表，触发歌曲更新
-FM.playlist.reset(FM.status.playlist)
+//等polymer-ready事件触发后执行，避免其他的组件监听不到SONG:UPDATE事件
+window.addEventListener('polymer-ready', function() {
+	FM.playlist.reset(FM.status.playlist)
+})

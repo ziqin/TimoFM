@@ -34,7 +34,7 @@
            }
 
            p.no-lrc {
-               opacity: 1;
+               opacity: 0.5;
                top: 45vh;
            }
 
@@ -77,7 +77,9 @@
                 var self = this
                 FM.obs.on('SONG:UPDATE', function(song) {
                     self.lrc = []
-                    self.fetchLrc(song)
+                    process.nextTick(function() {
+                        self.fetchLrc(song)
+                    })
                 })
 
                 FM.obs.on('TIME:UPDATE', function(playTime) {
@@ -100,10 +102,6 @@
                         }
                     }
                 })
-
-                setTimeout(function() {
-                    self.fetchLrc(self.song)
-                },200)
             },
 
             fetchLrc : function(song) {
@@ -124,7 +122,7 @@
                     var time = parseInt(m)*60 + parseFloat(s)
                     lines.push({
                         time : time,
-                        word : word
+                        word : word.replace(/\[.*?\]/g,'')
                     })
                 })
                 return lines
