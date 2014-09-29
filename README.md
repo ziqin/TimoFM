@@ -1,7 +1,7 @@
 豆瓣电台 node-webkit版
 
 ##### download
-    - [mac版](http://pan.baidu.com/s/1gd05huz)
+    - mac版(http://pan.baidu.com/s/1pJ7GvRt)
     - linux版 (暂无)
     - windows版 (暂无)
 
