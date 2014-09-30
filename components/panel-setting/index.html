@@ -25,16 +25,23 @@
                 text-align: right;
             }
 
+            h3 i {
+                font-style: normal;
+                color: orangered;
+                cursor: pointer;
+                vertical-align: middle;
+            }
+
             section div {
                 margin-top: 5vh;
             }
 
-            label {
+            p {
                 display: block;
                 margin: 2vh 0;
             }
 
-            label span {
+            p label{
                 display: inline-block;
                 text-align: right;
                 width: 40% ;
@@ -94,29 +101,60 @@
         <div class="no-result"><span class="iconfont">&#xe646;</span>coming soon!</div>
 		<div class="setting">
             <section class="hot-key">
-                <h3>热键设置</h3>
+                <h3 title="注意：犹豫node-webkit本身的原因，无法检测Command组合键，设置时请选择CTRL/ALT作为主按键, 如果按键中有CTRL键，在使用时需要按Command键调用"><i class="iconfont" &#xe64b;></i>热键设置</h3>
                 <div>
-                    <label><span>暂停/播放</span><input  name="pause" placeholder="无" on-keydown="{{hotKey}}" /></label>
-                    <label><span>红心</span><input name="star" placeholder="无" on-keydown="{{hotKey}}" /></label>
-                    <label><span>不再播放</span><input name="noplay" placeholder="无" on-keydown="{{hotKey}}"  /></label>
-                    <label><span>下一首</span><input name="next" placeholder="无" on-keydown="{{hotKey}}"  /></label>
-                    <label><span>打开控制台</span><input name="showDevTools" placeholder="无" on-keydown="{{hotKey}}"  /></label>
-                    <label><span>显示主窗口</span><input name="show" placeholder="无" on-keydown="{{hotKey}}"  /></label>
-                    <label><span>启用媒体键</span><input type="checkbox" name="mediaKey"  checked="{{config.mediaKey}}" on-change="{{toggle}}" /></label>
+                    <p>
+                        <label>暂停/播放</label>
+                        <input  name="PAUSE" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.PAUSE}}" />
+                    </p>
+                    <p>
+                        <label>红心</label>
+                        <input name="STAR" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.STAR}}" />
+                    </p>
+                    <p>
+                        <label>不再播放</label>
+                        <input name="NOPLAY" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.NOPLAY}}" />
+                    </p>
+                    <p>
+                        <label>下一首</label>
+                        <input name="NEXT" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.NEXT}}" />
+                    </p>
+                    <p>
+                        <label>打开控制台</label>
+                        <input name="SHOW_DEV_TOOLS" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.SHOW_DEV_TOOLS}}" />
+                    </p>
+                    <p>
+                        <label>显示主窗口</label>
+                        <input name="SHOW_WINDOW" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.SHOW_WINDOW}}" />
+                    </p>
+                    <p>
+                        <label>重启客户端</label>
+                        <input name="RESTART" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.RESTART}}" />
+                    </p>
+                    <p>
+                        <label>退出客户端</label>
+                        <input name="QUIT" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.QUIT}}" />
+                    </p>
+                    <p>
+                        <label>显示歌词</label>
+                        <input name="SHOW_LRC" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.SHOW_LRC}} " />
+                    </p>
+                    <p>
+                        <label for="mideaKey">启用媒体键</label><input type="checkbox" name="mediaKey"  checked="{{config.mediaKey}}" on-change="{{toggle}}" />
+                    </p>
                 </div>
             </section>
             <section>
                 <h3>其他设置</h3>
                 <div>
-                    <label><span>启用桌面通知</span><input type="checkbox" name="notification" checked="{{config.notification}}" on-change="{{toggle}}"/></label>
-                    <label><span>显示歌词</span><input type="checkbox" name="lyric" checked="{{config.lyric}}" on-change="{{toggle}}" /></label>
-                </div>
-            </section>
-            <section>
-                <h3>备份设置</h3>
-                <div class="backup">
-                    <button class="import">导入</button>
-                    <button class="export">导出</button>
+                    <p>
+                        <label for="notification">启用桌面通知</label>
+                        <input type="checkbox" name="notification" checked="{{config.notification}}" on-change="{{toggle}}"/>
+                    </p>
+                    <p>
+                        <label for="lyric">显示歌词</label>
+                        <input type="checkbox" name="lyric" checked="{{config.lyric}}" on-change="{{toggle}}" />
+                    </p>
                 </div>
             </section>
 		</div>
@@ -124,6 +162,7 @@
     <script src="./keymap.js"></script>
 	<script>
 	Polymer('panel-setting',{
+        invalidKey : '无效快捷键',
         config : FM.config,
         ready : function() {
             var self = this
@@ -132,17 +171,32 @@
                 self.config = FM.config
                 FM.cache.set('CACHE:CONFIG', FM.config)
             })
+
+            FM.obs.on('KEY:REGISTER_FAIL', function(e) {
+                delete FM.config.hotKey[e.name]
+                self.config.hotKey[e.name] = self.invalidKey
+                FM.cache.set('CACHE:CONFIG', FM.config)
+            })
         },
 
         //记录快捷键
-        hotKey : function(e) {
+        recordKey : function(e) {
+            var self = this
+            var target = e.currentTarget
+            var key = self.getPressKey(e).trim()
+            target.value = key
+            target.dataset.key = key
+        },
+
+        //失去焦点后设置快捷键
+        setKey : function(e) {
             var self = this
             var target = e.currentTarget
             var name = target.name
-            target.value = self.getPressKey(e)
-            if(target.value != FM.config.hotKey[name]) {
-                FM.config.hotKey[name] = self.getPressKey(e)
-                FM.obs.emit('CONFIG:UPDATE', {type : 'hotKey'})
+            var key = target.dataset.key
+            if(key && (key != self.invalidKey) && (key != FM.config.hotKey[name])) {
+                FM.config.hotKey[name] = key
+                FM.obs.emit('CONFIG:UPDATE', {type : 'hotKey', name : name, key : key})
             }
         },
 
@@ -163,8 +217,15 @@
                 keys.push(map[18][0])
             }
             if(e.keyCode && [16,17,18,91,92].indexOf(e.keyCode) < 0) {
-                keys.push(map[e.keyCode])
+                if(map[e.keyCode]) {
+                    keys.push(map[e.keyCode][0])
+                }
             }
+            keys.forEach(function(o, i) {
+                var s = o.split('')
+                s[0] = s[0].toUpperCase()
+                keys[i] = s.join('')
+            })
             return keys.join('+')
         },
 

@@ -29,20 +29,28 @@
                 var self = this
                 self.gui = require('nw.gui')
                 self.win = self.gui.Window.get()
-//                self.addTray()
-//                FM.obs.on('SONG:UPDATE', self.addTray.bind(self))
                 FM.obs.on('NOTI:CLICK', self.restore.bind(self))
-//                self.showDevTools()
+
+                FM.obs.on('KEY:SHOW_DEV_TOOLS', self.showDevTools.bind(self))
+                FM.obs.on('KEY:RESTART', self.restart.bind(self))
+                FM.obs.on('KEY:QUIT', self.close.bind(self))
+                FM.obs.on('KEY:SHOW_WINDOW', function(){
+                    self.isMin ? self.restore() : self.min()
+                })
             },
 
+            //最小化
             min : function() {
                 this.win.minimize()
+                this.isMin = true
             },
 
+            //切换控制台显示
             showDevTools : function() {
                 this.win.isDevToolsOpen() ? this.win.closeDevTools() : this.win.showDevTools()
             },
 
+            //关闭
             close : function() {
                 if(this.tray) {
                     this.tray.remove()
@@ -51,10 +59,18 @@
                 this.win.close()
             },
 
-            restore : function() {
-                this.win.restore()
+            //重启
+            restart : function() {
+                this.win.reload()
             },
 
+            //显示主窗口
+            restore : function() {
+                this.win.restore()
+                this.isMin = false
+            },
+
+            //增加任务栏图标
             addTray : function() {
                 var self = this
                 self.tray && self.tray.remove()
@@ -79,6 +95,7 @@
                 self.tray = tray
             },
 
+            //获取任务栏图标
             getIcon : function() {
                 if(FM.status.song.like) {
                     return {

@@ -96,6 +96,7 @@
                 self.song = e
             })
 
+            //更新进度条
             self.player.addEventListener('timeupdate', function() {
                 var pt = self.player.currentTime
                 var dt = self.player.duration
@@ -122,10 +123,12 @@
                 self.playing = true
             })
 
-            FM.obs.on('KEY:MediaPrevTrack', self.neverPlayAgain.bind(self))
-            FM.obs.on('KEY:MediaNextTrack', self.skip.bind(self))
-            FM.obs.on('KEY:MediaStop', self.togglePlay.bind(self))
-            FM.obs.on('KEY:MediaPlayPause', self.togglePlay.bind(self))
+            //监听快捷键事件
+            FM.obs.on('KEY:STAR', self.star.bind(self))
+            FM.obs.on('KEY:NEXT', self.skip.bind(self))
+            FM.obs.on('KEY:STOP', self.togglePlay.bind(self))
+            FM.obs.on('KEY:PAUSE', self.togglePlay.bind(self))
+            FM.obs.on('KEY:NOPLAY', self.neverPlayAgain.bind(self))
         },
 
         formatTime : function(n) {
@@ -166,9 +169,8 @@
         },
 
         //加红心
-        star : function(e) {
+        star : function() {
             var self = this
-            var btn = e.currentTarget
             var method = self.song.like ? 'unstar' : 'star'
             FM.appSDK[method]({
                 channel_id : FM.status.channel.id,

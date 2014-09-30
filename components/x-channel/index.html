@@ -76,6 +76,9 @@
 
             i.cantplay {
                 opacity: 1;
+                font-size: 14px;
+                top: 0;
+                right: 0;
             }
 
             div:hover i, div:hover b {
@@ -128,7 +131,7 @@
             </h3>
             <p>{{channel.intro}}</p>
             <template if="{{channel.cantPlay}}">
-                <!--<i class="iconfont cantplay" title="不支持播放">&#xe64a;</i>-->
+                <i class="iconfont cantplay" title="不支持播放">&#xe649;</i>
             </template>
             <template if="{{!channel.cantPlay}}">
                 <i class="iconfont {{channel.isfav ? 'unfav' : 'fav'}}" title="{{channel.isfav ? '取消收藏' : '收藏频道'}}" on-click="{{fav}}">&#xe640;</i>

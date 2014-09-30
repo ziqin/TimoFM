@@ -3,34 +3,59 @@
     </template>
     <script>
         Polymer('x-hotkey',{
+            keys : {},
             ready : function() {
+                var self = this
                 this.gui = require('nw.gui');
+                this.registerMediaKey()
+                this.registerHotKey(FM.config.hotKey)
 
-                function active() {
-                   FM.obs.emit('KEY:' + this.key)
-                }
+                //快捷键更新后，重新注册
+                FM.obs.on('CONFIG:UPDATE', function(e) {
+                    if(e.type == 'hotKey') {
+                        self.register(e.name, e.key)
+                    }
+                })
+            },
 
-                function failed(msg) {
-                    console.log(this)
-                    console.error(msg)
-                }
-
-                if(FM.config.mediaKey) {
-                    this.register("MediaPrevTrack", active, failed)
-                    this.register("MediaNextTrack", active, failed)
-                    this.register("MediaStop", active, failed)
-                    this.register("MediaPlayPause", active, failed)
+            //注册全局快捷键
+            registerHotKey : function(hotKey) {
+                for(name in hotKey) {
+                    this.register(name, hotKey[name])
                 }
             },
 
-            register : function(key, active, failed) {
+            //注册媒体键
+            registerMediaKey : function() {
+                if(FM.config.mediaKey && process.platform == 'darwin') {
+                    this.register("NOPLAY", "MediaPrevTrack")
+                    this.register("NEXT", "MediaNextTrack")
+                    this.register("STOP", "MediaStop")
+                    this.register("PAUSE", "MediaPlayPause")
+                }
+            },
+
+            //调用node-webkit注册接口
+            register : function(name, key, active, failed) {
                 var shortcut = new this.gui.Shortcut({
                     key : key,
-                    active : active,
-                    failed : failed
+                    active : active || function () {
+                        FM.obs.emit('KEY:' + name)
+                    },
+                    failed : failed || function (msg) {
+                        FM.obs.emit('KEY:REGISTER_FAIL',{
+                            name : name,
+                            key : key
+                        })
+                        console.error(this, msg)
+                    }
                 })
+                if(this.keys[name]) {
+                    this.gui.App.unregisterGlobalHotKey(this.keys[name])
+                }
                 this.gui.App.unregisterGlobalHotKey(shortcut)
                 this.gui.App.registerGlobalHotKey(shortcut)
+                this.keys[name] = shortcut
             }
         })
     </script>

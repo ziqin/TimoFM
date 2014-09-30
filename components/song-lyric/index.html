@@ -70,11 +70,15 @@
    </template>
     <script>
         Polymer('song-lyric', {
+            //当前歌曲
             song: FM.status.song,
+            //当前歌词句子列表
             lrc : [],
             ready : function() {
                 var self = this
                 self.hidden = !FM.config.lyric
+
+                //歌曲更新后，更换歌词
                 FM.obs.on('SONG:UPDATE', function(song) {
                     self.lrc = []
                     self.song = song
@@ -84,6 +88,12 @@
                     })
                 })
 
+                //临时切换歌词显示和隐藏
+                FM.obs.on('KEY:SHOW_LRC', function() {
+                    self.hidden = !self.hidden
+                })
+
+                //配置信息改变后，切换歌词是否显示
                 FM.obs.on('CONFIG:UPDATE', function(e) {
                     if(e.type == 'lyric') {
                         self.hidden = !FM.config.lyric
@@ -93,6 +103,7 @@
                     }
                 })
 
+                //歌词滚动
                 FM.obs.on('TIME:UPDATE', function(playTime) {
                     if(self.lrc.length && !self.hidden) {
                         var lines = self.lrc
@@ -115,6 +126,7 @@
                 })
             },
 
+            //获取歌词
             fetchLrc : function(song) {
                 var self = this
                 FM.appSDK.lyric({
@@ -127,6 +139,7 @@
                 })
             },
 
+            //解析歌词
             parseLrc : function(lrc) {
                 var lines = []
                 lrc.replace((/\[(\d+)\:(\d+?(\.)?\d+)\](.+)/g), function($0, m, s, dot, word) {
