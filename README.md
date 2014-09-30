@@ -5,7 +5,7 @@
 
     
 ##### download
-- [mac版本](http://pan.baidu.com/s/1F81VS)
+- [mac版本](http://pan.baidu.com/s/1bnyB5Xd)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
@@ -29,8 +29,8 @@
 
 ##### todo
 - [ ] bug修复，稳定性增强
-- [ ] 全局快捷键(50%)
-- [ ] 设置(快捷键配置，是否显示歌词，桌面通知，频谱，设置导入导出) (50%)
+- [x] 全局快捷键
+- [x] 设置(快捷键配置，是否显示歌词，桌面通知)
 - [x] ~~频道收藏~~ (暂时不能同步到服务器)
 - [x] ~~专辑搜索~~ (翻页未完成)
 - [x] ~~桌面通知~~
