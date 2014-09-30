@@ -74,6 +74,7 @@
             lrc : [],
             ready : function() {
                 var self = this
+                self.hidden = !FM.config.lyric
                 FM.obs.on('SONG:UPDATE', function(song) {
                     self.lrc = []
                     self.song = song

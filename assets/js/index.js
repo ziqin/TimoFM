@@ -19,6 +19,8 @@ FM.playlist = new playlist()
 //播放器状态
 FM.status = FM.cache.get('CACHE:STATUS', { channel : { id : 0}, playlist: [], song : {}})
 
+FM.config = FM.cache.get('CACHE:CONFIG', { hotKey : {}, mediaKey : true, notification : true, lyric : true })
+
 //播放列表变化时，触发歌曲更新事件
 Object.observe(FM.playlist, function(changes){
 	changes.forEach(function(change) {

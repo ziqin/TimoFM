@@ -93,7 +93,6 @@
 		</style>
         <div class="no-result"><span class="iconfont">&#xe646;</span>coming soon!</div>
 		<div class="setting">
-            <template>
             <section class="hot-key">
                 <h3>热键设置</h3>
                 <div>
@@ -103,13 +102,13 @@
                     <label><span>下一首</span><input name="next" placeholder="无" on-keydown="{{hotKey}}"  /></label>
                     <label><span>打开控制台</span><input name="showDevTools" placeholder="无" on-keydown="{{hotKey}}"  /></label>
                     <label><span>显示主窗口</span><input name="show" placeholder="无" on-keydown="{{hotKey}}"  /></label>
-                    <label><span>启用媒体键</span><input type="checkbox" name="mediaKey"  on-change="{{toggle}}" /></label>
+                    <label><span>启用媒体键</span><input type="checkbox" name="mediaKey"  checked="{{config.mediaKey}}" on-change="{{toggle}}" /></label>
                 </div>
             </section>
             <section>
                 <h3>其他设置</h3>
                 <div>
-                    <label><span>启用桌面通知</span><input type="checkbox" name="notification" on-change="{{toggle}}"/></label>
+                    <label><span>启用桌面通知</span><input type="checkbox" name="notification" checked="{{config.notification}}" on-change="{{toggle}}"/></label>
                     <label><span>显示歌词</span><input type="checkbox" name="lyric" checked="{{config.lyric}}" on-change="{{toggle}}" /></label>
                 </div>
             </section>
@@ -125,22 +124,17 @@
     <script src="./keymap.js"></script>
 	<script>
 	Polymer('panel-setting',{
-        config : {
-            hotKey : {},
-            mediaKey : true,
-            notification : true,
-            lyric : true
-        },
+        config : FM.config,
         ready : function() {
             var self = this
-//            FM.config = FM.cache.get('CACHE:CONFIG') || this.config
             //FM.config变化后，记录到缓存
-//            FM.obs.on('CONFIG:UPDATE', function(e) {
-//                self.config = FM.config
-//                FM.cache.set('CACHE:CONFIG', FM.config)
-//            })
+            FM.obs.on('CONFIG:UPDATE', function(e) {
+                self.config = FM.config
+                FM.cache.set('CACHE:CONFIG', FM.config)
+            })
         },
 
+        //记录快捷键
         hotKey : function(e) {
             var self = this
             var target = e.currentTarget
@@ -152,6 +146,7 @@
             }
         },
 
+        //获取快捷键组合
         getPressKey : function(e) {
             var keys = []
             var map = KeyMap.map
@@ -179,7 +174,6 @@
             var name = target.name
             FM.config[name]= target.checked
             FM.obs.emit('CONFIG:UPDATE', {type : name})
-            console.log('config-update')
         },
 
         //读取配置

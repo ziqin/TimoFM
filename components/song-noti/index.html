@@ -4,7 +4,7 @@
             ready : function() {
                 var self = this
                 FM.obs.on('SONG:UPDATE', function(song) {
-                    self.noti(song)
+                    FM.config.notification && self.noti(song)
                 })
             },
 

@@ -15,10 +15,12 @@
                     console.error(msg)
                 }
 
-                this.register("MediaPrevTrack", active, failed)
-                this.register("MediaNextTrack", active, failed)
-                this.register("MediaStop", active, failed)
-                this.register("MediaPlayPause", active, failed)
+                if(FM.config.mediaKey) {
+                    this.register("MediaPrevTrack", active, failed)
+                    this.register("MediaNextTrack", active, failed)
+                    this.register("MediaStop", active, failed)
+                    this.register("MediaPlayPause", active, failed)
+                }
             },
 
             register : function(key, active, failed) {
