@@ -58,7 +58,6 @@
                top: 20vh;
            }
 
-
        </style>
         <div class="{{lrc.length > 0 ? 'has-lyric' : ''}}">
             <template if="{{!lrc.length}}">
@@ -77,13 +76,24 @@
                 var self = this
                 FM.obs.on('SONG:UPDATE', function(song) {
                     self.lrc = []
+                    self.song = song
+                    if(self.hidden) return
                     process.nextTick(function() {
                         self.fetchLrc(song)
                     })
                 })
 
+                FM.obs.on('CONFIG:UPDATE', function(e) {
+                    if(e.type == 'lyric') {
+                        self.hidden = !FM.config.lyric
+                        if(!self.hidden && !self.lrc.length) {
+                            self.fetchLrc(self.song)
+                        }
+                    }
+                })
+
                 FM.obs.on('TIME:UPDATE', function(playTime) {
-                    if(self.lrc.length) {
+                    if(self.lrc.length && !self.hidden) {
                         var lines = self.lrc
                         for(i = 0; i<lines.length; i++) {
                             if(playTime < lines[i].time) {

@@ -1,4 +1,4 @@
-<polymer-element name="panel-setting" attributes="">
+<polymer-element name="panel-setting" attributes="config">
 	<template>
 		<style>
             :host {
@@ -12,7 +12,6 @@
                 height: 100vh;
                 overflow: auto;
                 font-size: 12px;
-                display: none;
             }
 
             section {
@@ -38,12 +37,12 @@
             label span {
                 display: inline-block;
                 text-align: right;
-                width: 50%;
+                width: 40% ;
                 margin-right: 5%;
             }
 
             input {
-                width: 40%;
+                width: 50%;
                 height: 20px;
                 border: 1px solid rgba(0,0,0,0.2);
                 background: rgba(255,255,255,0.4);
@@ -81,6 +80,7 @@
             }
 
             .no-result {
+                display: none;
                 text-align: center;
                 margin-top: 48vh;
             }
@@ -93,24 +93,24 @@
 		</style>
         <div class="no-result"><span class="iconfont">&#xe646;</span>coming soon!</div>
 		<div class="setting">
+            <template>
             <section class="hot-key">
                 <h3>热键设置</h3>
                 <div>
-                    <label><span>暂停/播放</span><input name="pause" placeholder="无" /></label>
-                    <label><span>加红心/取消红心</span><input name="star" placeholder="无" /></label>
-                    <label><span>不再播放</span><input name="noplay" placeholder="无" /></label>
-                    <label><span>下一首</span><input name="next" placeholder="无" /></label>
-                    <label><span>打开控制台</span><input name="showDevTools" placeholder="无" /></label>
-                    <label><span>隐藏/显示主窗口</span><input name="show" placeholder="无" /></label>
-                    <label><span>清空所有缓存</span><input name="clean" placeholder="无" /></label>
-                    <label><span>启用媒体键(MAC)</span><input type="checkbox" checked /></label>
+                    <label><span>暂停/播放</span><input  name="pause" placeholder="无" on-keydown="{{hotKey}}" /></label>
+                    <label><span>红心</span><input name="star" placeholder="无" on-keydown="{{hotKey}}" /></label>
+                    <label><span>不再播放</span><input name="noplay" placeholder="无" on-keydown="{{hotKey}}"  /></label>
+                    <label><span>下一首</span><input name="next" placeholder="无" on-keydown="{{hotKey}}"  /></label>
+                    <label><span>打开控制台</span><input name="showDevTools" placeholder="无" on-keydown="{{hotKey}}"  /></label>
+                    <label><span>显示主窗口</span><input name="show" placeholder="无" on-keydown="{{hotKey}}"  /></label>
+                    <label><span>启用媒体键</span><input type="checkbox" name="mediaKey"  on-change="{{toggle}}" /></label>
                 </div>
             </section>
             <section>
                 <h3>其他设置</h3>
                 <div>
-                    <label><span>启用桌面通知</span><input type="checkbox" name="notification" checked /></label>
-                    <label><span>显示歌词</span><input type="checkbox" name="showLrc" /></label>
+                    <label><span>启用桌面通知</span><input type="checkbox" name="notification" on-change="{{toggle}}"/></label>
+                    <label><span>显示歌词</span><input type="checkbox" name="lyric" checked="{{config.lyric}}" on-change="{{toggle}}" /></label>
                 </div>
             </section>
             <section>
@@ -122,18 +122,64 @@
             </section>
 		</div>
 	</template>
+    <script src="./keymap.js"></script>
 	<script>
 	Polymer('panel-setting',{
-        path : './setting.json',
+        config : {
+            hotKey : {},
+            mediaKey : true,
+            notification : true,
+            lyric : true
+        },
         ready : function() {
             var self = this
-//            self.readConfig(self.path)
+//            FM.config = FM.cache.get('CACHE:CONFIG') || this.config
+            //FM.config变化后，记录到缓存
+//            FM.obs.on('CONFIG:UPDATE', function(e) {
+//                self.config = FM.config
+//                FM.cache.set('CACHE:CONFIG', FM.config)
+//            })
         },
 
-        //配置改变后，自动保存
-        configChanged : function() {
-            FM.config = this.config
-            this.saveConfig(this.path, this.config)
+        hotKey : function(e) {
+            var self = this
+            var target = e.currentTarget
+            var name = target.name
+            target.value = self.getPressKey(e)
+            if(target.value != FM.config.hotKey[name]) {
+                FM.config.hotKey[name] = self.getPressKey(e)
+                FM.obs.emit('CONFIG:UPDATE', {type : 'hotKey'})
+            }
+        },
+
+        getPressKey : function(e) {
+            var keys = []
+            var map = KeyMap.map
+            if(e.metaKey) {
+               keys.push(map[91][0])
+            }
+            if(e.shiftKey) {
+                keys.push(map[16][0])
+            }
+            if(e.ctrlKey) {
+                keys.push(map[17][0])
+            }
+            if(e.altKey) {
+                keys.push(map[18][0])
+            }
+            if(e.keyCode && [16,17,18,91,92].indexOf(e.keyCode) < 0) {
+                keys.push(map[e.keyCode])
+            }
+            return keys.join('+')
+        },
+
+        //切换开关状态
+        toggle : function(e) {
+            var target = e.currentTarget
+            var name = target.name
+            FM.config[name]= target.checked
+            FM.obs.emit('CONFIG:UPDATE', {type : name})
+            console.log('config-update')
         },
 
         //读取配置
