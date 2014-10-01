@@ -72,7 +72,9 @@
                 //歌曲更新后，更新颜色
                 FM.obs.on('SONG:UPDATE', function(song) {
                     //changing状态用于控制封面透明度渐变效果
-                    self.changing = true
+                    if(song.picture != self.info.picture) {
+                        self.changing = true
+                    }
                     self.info = song
                     self.updateColor(self.info.picture)
                 })
@@ -104,7 +106,7 @@
             updateColor : function(src) {
                 if(!src) return
                 var img = this.shadowRoot.querySelector('img')
-                img.onload = function ( ) {
+                img.onload = function () {
                     var colors =  Colibri.extractImageColors( img, 'css' )
                     FM.obs.emit('COLOR:UPDATE', colors)
                 }

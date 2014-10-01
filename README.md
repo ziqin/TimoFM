@@ -1,13 +1,15 @@
 豆瓣电台 node-webkit版  -----**(MAC平台第二好用的豆瓣电台)**
 
+
 ##### 为什么**又**一个豆瓣电台 ?
 我自己是豆瓣电台的重度用户，用过最好的客户端是windows下的[kfstorm](http://www.kfstorm.com/blog/doubanfm/)，从各方面来说，这个客户端都堪称完美，唯一的遗憾是没有mac版本的，而mac平台下的各种豆瓣电台都不太好用，之前一直使用的是[diumoo](http://diumoo.net)，感觉还是缺了一些功能，比如频道搜索，专辑搜索等。所以用[node-webkit](https://github.com/rogerwang/node-webkit)和[Polymer](http://www.polymer-project.org/)做了这个客户端，主要是解决自己日常使用的问题。
 
     
 ##### download
-- [mac版本](http://pan.baidu.com/s/1bnyB5Xd)
+- [mac版本](http://pan.baidu.com/s/1pJmbOJx)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
+    
     
 ##### 特点
 - 界面高度抄袭KFStorm的客户端 (嗯，就是这样)
@@ -21,6 +23,7 @@
 - 支持歌词显示
 - 支持桌面通知
 
+
 ##### 截图
 <img src="assets/images/dbfm9.png" width="400" height=200 />
 
@@ -30,11 +33,14 @@
 
 <img src="assets/images/dbfm6.png" width="400"  height=200  />
 
+<img src="assets/images/dbfm10.png" width="400"  height=200  />
+
+
 ##### todo
 - [ ] bug修复，稳定性增强
-- [ ]任务栏图标根据红心变化
-- [ ]自动检查更新
-- [ ]界面字体自定义配置
+- [ ] 任务栏图标根据红心变化
+- [ ] 界面字体自定义配置
+- [ ] 收听相似歌曲
     
 
 ##### 贡献 [How-to-run-apps](https://github.com/rogerwang/node-webkit/wiki/How-to-run-apps)
