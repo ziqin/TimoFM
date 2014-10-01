@@ -3,7 +3,8 @@
     </template>
     <script>
         Polymer('x-hotkey',{
-            keys : {},
+            //缓存注册过的键
+            keys: {},
             ready : function() {
                 var self = this
                 this.gui = require('nw.gui');
@@ -25,13 +26,20 @@
                 }
             },
 
+            //媒体键
+            mediaKeys : {
+                MediaPrevTrack : "NOPLAY",
+                MediaNextTrack : "NEXT",
+                MediaStop : "STOP",
+                MediaPlayPause : "PAUSE"
+            },
+
             //注册媒体键
             registerMediaKey : function() {
                 if(FM.config.mediaKey && process.platform == 'darwin') {
-                    this.register("NOPLAY", "MediaPrevTrack")
-                    this.register("NEXT", "MediaNextTrack")
-                    this.register("STOP", "MediaStop")
-                    this.register("PAUSE", "MediaPlayPause")
+                    for(key in this.mediaKeys) {
+                        this.register(this.mediaKeys[key], key)
+                    }
                 }
             },
 
@@ -50,8 +58,10 @@
                         console.error(this, msg)
                     }
                 })
-                if(this.keys[name]) {
+                //如果之前注册过同样动作的键，则取消之前的注册，媒体键除外
+                if(this.keys[name] && !this.mediaKeys[this.keys[name].key]) {
                     this.gui.App.unregisterGlobalHotKey(this.keys[name])
+                    delete this.keys[name]
                 }
                 this.gui.App.unregisterGlobalHotKey(shortcut)
                 this.gui.App.registerGlobalHotKey(shortcut)

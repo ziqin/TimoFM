@@ -7,14 +7,15 @@
 		<style>
             .progress {
                 position: relative;
-                margin: 0 20px 30px;
+                margin: 0 20px 25px;
                 height: 2px;
                 padding: 1px;
                 background: #999;
                 border-radius: 2px;
+                box-shadow: 0 0 1px rgba(0,0,0,0.5) inset;
             }
 
-            .progress div {
+            .progress div.outer {
                 position: relative;
             }
 
@@ -24,6 +25,7 @@
                 top: 0px;
                 width: 0;
                 height: 2px;
+                background: #fff;
             }
 
             .progress time {
@@ -39,6 +41,29 @@
             .progress .dt {
                 right: 0
             }
+            
+            .player-ctrl-extra {
+                position: absolute;
+                top: -8vh;
+                width: 100%;
+                text-align: center;
+            }
+
+            .player-ctrl-extra i {
+                cursor: pointer;
+                margin-right: 5px;
+            }
+
+            .player-ctrl-extra i.enable {
+                color: #ff0000;
+            }
+
+            .player-ctrl-extra i:last-child {
+                font-size: 13px;
+                margin-right: 0;
+                vertical-align: 1px;
+            }
+
 
             .player-ctrl {
                 text-align: center;
@@ -72,8 +97,16 @@
 		<div class="progress c1 bg2">
             <time class="pt">{{time.pmt}}</time>
             <time class="dt">{{time.dmt }}</time>
-            <div>
+            <div class="outer">
                 <span class="bg" style="width:{{time.percent}}%;"></span>
+            </div>
+            <div class="player-ctrl-extra">
+                <template if="{{song.prev}}">
+                    <i title="重听上一首歌曲" class="iconfont"  on-click="{{playPrevSong}}">&#xe610;</i>
+                </template>
+                <i title="单曲循环" class="iconfont {{isSingleCycle ? 'enable' : ''}}" on-click="{{singleCycle}}">&#xe60e;</i>
+                <!--<i title="听相似的歌曲" class="iconfont"  on-click="{{playSimilar}}">&#xe60d;</i>-->
+                <i title="显示歌词" class="iconfont {{lyric ? 'enable' : ''}}" on-click="{{toggleLyric}}">&#xe613;</i>
             </div>
         </div>
 
@@ -87,12 +120,23 @@
     <script>
     Polymer('song-player', {
         time : {},
+        //是否单曲循环
+        isSingleCycle : false,
+        //是否显示歌词
+        lyric : FM.config.lyric,
+        //当前歌曲
         song : FM.status.song,
         ready : function() {
             var self = this
             self.player = self.shadowRoot.querySelector('x-audio').player
 
             FM.obs.on('SONG:UPDATE', function(e) {
+                var prev = self.song
+                //TODO 是否应该把playlist改成linkedlist实现
+                //避免循环引用
+                if((prev.sid != e.sid) && (!prev.prev || (prev.prev.sid != e.sid))) {
+                    e.prev = prev
+                }
                 self.song = e
             })
 
@@ -108,16 +152,22 @@
                 FM.obs.emit('TIME:UPDATE', pt)
             })
 
+            //歌曲播放结束
             self.player.addEventListener('ended', function() {
-                console.log('ended')
-                FM.playlist.next()
+                if(self.isSingleCycle) {
+                    self.player.load()
+                } else {
+                    FM.playlist.next()
+                }
             })
 
+            //暂停
             self.player.addEventListener('pause', function() {
                 console.log('pause')
                 self.playing = false
             })
 
+            //播放
             self.player.addEventListener('playing', function() {
                 console.log('playing')
                 self.playing = true
@@ -131,6 +181,7 @@
             FM.obs.on('KEY:NOPLAY', self.neverPlayAgain.bind(self))
         },
 
+        //格式化时间
         formatTime : function(n) {
             var m = Math.ceil(n/60)
             var s = Math.ceil(n%60)
@@ -179,6 +230,29 @@
                 if(err) return console.error(err)
                 self.song.like = !self.song.like
             })
+        },
+
+        //切换歌词显示
+        toggleLyric : function() {
+            FM.config.lyric = !FM.config.lyric
+            this.lyric = FM.config.lyric
+            FM.obs.emit('CONFIG:UPDATE', {
+                type : 'lyric'
+            })
+        },
+
+        //听上一首歌曲
+        playPrevSong : function() {
+            var self = this
+            if(this.song.prev) {
+                FM.obs.emit('SONG:UPDATE', this.song.prev)
+            }
+        },
+
+        //单曲循环
+        singleCycle : function() {
+            var self = this
+            self.isSingleCycle = !self.isSingleCycle
         }
     })
     </script>

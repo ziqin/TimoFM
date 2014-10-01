@@ -18,6 +18,12 @@
                 left: 0;
                 top: 0;
                 cursor: pointer;
+                opacity: 1;
+                transition: opacity 0.4s ease-in;
+            }
+
+            a.changing {
+                opacity: 0.5;
             }
 
             song-lyric {
@@ -37,7 +43,7 @@
             .c2, body /deep/ .c2 {color: %(c2)}
             .cb, body /deep/ .cb {color: %(bg)}
         </div>
-        <a url="http://music.douban.com{{info.album}}" on-click={{jump2douban}}>
+        <a url="http://music.douban.com{{info.album}}" on-click={{jump2douban}} class="{{changing ? 'changing' : ''}}">
             <img src={{info.picture}} />
         </a>
         <song-lyric></song-lyric>
@@ -45,7 +51,9 @@
     <script src="./colibri.js"></script>
     <script>
         Polymer('song-face', {
-            info : FM.status.song,
+            info : {
+                picture : 'http://img3.douban.com/pics/music/default_cover/lpic/music-default.gif'
+            },
             ready : function() {
                 var self = this
 
@@ -63,6 +71,8 @@
 
                 //歌曲更新后，更新颜色
                 FM.obs.on('SONG:UPDATE', function(song) {
+                    //changing状态用于控制封面透明度渐变效果
+                    self.changing = true
                     self.info = song
                     self.updateColor(self.info.picture)
                 })
@@ -76,6 +86,7 @@
                         document.body.appendChild(colorStyle)
                     }
                     colorStyle.innerHTML = self.getColorText(colors)
+                    self.changing = false
                 })
             },
 
@@ -92,13 +103,12 @@
             //图片变换后，获取主要颜色
             updateColor : function(src) {
                 if(!src) return
-                var img = new Image( )
+                var img = this.shadowRoot.querySelector('img')
                 img.onload = function ( ) {
                     var colors =  Colibri.extractImageColors( img, 'css' )
                     FM.obs.emit('COLOR:UPDATE', colors)
                 }
                 img.crossOrigin = 'Anonymous'
-                img.src = src
             },
 
             //替换字符串模板

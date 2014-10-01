@@ -9,7 +9,6 @@
                 bottom: 0;
                 background: #fff;;
                 z-index: 1000;
-                -webkit-transition: opacity 1s ease-in;
                 transition: opacity 1s ease-in;
                 pointer-events:none;
             }
@@ -19,11 +18,7 @@
         Polymer('x-mask',{
             enteredView : function() {
                 var self = this
-                if(FM.status.song.url) {
-                    self.hide()
-                } else {
-                    FM.obs.on('SONG:UPDATE', self.hide.bind(self))
-                }
+                FM.obs.on('SONG:UPDATE', self.hide.bind(self))
             },
             hide : function() {
                 var self = this

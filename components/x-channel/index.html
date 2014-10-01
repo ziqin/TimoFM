@@ -1,4 +1,4 @@
-<polymer-element name="x-channel" attributes="channel small active">
+<polymer-element name="x-channel" attributes="channel active">
     <template>
         <style>
             div {
@@ -6,14 +6,15 @@
                 height: 20vh;
                 margin: 2vh 1.5vh 2vh 0;
                 text-align: left;
-                background: rgba(255,255,255,0.1);
+                background: rgba(255,255,255,0.2);
+                border: 1px solid rgba(255,255,255,0.2);
                 box-shadow: 0 0 1px rgba(0,0,0,0.15);
                 cursor: {{channel.cantPlay ? 'not-allowed' : 'pointer'}};
             }
 
             div:hover,div.active {
-                background: rgba(255,255,255,0.2);
-                -webkit-transition: background 0.2s ease-in;
+                background: rgba(255,255,255,0.4);
+                transition: background 0.2s ease-in;
             }
 
             img {
@@ -28,7 +29,7 @@
                 position: absolute;
                 left: 21vh;
                 top: 1vh;
-                right: 1vh;
+                right: 2vw;
                 margin: 0;
                 height: 7vh;
                 line-height: 7vh;
@@ -84,45 +85,12 @@
             div:hover i, div:hover b {
                 cursor: pointer;
                 opacity: 1;
-                -webkit-transition: opacity 0.4s ease-in;
+                transition: opacity 0.4s ease-in;
             }
 
-            .small {
-                display: inline-block;
-                height: 8vh;
-                line-height: 8vh;
-                width: 17vw;
-                margin: 0;
-                padding: 0.5vw;
-                background: rgba(255, 255, 255, 0.1);
-                text-align: center;
-                cursor: pointer;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                box-shadow: none;
-            }
-
-            .small:hover,.small.active {
-                -webkit-transition: all 0.4s ease-in;
-                transition: all 0.4s ease-in;
-                background: rgba(200, 200, 200, 0.2);
-                color: #fff;
-            }
-
-            .small img, .small i, .small b, .small p {
-                display: none;
-            }
-
-            .small h3 {
-                position: static;
-                height: 8vh;
-                line-height: 8vh;
-                font-size: 12px;
-            }
         </style>
         <div data-id="{{channel.id}}" on-click="{{selectChannel}}"
-             class="{{active? 'active' : ''}} {{small? 'small':''}}">
+             class="{{active? 'active' : ''}}">
             <img src="{{channel.cover}}" />
             <h3>{{channel.name}}
                 <template if="{{channel.url}}">

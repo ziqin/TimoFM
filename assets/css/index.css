@@ -12,8 +12,8 @@ ul, li {
 }
 
 body {
+    font-family: Papyrus;
     transition: background 0.4s ease-in;
-    webkit-transition: background 0.4s ease-in;
 }
 
 #wrapper {
@@ -46,6 +46,11 @@ body {
     height: 16vh;
     line-height: 16vh;
     text-align: center;
+    transition: font-size 0.3s ease-in;
+}
+
+.sidebar .nav li:hover {
+    font-size: 18px;
 }
 
 .sidebar .content {
@@ -71,7 +76,6 @@ body {
 .sidebar .content > *.active {
     opacity: 1;
     transition: all 0.3s ease-in;
-    webkit-transition: all 0.3s ease-in;
     -webkit-transform: scale(1);
     z-index: 2;
 }
@@ -98,7 +102,6 @@ song-face {
     position: absolute;
     top: 0;
     transition: left 0.4s ease-in;
-    webkit-transition: left 0.4s ease-in;
     width: 50%;
     z-index: 10;
 }
@@ -115,11 +118,12 @@ x-view {
 
 @font-face {
     font-family: 'iconfont';
-    src:url('http://at.alicdn.com/t/font_1412069029_0405693.woff') format('woff');
+    src:url('http://at.alicdn.com/t/font_1412137972_0042686.woff') format('woff');
 }
 
 body /deep/ .iconfont{
     font-family:"iconfont";
+    font-style: normal;
 }
 
 body /deep/ ::-webkit-scrollbar {

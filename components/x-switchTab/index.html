@@ -20,6 +20,7 @@
                         contentItems.forEach(function(o, index) {
                             if(i == index) {
                                 o.classList.add(self.activeClass)
+                                o.setAttribute('actived', true)
                             } else {
                                 navItems[index].classList.remove(self.activeClass)
                                 o.classList.remove(self.activeClass)

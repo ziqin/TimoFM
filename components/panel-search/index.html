@@ -1,16 +1,10 @@
-<polymer-element name="panel-search" attributes="">
+<polymer-element name="panel-search" attributes="actived">
 	<template>
 		<style>
             :host {
                 display: block;
                 height: 100vh;
                 text-align: center;
-            }
-
-            ul, li {
-                margin: 0;
-                padding: 0;
-                list-style: none;
             }
 
             .search {
@@ -31,57 +25,139 @@
 
             input[type="search"]:focus {
                 background: rgba(255,255,255,0.8);
-                -webkit-transition: background 0.2s ease-in;
+                transition: background 0.2s ease-in;
+            }
+
+            @-webkit-keyframes  loading {
+                from {-webkit-transform: rotate(0deg);}
+                to {-webkit-transform: rotate(360deg);}
+            }
+
+            .loading {
+                text-align: center;
+                margin-top: 10px;
+            }
+            .loading i {
+                font-style: normal;
+                -webkit-animation:loading 2s infinite linear ;
+            }
+
+            .no-result {
+                font-size: 12px;
+                line-height: 80vh;
+            }
+
+            .no-result i {
+                font-size: 16px;
+                vertical-align: 0;
+                margin-right: 5px;
             }
 		</style>
-        <div class="search">
-           <input type="search" id="searchInput" placeholder="搜索专辑"  on-keyup="{{search}}" value="{{keyword}}" />
-            <ul>
-                <template repeat="{{item in channels}}">
-                    <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
-                </template>
-            </ul>
+        <div class="search" id="search">
+           <input type="search" id="searchInput" placeholder="搜索专辑"  on-keyup="{{keySearch}}" value="{{oldKeyword}}" />
+            <template repeat="{{item in channels}}">
+                <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
+            </template>
+            <template if="{{noSearchResult}}">
+                <div class="no-result"><i class="iconfont">&#xe60a;</i>没有找到你要的</div>
+            </template>
+            <template if="{{loading}}">
+                <div class="loading"><i class="iconfont">&#xe63b;</i></div>
+            </template>
         </div>
 	</template>
 	<script>
 	Polymer('panel-search',{
-        page: 0,
+        //专辑频道列表
+        channels : [],
+        //总数量
+        count : 0,
+        //选中的频道id
         selectedId : FM.status.channel.id,
         ready : function() {
             var self = this
             FM.obs.on('CHANNEL:UPDATE', function(channel) {
                 self.selectedId = channel.id
             })
-
-            self.restoreSearch()
         },
 
-        //从music.douban.com 搜索专辑
-        search : function(e) {
+        //面板可见时，才开始初始化状态，延迟加载内容
+        activedChanged : function() {
+            if(!this.loaded) {
+                this.loaded = true
+                this.restoreSearch()
+                this.bindPageEvent()
+            }
+        },
+
+        //绑定翻页事件
+        bindPageEvent : function() {
             var self = this
+            var delay = null
+            var box = this.$.search
+            box.addEventListener('scroll', function() {
+                if(!self.loading && self.channels.length < self.count) {
+                    delay && global.clearTimeout(delay)
+                    delay = global.setTimeout(function() {
+                        if(box.scrollHeight - box.scrollTop - box.clientHeight < 10) {
+                            self.search(self.keyword, self.channels.length)
+                        }
+                    },400)
+                }
+            })
+        },
+
+        //回车搜索
+        keySearch : function(e) {
             var isEnterKey = e.keyCode == 13
             var keyword = this.$.searchInput.value.trim()
             if(isEnterKey && keyword) {
+                this.search(keyword, 0)
+            }
+        },
+
+        //从music.douban.com 搜索专辑
+        search : function(keyword, start) {
+            var self = this
+            if(!self.loading) {
+                self.loading = true
                 FM.appSDK.music_search({
-                    search_text : keyword,
-                    start : self.page*15
-                }, function(err, channels) {
-                    if(channels) {
-                        self.channels = channels
-                        FM.cache.set('CACHE:SEARCHED_SUBJECTS',{
-                            channels : channels,
-                            keyword : keyword
-                        })
+                    search_text: keyword,
+                    start: start
+                }, function (err, result) {
+                    self.loading = false
+                    if (result.subjects) {
+                        if(self.keyword != keyword) {
+                            self.channels = result.subjects
+                        } else {
+                            self.channels = self.channels.concat(result.subjects)
+                        }
+                        self.count = result.count
+                        self.keyword = keyword
+                        self.noSearchResult = result.subjects.length < 1
+                        self.cacheSearch()
                     }
                 })
             }
         },
-        //回复搜索状态
+
+        //缓存搜索结果
+        cacheSearch : function() {
+            FM.cache.set('CACHE:SEARCHED_SUBJECTS', {
+                channels: this.channels,
+                count: this.count,
+                keyword : this.keyword
+            })
+        },
+
+        //恢复搜索状态
         restoreSearch : function() {
             var searchCache = FM.cache.get('CACHE:SEARCHED_SUBJECTS')
             if(searchCache) {
                 this.channels = searchCache.channels
                 this.keyword = searchCache.keyword
+                this.count = searchCache.count
+                this.oldKeyword = this.keyword
             }
         }
 	})

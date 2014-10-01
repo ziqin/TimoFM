@@ -1,3 +1,4 @@
+//from https://github.com/RobertWHurst/KeyboardJS
 ;(function() {
 	var usLocale = {
 		"map": {

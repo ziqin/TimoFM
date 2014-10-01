@@ -16,7 +16,7 @@
 
            .has-lyric {
                background: rgba(0,0,0,0.4);
-               -webkit-transition: background 0.5s ease-in;
+               transition: background 0.5s ease-in;
            }
 
            p {
@@ -30,7 +30,7 @@
                font-size: 13px;
                text-align: center;
                opacity: 0;
-               -webkit-transition: all 0.5s ease-in;
+               transition: all 0.5s ease-in;
            }
 
            p.no-lrc {
@@ -88,18 +88,15 @@
                     })
                 })
 
-                //临时切换歌词显示和隐藏
+                //快捷键切换歌词显示
                 FM.obs.on('KEY:SHOW_LRC', function() {
-                    self.hidden = !self.hidden
+                    self.toggleLyric()
                 })
 
-                //配置信息改变后，切换歌词是否显示
+                //歌词配置信息改变后，切换歌词是否显示
                 FM.obs.on('CONFIG:UPDATE', function(e) {
                     if(e.type == 'lyric') {
-                        self.hidden = !FM.config.lyric
-                        if(!self.hidden && !self.lrc.length) {
-                            self.fetchLrc(self.song)
-                        }
+                        self.toggleLyric()
                     }
                 })
 
@@ -124,6 +121,15 @@
                         }
                     }
                 })
+            },
+
+            //切换歌词显示
+            toggleLyric : function() {
+                var self = this
+                self.hidden = !FM.config.lyric
+                if(!self.hidden && !self.lrc.length) {
+                    self.fetchLrc(self.song)
+                }
             },
 
             //获取歌词

@@ -21,15 +21,15 @@
         }
 
         .nav {
-            border-bottom: 1px solid rgba(200, 200, 200, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .nav li {
             position: relative;
             height: 8vh;
-            line-height: 8vh;
+            line-height: 10vh;
             width: 12vw;
-            margin-right: -0.25em;
+            margin-right: -0.5em;
             display: inline-block;
             list-style: none;
             cursor: pointer;
@@ -40,7 +40,7 @@
         }
 
         .nav li.active {
-            background: rgba(200, 200, 200, 0.3);
+            background: rgba(255, 255, 255, 0.3);
             z-index: 2;
             -webkit-transform: scale(1);
         }
@@ -70,7 +70,6 @@
 
         section.active {
             -webkit-transform: scale(1);
-            -webkit-transition: all 0.4s ease-in;
             transition: all 0.4s ease-in;
             opacity: 1;
             z-index: 2
@@ -87,7 +86,7 @@
 
         input[type="search"]:focus {
             background: rgba(255,255,255,0.8);
-            -webkit-transition: background 0.2s ease-in;
+            transition: background 0.2s ease-in;
         }
 
         .no-result {
@@ -95,28 +94,71 @@
             text-align: center;
             line-height: 75vh;
         }
+
+        .no-result i {
+            font-size: 16px;
+            vertical-align: 0;
+            margin-right: 5px;
+        }
+
+        .small {
+            text-align: justify;
+        }
+
+        .small x-channel{
+            display:inline-block;
+            margin-right: 1.9vh;
+            font-size: 0;
+        }
+
+        .small /deep/ div {
+            height: 16vh;
+            line-height: 16vh;
+            width: 17.3vw;
+            margin: 0;
+            text-align: center;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .small /deep/ div:hover,.small /deep/ div.active {
+        }
+
+        .small /deep/ img, .small /deep/ i, .small /deep/ b, .small /deep/ p {
+            display: none;
+        }
+
+        .small /deep/ h3 {
+            position: static;
+            height: 16vh;
+            line-height: 16vh;
+            margin: 0;
+            font-size: 12px;
+        }
     </style>
     <x-switchTab>
         <ul class="nav">
             <li class="active">固定兆赫</li>
-            <li>收藏兆赫</li>
-            <li>兆赫搜索</li>
+            <li on-click="{{restoreFav}}">收藏兆赫</li>
+            <li on-click="{{restoreSearch}}">兆赫搜索</li>
         </ul>
         <div class="content">
             <section class="small active">
                 <template repeat="{{item in personalChannels}}">
-                    <x-channel channel="{{item}}" small="true" active="{{item.id == selectedId}}"></x-channel>
+                    <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
                 </template>
                 <template repeat="{{item in publicChannels}}">
-                    <x-channel channel="{{item}}" small="true" active="{{item.id == selectedId}}"></x-channel>
+                    <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
                 </template>
             </section>
-            <section class="small">
+            <section>
                 <template if={{favChannels.length}} repeat="{{item in favChannels}}">
                    <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
                 </template>
                 <template if="{{!favChannels.length}}">
-                    <div class="no-result">还没有收藏兆赫</div>
+                    <div class="no-result"><i class="iconfont">&#xe60a;</i>还没有收藏兆赫</div>
                 </template>
             </section>
             <section class="search">
@@ -124,6 +166,9 @@
                 <ul>
                     <template repeat="{{item in searchChannels}}">
                         <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
+                    </template>
+                    <template if="{{noSearchResult}}">
+                        <div class="no-result"><i class="iconfont">&#xe60a;</i>没有找到你要的</div>
                     </template>
                 </ul>
             </section>
@@ -135,23 +180,22 @@
         publicChannels : [],
         personalChannels : [],
         favChannels : [],
-
+        searchChannels : [],
         selectedId : FM.status.channel.id,
 
         ready : function() {
             var self = this
             this.publicChannels = this.getPublicChannels()
             this.personalChannels = this.getPersonalChannels()
-            this.favChannels = this.getFavChannels()
-            this.restoreSearch()
 
             //频道被选择时
             FM.obs.on('CHANNEL:UPDATE', function(channel) {
-                this.selectedId = channel.id
+                self.selectedId = channel.id
             })
 
             //频道被收藏时
             FM.obs.on('CHANNEL:FAV', function(channel) {
+                self.restoreFav()
                 var isFav =  self.favChannels.some(function(item) {
                     return channel.id == item.id
                 })
@@ -163,6 +207,7 @@
 
             //频道被取消收藏时
             FM.obs.on('CHANNEL:UNFAV', function(channel) {
+                self.restoreFav()
                 self.favChannels = self.favChannels.filter(function(item) {
                    return item.id != channel.id
                 })
@@ -185,6 +230,7 @@
             return FM.cache.get('CACHE:FAV_CHANNELS') || []
         },
 
+        //缓存收藏的频道
         setFavChannels : function() {
             FM.cache.set('CACHE:FAV_CHANNELS', this.favChannels)
         },
@@ -198,23 +244,38 @@
                 FM.webSDK.search({
                     query : keyword
                 }, function(err, channels) {
-                    if(channels) {
+                    if(channels && channels.length) {
                         self.searchChannels = channels
-                        FM.cache.set('CACHE:SEARCHED_CHANNELS', {
-                            keyword : keyword,
-                            channels :channels
-                        })
+                        self.noSearchResult = false
+                    } else {
+                        self.searchChannels = []
+                        self.noSearchResult = true
                     }
+                    FM.cache.set('CACHE:SEARCHED_CHANNELS', {
+                        keyword : keyword,
+                        channels :channels
+                    })
                 })
+            }
+        },
+
+        //恢复收藏的频道
+        restoreFav : function() {
+            if(!this.favRestored) {
+                this.favChannels = this.getFavChannels()
+                this.favRestored = true
             }
         },
 
         //回复搜索状态
         restoreSearch : function() {
-            var searchCache = FM.cache.get('CACHE:SEARCHED_CHANNELS')
-            if(searchCache) {
-                this.searchChannels = searchCache.channels
-                this.searchKey = searchCache.keyword
+            if(!this.searchRestored) {
+                var searchCache = FM.cache.get('CACHE:SEARCHED_CHANNELS')
+                if (searchCache) {
+                    this.searchChannels = searchCache.channels
+                    this.searchKey = searchCache.keyword
+                }
+                this.searchRestored = true
             }
         }
     })
