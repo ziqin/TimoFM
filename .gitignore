@@ -1,6 +1,7 @@
 .DS_*
 *.sublime*
 /node_modules
+/.idea
 psd
 thumb
 *.log

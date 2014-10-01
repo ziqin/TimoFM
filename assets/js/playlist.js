@@ -66,6 +66,7 @@ Playlist.prototype = {
 	concat : function(list) {
 		this._list = this._list.concat(list)
 		this.obs.emit(this.updateEvent, this._list)
+		this.obs.emit(this.moveEvent, this.current)
 		return this._list
 	},
 
@@ -79,6 +80,15 @@ Playlist.prototype = {
 	//获取当前项，以及当前项后面的所有项
 	getRest : function() {
 		return this._list.slice(this.index)
+	},
+
+	//清空列表
+	clean : function() {
+		this._list = []
+		this.index = 0
+		this.obs.emit(this.updateEvent, this._list)
+		this.obs.emit(this.moveEvent, this.current)
+		return this._list
 	}
 }
 

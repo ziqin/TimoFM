@@ -19,26 +19,17 @@ FM.playlist = new playlist(FM.obs)
 //播放器状态
 FM.status = FM.cache.get('CACHE:STATUS', { channel : { id : 0}, playlist: [], song : {}})
 //播放器配置
-FM.config = FM.cache.get('CACHE:CONFIG', { hotKey : {}, mediaKey : true, notification : true, lyric : true })
+FM.config = FM.cache.get('CACHE:CONFIG', { hotKey : {}, mediaKey : true, notification : true, lyric : false})
 
 //播放器状态变化时，触发状态更新事件
 Object.observe(FM.status, function(changes) {
 	FM.cache.set('CACHE:STATUS', FM.status)
 })
 
-//根据当前的频道id拉取歌曲列表
-function fetchSongs () {
-	FM.appSDK.songs({
-		channel_id : FM.status.channel.id,
-		sid : FM.status.song.id
-	},function(err, songs) {
-		if(err) return console.error(err)
-		FM.playlist.concat(songs)
-	})
-}
-
 //登录后重新拉取列表
-FM.obs.on('LOGIN:UPDATE', fetchSongs)
+FM.obs.on('LOGIN:UPDATE', function() {
+	FM.playlist.clean()
+})
 
 //列表发生变化后，缓存状态
 FM.obs.on('PLAYLIST:UPDATE', function(list) {
@@ -47,7 +38,13 @@ FM.obs.on('PLAYLIST:UPDATE', function(list) {
 
 	//列表歌曲不足时自动补充
 	if(FM.playlist.isEmpty(1) || FM.playlist.isEnd(1)) {
-		fetchSongs()
+		FM.appSDK.songs({
+			channel_id : FM.status.channel.id,
+			sid : FM.status.song.id
+		},function(err, songs) {
+			if(err) return console.error(err)
+			FM.playlist.concat(songs)
+		})
 	}
 })
 
