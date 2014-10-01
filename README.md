@@ -1,6 +1,6 @@
 豆瓣电台 node-webkit版  -----**(MAC平台第二好用的豆瓣电台)**
 
-##### 为什么**又**一个豆瓣电台
+##### 为什么**又**一个豆瓣电台 ?
 我自己是豆瓣电台的重度用户，用过最好的客户端是windows下的[kfstorm](http://www.kfstorm.com/blog/doubanfm/)，从各方面来说，这个客户端都堪称完美，唯一的遗憾是没有mac版本的，而mac平台下的各种豆瓣电台都不太好用，之前一直使用的是[diumoo](http://diumoo.net)，感觉还是缺了一些功能，比如频道搜索，专辑搜索等。所以用[node-webkit](https://github.com/rogerwang/node-webkit)和[Polymer](http://www.polymer-project.org/)做了这个客户端，主要是解决自己日常使用的问题。
 
     
@@ -10,13 +10,16 @@
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
 ##### 特点
-- 界面高度抄袭KFStorm的客户端
+- 界面高度抄袭KFStorm的客户端 (嗯，就是这样)
 - 基于HTML5，NodeJS, Polymer开发，理论上可以跨平台，前端同学有需求也可以自己改
 - 支持用户创建的兆赫搜索
 - 支持专辑模糊搜索（专辑名称，艺术家名称）
-- 支持全局快捷键
 - 支持频道收藏（暂时只能收藏在本地，未同步服务器）
-- 支持歌词滚动显示
+- 支持全局快捷键
+- 支持单曲循环
+- 支持播放上一首 (咦？)
+- 支持歌词显示
+- 支持桌面通知
 
 ##### 截图
 <img src="assets/images/dbfm9.png" width="400" height=200 />
@@ -29,15 +32,9 @@
 
 ##### todo
 - [ ] bug修复，稳定性增强
-- [x] 全局快捷键
-- [x] 设置(快捷键配置，是否显示歌词，桌面通知)
-- [x] ~~频道收藏~~ (暂时不能同步到服务器)
-- [x] ~~专辑搜索~~ (翻页未完成)
-- [x] ~~桌面通知~~
-- [x] ~~歌词~~ (因为技术原因，不能支持桌面透明窗口，所以目前歌词是放在主界面上)
-- 任务栏图标根据红心变化
-- 自动检查更新
-- 优化字体显示
+- [ ]任务栏图标根据红心变化
+- [ ]自动检查更新
+- [ ]界面字体自定义配置
     
 
 ##### 贡献 [How-to-run-apps](https://github.com/rogerwang/node-webkit/wiki/How-to-run-apps)

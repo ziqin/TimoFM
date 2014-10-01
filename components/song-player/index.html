@@ -44,8 +44,8 @@
             
             .player-ctrl-extra {
                 position: absolute;
-                top: -8vh;
-                width: 100%;
+                top: -8.6vh;
+                right: 6vw;
                 text-align: center;
             }
 
@@ -101,7 +101,7 @@
                 <span class="bg" style="width:{{time.percent}}%;"></span>
             </div>
             <div class="player-ctrl-extra">
-                <template if="{{song.prev}}">
+                <template if="{{hasPrev}}">
                     <i title="重听上一首歌曲" class="iconfont"  on-click="{{playPrevSong}}">&#xe610;</i>
                 </template>
                 <i title="单曲循环" class="iconfont {{isSingleCycle ? 'enable' : ''}}" on-click="{{singleCycle}}">&#xe60e;</i>
@@ -131,13 +131,16 @@
             self.player = self.shadowRoot.querySelector('x-audio').player
 
             FM.obs.on('SONG:UPDATE', function(e) {
-                var prev = self.song
-                //TODO 是否应该把playlist改成linkedlist实现
-                //避免循环引用
-                if((prev.sid != e.sid) && (!prev.prev || (prev.prev.sid != e.sid))) {
-                    e.prev = prev
-                }
+                //是否显示上一首按钮
+                self.hasPrev = FM.playlist.index >= 1
                 self.song = e
+            })
+
+            //同步歌词显示状态
+            FM.obs.on('CONFIG:UPDATE', function(e) {
+                if(e.type == 'lyric') {
+                    self.lyric = FM.config.lyric
+                }
             })
 
             //更新进度条
@@ -175,6 +178,7 @@
 
             //监听快捷键事件
             FM.obs.on('KEY:STAR', self.star.bind(self))
+            FM.obs.on('KEY:PREV', self.playPrevSong.bind(self))
             FM.obs.on('KEY:NEXT', self.skip.bind(self))
             FM.obs.on('KEY:STOP', self.togglePlay.bind(self))
             FM.obs.on('KEY:PAUSE', self.togglePlay.bind(self))
@@ -210,7 +214,7 @@
         //不再播放
         neverPlayAgain : function() {
             var self = this
-            FM.playlist.next()
+            FM.playlist.removeCurrent()
             FM.appSDK.never_play_again({
                 channel_id : FM.status.channel.id,
                 sid : FM.status.song.sid
@@ -235,7 +239,6 @@
         //切换歌词显示
         toggleLyric : function() {
             FM.config.lyric = !FM.config.lyric
-            this.lyric = FM.config.lyric
             FM.obs.emit('CONFIG:UPDATE', {
                 type : 'lyric'
             })
@@ -244,9 +247,7 @@
         //听上一首歌曲
         playPrevSong : function() {
             var self = this
-            if(this.song.prev) {
-                FM.obs.emit('SONG:UPDATE', this.song.prev)
-            }
+            FM.playlist.prev()
         },
 
         //单曲循环

@@ -116,6 +116,10 @@
                         <input name="NOPLAY" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.NOPLAY}}" />
                     </p>
                     <p>
+                        <label>上一首</label>
+                        <input name="PREV" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.PREV}}" />
+                    </p>
+                    <p>
                         <label>下一首</label>
                         <input name="NEXT" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.NEXT}}" />
                     </p>
@@ -162,7 +166,6 @@
     <script src="./keymap.js"></script>
 	<script>
 	Polymer('panel-setting',{
-        invalidKey : '无效快捷键',
         config : FM.config,
         ready : function() {
             var self = this
@@ -174,7 +177,6 @@
 
             FM.obs.on('KEY:REGISTER_FAIL', function(e) {
                 delete FM.config.hotKey[e.name]
-                self.config.hotKey[e.name] = self.invalidKey
                 FM.cache.set('CACHE:CONFIG', FM.config)
             })
         },
@@ -194,7 +196,7 @@
             var target = e.currentTarget
             var name = target.name
             var key = target.dataset.key
-            if(key && (key != self.invalidKey) && (key != FM.config.hotKey[name])) {
+            if(key  && (key != FM.config.hotKey[name])) {
                 FM.config.hotKey[name] = key
                 FM.obs.emit('CONFIG:UPDATE', {type : 'hotKey', name : name, key : key})
             }

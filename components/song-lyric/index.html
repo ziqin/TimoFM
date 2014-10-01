@@ -90,7 +90,10 @@
 
                 //快捷键切换歌词显示
                 FM.obs.on('KEY:SHOW_LRC', function() {
-                    self.toggleLyric()
+                    FM.config.lyric = !FM.config.lyric
+                    FM.obs.emit('CONFIG:UPDATE',{
+                        type : 'lyric'
+                    })
                 })
 
                 //歌词配置信息改变后，切换歌词是否显示
@@ -130,6 +133,7 @@
                 if(!self.hidden && !self.lrc.length) {
                     self.fetchLrc(self.song)
                 }
+                FM.cache.set('CACHE:CONFIG', FM.config)
             },
 
             //获取歌词

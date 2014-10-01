@@ -15,29 +15,11 @@ FM.appSDK = new appSDK()
 //缓存控制器
 FM.cache = new cache(localStorage)
 //播放列表
-FM.playlist = new playlist()
+FM.playlist = new playlist(FM.obs)
 //播放器状态
 FM.status = FM.cache.get('CACHE:STATUS', { channel : { id : 0}, playlist: [], song : {}})
 //播放器配置
 FM.config = FM.cache.get('CACHE:CONFIG', { hotKey : {}, mediaKey : true, notification : true, lyric : true })
-
-//播放列表变化时，触发歌曲更新事件
-Object.observe(FM.playlist, function(changes){
-	changes.forEach(function(change) {
-		//列表第一首歌曲有变化时，触发歌曲更新事件
-		if(FM.playlist.current != change.oldValue[0]) {
-			FM.obs.emit('SONG:UPDATE', FM.playlist.current)
-			//更新歌曲状态
-			FM.status.song = FM.playlist.current
-		}
-		//列表歌曲数不够时，补充歌曲
-		if(FM.playlist.length <= 1) {
-			process.nextTick(fetchSongs)
-		}
-	});
-	//更新列表状态
-	FM.status.playlist = FM.playlist.list
-});
 
 //播放器状态变化时，触发状态更新事件
 Object.observe(FM.status, function(changes) {
@@ -57,6 +39,25 @@ function fetchSongs () {
 
 //登录后重新拉取列表
 FM.obs.on('LOGIN:UPDATE', fetchSongs)
+
+//列表发生变化后，缓存状态
+FM.obs.on('PLAYLIST:UPDATE', function(list) {
+	//更新列表缓存状态
+	FM.status.playlist = FM.playlist.getRest()
+
+	//列表歌曲不足时自动补充
+	if(FM.playlist.isEmpty(1) || FM.playlist.isEnd(1)) {
+		fetchSongs()
+	}
+})
+
+//列表当前项变化后，触发歌曲更新
+FM.obs.on('PLAYLIST:MOVE', function(current) {
+	if(current && current != FM.status.song) {
+		FM.obs.emit('SONG:UPDATE', current)
+		FM.status.song = current
+	}
+})
 
 //重置播放列表，触发歌曲更新
 //等polymer-ready事件触发后执行，避免其他的组件监听不到SONG:UPDATE事件
