@@ -25,8 +25,10 @@
             },
             hide : function() {
                 var self = this
+                if(self.hidden) return
                 self.style.opacity = 0
                 setTimeout(function() {
+                    self.hidden = true
                     self.parentNode.removeChild(self)
                 },1000)
             }

@@ -24,16 +24,17 @@
 
 
 ##### 截图
-<img src="assets/images/dbfm9.png" width="400" height=200 />
+<img src="assets/images/capture1.png" width="400" height=200 title="主界面" />
 
-<img src="assets/images/dbfm8.png" width="400"  height=200  />
+<img src="assets/images/capture2.png" width="400" height=200 title="主界面" />
 
-<img src="assets/images/dbfm5.png" width="400"  height=200  />
+<img src="assets/images/capture3.png" width="400" height=200 title="专辑搜索" />
 
-<img src="assets/images/dbfm6.png" width="400"  height=200  />
+<img src="assets/images/capture4.png" width="400" height=200 title="频道搜索" />
 
-<img src="assets/images/dbfm10.png" width="400"  height=200  />
+<img src="assets/images/capture5.png" width="400" height=200 title="频道收藏" />
 
+<img src="assets/images/capture7.png" width="400" height=200 title="快捷键设置" />
 
 ##### todo
 - [ ] bug修复，稳定性增强
