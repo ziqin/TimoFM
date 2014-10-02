@@ -101,7 +101,7 @@
         <div class="no-result"><span class="iconfont">&#xe646;</span>coming soon!</div>
 		<div class="setting">
             <section class="hot-key">
-                <h3 title="注意：犹豫node-webkit本身的原因，无法检测Command组合键，设置时请选择CTRL/ALT作为主按键, 如果按键中有CTRL键，在使用时需要按Command键调用"><i class="iconfont">&#xe64b;</i>热键设置</h3>
+                <h3 title="注意：由于node-webkit本身的原因，无法检测Command组合键，设置时请选择CTRL/ALT作为主按键, 如果按键中有CTRL键，在使用时需要按Command键调用"><i class="iconfont">&#xe64b;</i>热键设置</h3>
                 <div>
                     <p>
                         <label>暂停/播放</label>
@@ -152,6 +152,10 @@
                 <h3>其他设置</h3>
                 <div>
                     <p>
+                        <label>界面字体设置</label>
+                        <input name="fontfamily" placeholder="输入字体名称" title="可以输入多个，以逗号分割，按照从前到后的顺序，如果系统中没有前面的字体，则应用后面的" value="{{config.fontfamily}}" on-blur="{{setFontFamily}}" />
+                    </p>
+                    <p>
                         <label for="notification">启用桌面通知</label>
                         <input type="checkbox" name="notification" checked="{{config.notification}}" on-change="{{toggle}}"/>
                     </p>
@@ -169,6 +173,8 @@
         config : FM.config,
         ready : function() {
             var self = this
+            self.applyFontFamily()
+
             //FM.config变化后，记录到缓存
             FM.obs.on('CONFIG:UPDATE', function(e) {
                 self.config = FM.config
@@ -239,25 +245,18 @@
             FM.obs.emit('CONFIG:UPDATE', {type : name})
         },
 
-        //读取配置
-        readConfig : function(path) {
-            var self = this
-            var fs = require('fs')
-            if(fs.existsSync(path)) {
-                fs.readFile(path, function(err, data) {
-                    if(err)  return console.error(err)
-                    self.config = JSON.parse(data.toString())
-                })
+        //应用字体设置
+        applyFontFamily : function() {
+            if(FM.config.fontfamily) {
+                document.body.style.fontFamily = FM.config.fontfamily
             }
         },
 
-        //写入配置
-        saveConfig : function(path, config) {
-            var self = this
-            var fs = require('fs')
-            fs.writeFile(path, JSON.stringify(config), function(err) {
-                if(err) return console.error(err)
-            })
+        //保存字体设置
+        setFontFamily : function(e) {
+            var target = e.currentTarget
+            this.applyFontFamily()
+            FM.obs.emit('CONFIG:UPDATE', {type: target.name})
         }
 	})
 	</script>
