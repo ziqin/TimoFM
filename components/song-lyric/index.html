@@ -22,11 +22,10 @@
            p {
                position: absolute;
                top: 70vh;
-               height: 10vh;
+               margin: 0;
                padding: 0 3vw;
                width: 44vw;
-               margin: 0;
-               line-height: 10vh;
+               line-height: 1;
                font-size: 13px;
                text-align: center;
                opacity: 0;
@@ -151,15 +150,25 @@
 
             //解析歌词
             parseLrc : function(lrc) {
-                var lines = []
-                lrc.replace((/\[(\d+)\:(\d+?(\.)?\d+)\](.+)/g), function($0, m, s, dot, word) {
-                    var time = parseInt(m)*60 + parseFloat(s)
-                    lines.push({
-                        time : time,
-                        word : word.replace(/\[.*?\]/g,'')
+                var result = []
+                var lines = lrc.split('\n')
+                lines.forEach(function(line) {
+                    var times = []
+                    line = line.replace(/\[(\d+)\:(\d+?(\.)?\d+)\]/g,function($0, m , s) {
+                        times.push(parseInt(m)*60 + parseFloat(s))
+                        return ''
+                    })
+                    times.forEach(function(time, i) {
+                        result.push({
+                            time : time,
+                            word : line
+                        })
                     })
                 })
-                return lines
+                result = result.sort(function(a, b) {
+                    return a.time - b.time
+                })
+                return result
             }
         })
     </script>
