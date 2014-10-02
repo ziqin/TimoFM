@@ -101,6 +101,25 @@
             margin-right: 5px;
         }
 
+        @-webkit-keyframes  rotate {
+            from {-webkit-transform: rotate(0deg);}
+            to {-webkit-transform: rotate(360deg);}
+        }
+
+        .loading {
+            text-align: center;
+            line-height: 1;
+            margin-top: 10px;
+        }
+        .loading i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            font-style: normal;
+            -webkit-animation: rotate 2s infinite linear ;
+        }
+
         .small {
             text-align: justify;
         }
@@ -161,14 +180,18 @@
                     <div class="no-result"><i class="iconfont">&#xe60a;</i>还没有收藏兆赫</div>
                 </template>
             </section>
-            <section class="search">
-                <input type="search" id="searchInput" placeholder="搜索兆赫" value="{{searchKey}}" on-keyup="{{search}}" />
+            <section class="search" id="search">
+                <input type="search" id="searchInput" placeholder="搜索兆赫" value="{{oldKeyword}}" on-keyup="{{keySearch}}
+                " />
                 <ul>
                     <template repeat="{{item in searchChannels}}">
                         <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
                     </template>
                     <template if="{{noSearchResult}}">
                         <div class="no-result"><i class="iconfont">&#xe60a;</i>没有找到你要的</div>
+                    </template>
+                    <template if="{{loading}}">
+                        <div class="loading"><i class="iconfont">&#xe618;</i></div>
                     </template>
                 </ul>
             </section>
@@ -235,26 +258,56 @@
             FM.cache.set('CACHE:FAV_CHANNELS', this.favChannels)
         },
 
-        //搜索兆赫
-        search : function(e) {
+        //绑定翻页事件
+        bindPageEvent : function() {
             var self = this
+            var delay = null
+            var box = this.$.search
+            box.addEventListener('scroll', function() {
+                if(!self.loading && self.searchChannels.length < self.count) {
+                    delay && global.clearTimeout(delay)
+                    delay = global.setTimeout(function() {
+                        if(box.scrollHeight - box.scrollTop - box.clientHeight < 10) {
+                            self.search(self.keyword, self.searchChannels.length)
+                        }
+                    },400)
+                }
+            })
+        },
+
+        //回车搜索
+        keySearch : function(e) {
             var isEnterKey = e.keyCode == 13
             var keyword = this.$.searchInput.value.trim()
             if(isEnterKey && keyword) {
+                this.search(keyword, 0)
+            }
+        },
+
+        //搜索兆赫
+        search : function(keyword, start) {
+            var self = this
+            if(!self.loading) {
+                if(self.keyword != keyword) {
+                    self.searchChannels = []
+                }
+                self.loading = true
                 FM.webSDK.search({
-                    query : keyword
-                }, function(err, channels) {
-                    if(channels && channels.length) {
-                        self.searchChannels = channels
-                        self.noSearchResult = false
-                    } else {
-                        self.searchChannels = []
-                        self.noSearchResult = true
+                    query : keyword,
+                    start: start
+                }, function (err, data) {
+                    self.loading = false
+                    if (data.channels) {
+                        self.searchChannels = self.searchChannels.concat(data.channels)
+                        self.count = data.total*20
+                        self.keyword = keyword
+                        self.noSearchResult = data.channels.length < 1
+                        FM.cache.set('CACHE:SEARCHED_CHANNELS', {
+                            keyword : self.keyword,
+                            count : self.count,
+                            channels : data.channels
+                        })
                     }
-                    FM.cache.set('CACHE:SEARCHED_CHANNELS', {
-                        keyword : keyword,
-                        channels :channels
-                    })
                 })
             }
         },
@@ -273,9 +326,12 @@
                 var searchCache = FM.cache.get('CACHE:SEARCHED_CHANNELS')
                 if (searchCache) {
                     this.searchChannels = searchCache.channels
-                    this.searchKey = searchCache.keyword
+                    this.keyword = searchCache.keyword
+                    this.count = searchCache.count
+                    this.oldKeyword = this.keyword
                 }
                 this.searchRestored = true
+                this.bindPageEvent()
             }
         }
     })
