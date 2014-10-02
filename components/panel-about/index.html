@@ -79,18 +79,18 @@
                 <li>已经是最新版本</li>
             </template>
             <template if="{{newVersion && !checking}}">
-                <li><span on-click="{{goToLink}}" href="https://github.com/sapjax/dbfm">发现新版本{{newVersion}}</span></li>
+                <li><span on-click="{{goToLink}}" href="{{download}}">发现新版本{{newVersion}}</span></li>
             </template>
 		</ul>
 	</template>
 	<script>
 	Polymer('panel-about',{
         version : '0.0.0',
-        github : 'https://github.com/sapjax/dbfm',
+        github : 'https://github.com/sapjax/TimoFM',
         weibo : 'http://weibo.com/sapjax',
         weiboNick : '@压缩包子',
         localUrl : './package.json',
-        remoteUrl : 'https://raw.githubusercontent.com/sapjax/dbfm/master/package.json',
+        remoteUrl : 'https://raw.githubusercontent.com/sapjax/TimoFM/master/package.json',
         ready : function() {
             this.setVersion()
         },
@@ -125,6 +125,7 @@
                 } else {
                     self.noUpdate = true
                 }
+                self.download = body.download || self.github
             })
         },
 

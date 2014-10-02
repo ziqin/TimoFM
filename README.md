@@ -5,7 +5,7 @@
 
     
 ##### download
-- [mac版本](http://pan.baidu.com/s/1mgMFGQc)
+- [mac版本](http://pan.baidu.com/s/1gdxh1Ft)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
