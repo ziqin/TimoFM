@@ -7,12 +7,15 @@
                 top: 0;
                 right: 0;
                 bottom: 0;
-                background: #fff;;
+                line-height: 100vh;
+                text-align: center;
+                background: #fff;
                 z-index: 1000;
                 transition: opacity 1s ease-in;
                 pointer-events:none;
             }
         </style>
+        <img src="../../assets/images/mask-loading.gif" width="80" />
     </template>
     <script>
         Polymer('x-mask',{
@@ -24,7 +27,7 @@
                 var self = this
                 self.style.opacity = 0
                 setTimeout(function() {
-                    self.style.display = 'none'
+                    self.parentNode.removeChild(self)
                 },1000)
             }
         })

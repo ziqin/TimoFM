@@ -28,18 +28,23 @@
                 transition: background 0.2s ease-in;
             }
 
-            @-webkit-keyframes  loading {
+            @-webkit-keyframes  rotate {
                 from {-webkit-transform: rotate(0deg);}
                 to {-webkit-transform: rotate(360deg);}
             }
 
             .loading {
                 text-align: center;
+                line-height: 1;
                 margin-top: 10px;
             }
             .loading i {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
                 font-style: normal;
-                -webkit-animation:loading 2s infinite linear ;
+                -webkit-animation: rotate 2s infinite linear ;
             }
 
             .no-result {
@@ -62,7 +67,7 @@
                 <div class="no-result"><i class="iconfont">&#xe60a;</i>没有找到你要的</div>
             </template>
             <template if="{{loading}}">
-                <div class="loading"><i class="iconfont">&#xe63b;</i></div>
+                <div class="loading"><i class="iconfont">&#xe614;</i></div>
             </template>
         </div>
 	</template>
@@ -121,17 +126,16 @@
             var self = this
             if(!self.loading) {
                 self.loading = true
+                if(self.keyword != keyword) {
+                    self.channels = []
+                }
                 FM.appSDK.music_search({
                     search_text: keyword,
                     start: start
                 }, function (err, result) {
                     self.loading = false
                     if (result.subjects) {
-                        if(self.keyword != keyword) {
-                            self.channels = result.subjects
-                        } else {
-                            self.channels = self.channels.concat(result.subjects)
-                        }
+                        self.channels = self.channels.concat(result.subjects)
                         self.count = result.count
                         self.keyword = keyword
                         self.noSearchResult = result.subjects.length < 1
