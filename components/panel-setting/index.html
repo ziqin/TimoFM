@@ -8,8 +8,8 @@
             }
 
             .setting {
-                padding: 0 1vw;
                 height: 100vh;
+                padding: 0 1vw;
                 overflow: auto;
                 font-size: 12px;
             }
@@ -43,9 +43,9 @@
 
             p label{
                 display: inline-block;
-                text-align: right;
                 width: 40% ;
                 margin-right: 5%;
+                text-align: right;
             }
 
             input {
@@ -75,30 +75,16 @@
                 width: 80px;
                 height: 25px;
                 margin: 0 2vw;
-                cursor: pointer;
-                border: none;
-                background: rgba(255,255,255,0.4);
                 border:1px solid rgba(100,100,100,0.1);
+                background: rgba(255,255,255,0.4);
+                cursor: pointer;
             }
 
             button:hover, button:focus {
                 outline: none;
                 background: rgba(255,255,255,0.8);
             }
-
-            .no-result {
-                display: none;
-                text-align: center;
-                margin-top: 48vh;
-            }
-            
-            .no-result span {
-                font-size: 20px;
-                margin-right: 10px;
-                vertical-align: middle;
-            }
 		</style>
-        <div class="no-result"><span class="iconfont">&#xe646;</span>coming soon!</div>
 		<div class="setting">
             <section class="hot-key">
                 <h3 title="注意：由于node-webkit本身的原因，无法检测Command组合键，设置时请选择CTRL/ALT作为主按键, 如果按键中有CTRL键，在使用时需要按Command键调用"><i class="iconfont">&#xe64b;</i>热键设置</h3>

@@ -5,8 +5,8 @@
     <style>
         :host {
             display: block;
-            font-size: 2vw;
             height: 100vh;
+            font-size: 2vw;
         }
 
         * {
@@ -26,11 +26,11 @@
 
         .nav li {
             position: relative;
+            display: inline-block;
+            width: 12vw;
             height: 8vh;
             line-height: 10vh;
-            width: 12vw;
             margin-right: -0.5em;
-            display: inline-block;
             list-style: none;
             cursor: pointer;
             text-align: center;
@@ -40,8 +40,8 @@
         }
 
         .nav li.active {
-            background: rgba(255, 255, 255, 0.3);
             z-index: 2;
+            background: rgba(255, 255, 255, 0.3);
             -webkit-transform: scale(1);
         }
 
@@ -56,29 +56,29 @@
 
         section {
             position: absolute;
+            z-index: 1;
             left: 0;
             top: 0;
             right: 0;
             bottom: 0;
-            z-index: 1;
             height: 85vh;
-            overflow: auto;
             margin-top: 2vh;
+            overflow: auto;
             opacity: 0;
             -webkit-transform: scale(0.95);
         }
 
         section.active {
+            z-index: 2;
+            opacity: 1;
             -webkit-transform: scale(1);
             transition: all 0.4s ease-in;
-            opacity: 1;
-            z-index: 2
         }
 
         input[type="search"] {
             width: 37vw;
-            padding: 0 10px;
             height: 10vh;
+            padding: 0 10px;
             border:1px solid rgba(100,100,100,0.1);
             background: rgba(255,255,255,0.4);
             outline: none;
@@ -90,15 +90,15 @@
         }
 
         .no-result {
+            line-height: 75vh;
             font-size: 12px;
             text-align: center;
-            line-height: 75vh;
         }
 
         .no-result i {
-            font-size: 16px;
-            vertical-align: 0;
             margin-right: 5px;
+            vertical-align: 0;
+            font-size: 16px;
         }
 
         @-webkit-keyframes  rotate {
@@ -107,9 +107,9 @@
         }
 
         .loading {
+            margin-top: 10px;
             text-align: center;
             line-height: 1;
-            margin-top: 10px;
         }
         .loading i {
             display: inline-block;
@@ -131,9 +131,9 @@
         }
 
         .small /deep/ div {
+            width: 17.3vw;
             height: 16vh;
             line-height: 16vh;
-            width: 17.3vw;
             margin: 0;
             text-align: center;
             cursor: pointer;
@@ -264,7 +264,7 @@
             var delay = null
             var box = this.$.search
             box.addEventListener('scroll', function() {
-                if(!self.loading && self.searchChannels.length < self.count) {
+                if(!self.loading && Math.ceil(self.searchChannels.length/20) < self.total) {
                     delay && global.clearTimeout(delay)
                     delay = global.setTimeout(function() {
                         if(box.scrollHeight - box.scrollTop - box.clientHeight < 10) {
@@ -299,12 +299,12 @@
                     self.loading = false
                     if (data.channels) {
                         self.searchChannels = self.searchChannels.concat(data.channels)
-                        self.count = data.total*20
+                        self.total = data.total
                         self.keyword = keyword
-                        self.noSearchResult = data.channels.length < 1
+                        self.noSearchResult = self.searchChannels.length < 1
                         FM.cache.set('CACHE:SEARCHED_CHANNELS', {
                             keyword : self.keyword,
-                            count : self.count,
+                            total : self.total,
                             channels : data.channels
                         })
                     }
@@ -327,7 +327,7 @@
                 if (searchCache) {
                     this.searchChannels = searchCache.channels
                     this.keyword = searchCache.keyword
-                    this.count = searchCache.count
+                    this.total = searchCache.total
                     this.oldKeyword = this.keyword
                 }
                 this.searchRestored = true
