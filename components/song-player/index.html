@@ -233,6 +233,8 @@
             }, function(err, songs) {
                 if(err) return console.error(err)
                 self.song.like = !self.song.like
+                FM.status.song = JSON.parse(JSON.stringify(self.song))
+                FM.obs.emit('SONG:STAR', self.song)
             })
         },
 
