@@ -5,7 +5,7 @@
 
     
 ##### download
-- [mac版本](http://pan.baidu.com/s/1gdxh1Ft)
+- [mac版本](http://pan.baidu.com/s/1lMutS)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
@@ -38,7 +38,7 @@
 
 ##### todo
 - [ ] bug修复，稳定性增强
-- [ ] 任务栏图标根据红心变化
+- [x] 任务栏图标根据红心变化
 - [x] 界面字体自定义配置
 - [ ] 收听相似歌曲
     
