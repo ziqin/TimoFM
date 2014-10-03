@@ -17,6 +17,10 @@
 
             .progress div.outer {
                 position: relative;
+                left: 0;
+                right: 0;
+                height: 2px;
+                cursor: pointer;
             }
 
             .progress span {
@@ -97,7 +101,7 @@
 		<div class="progress c1 bg2">
             <time class="pt">{{time.pmt}}</time>
             <time class="dt">{{time.dmt }}</time>
-            <div class="outer">
+            <div class="outer" on-click="{{jumpToHere}}">
                 <span class="bg" style="width:{{time.percent}}%;"></span>
             </div>
             <div class="player-ctrl-extra">
@@ -256,6 +260,15 @@
         singleCycle : function() {
             var self = this
             self.isSingleCycle = !self.isSingleCycle
+        },
+
+        //播放进度跳转到鼠标点击处
+        jumpToHere : function(e) {
+            var fullWidth = e.currentTarget.offsetWidth
+            if(this.player.duration) {
+                this.player.currentTime = this.player.duration*(e.offsetX/fullWidth)
+            }
+            FM.obs.emit('SONG:FAST_FORWARD', this.song)
         }
     })
     </script>

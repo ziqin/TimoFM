@@ -234,8 +234,20 @@
         //应用字体设置
         applyFontFamily : function() {
             if(FM.config.fontfamily) {
-                document.body.style.fontFamily = FM.config.fontfamily
+                document.body.style.fontFamily = this.formatFontFamily(FM.config.fontfamily)
             }
+        },
+
+        //格式化中文字体为unicode字符
+        formatFontFamily : function(fontfamily) {
+            fontfamily =  fontfamily.replace(/['"]?([^\u0000-\u007F]+)['"]?/g, function ($0, zh) {
+                var unicodeName = ''
+                zh.split('').forEach(function(o, i) {
+                    unicodeName += '\\' + o.charCodeAt(0).toString(16)
+                })
+                return '"' + unicodeName + '"'
+            });
+            return fontfamily
         },
 
         //保存字体设置

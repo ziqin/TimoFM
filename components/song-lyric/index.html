@@ -103,6 +103,15 @@
                     }
                 })
 
+                //歌曲快进后，重新调整歌词位置
+                FM.obs.on('SONG:FAST_FORWARD', function(e) {
+                    if(self.lrc.length) {
+                        self.lrc.forEach(function(line) {
+                            line.class = ''
+                        })
+                    }
+                })
+
                 //歌词滚动
                 FM.obs.on('TIME:UPDATE', function(playTime) {
                     if(self.lrc.length && !self.hidden) {
