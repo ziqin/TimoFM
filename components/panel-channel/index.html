@@ -121,8 +121,15 @@
             -webkit-animation: rotate 2s infinite linear ;
         }
 
+        .small {
+            left: -1px;
+            top: -1px;
+        }
+
         .small /deep/ div {
             line-height: 20vh;
+            margin-left: 1px;
+            margin-top: 1px;
             text-align: center;
         }
 
@@ -303,6 +310,7 @@
 
         //回复搜索状态
         restoreSearch : function() {
+            this.$.searchInput.focus()
             if(!this.searchRestored) {
                 var searchCache = FM.cache.get('CACHE:SEARCHED_CHANNELS')
                 if (searchCache) {

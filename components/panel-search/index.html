@@ -64,7 +64,7 @@
             <template repeat="{{item in channels}}">
                 <x-channel channel="{{item}}" active="{{item.id == selectedId}}"></x-channel>
             </template>
-            <template if="{{noSearchResult}}">
+            <template if="{{noSearchResult && !loading}}">
                 <div class="no-result"><i class="iconfont">&#xe60a;</i>没有找到你要的</div>
             </template>
             <template if="{{loading}}">
@@ -164,6 +164,7 @@
                 this.count = searchCache.count
                 this.oldKeyword = this.keyword
             }
+            this.$.searchInput.focus()
         }
 	})
 	</script>
