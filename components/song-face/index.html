@@ -19,11 +19,6 @@
                 top: 0;
                 opacity: 1;
                 cursor: pointer;
-                transition: opacity 0.4s ease-in;
-            }
-
-            a.changing {
-                opacity: 0.5;
             }
 
             song-lyric {
@@ -43,7 +38,7 @@
             .c2, body /deep/ .c2 {color: %(c2)}
             .cb, body /deep/ .cb {color: %(bg)}
         </div>
-        <a url="http://music.douban.com{{info.album}}" on-click={{jump2douban}} class="{{changing ? 'changing' : ''}}">
+        <a url="http://music.douban.com{{info.album}}" on-click={{jump2douban}}>
             <img src={{info.picture}} />
         </a>
         <song-lyric></song-lyric>
@@ -71,10 +66,6 @@
 
                 //歌曲更新后，更新颜色
                 FM.obs.on('SONG:UPDATE', function(song) {
-                    //changing状态用于控制封面透明度渐变效果
-                    if(song.picture != self.info.picture) {
-                        self.changing = true
-                    }
                     self.info = song
                     self.updateColor(self.info.picture)
                 })
@@ -88,7 +79,6 @@
                         document.body.appendChild(colorStyle)
                     }
                     colorStyle.innerHTML = self.getColorText(colors)
-                    self.changing = false
                 })
             },
 

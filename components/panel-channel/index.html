@@ -78,6 +78,7 @@
         input[type="search"] {
             width: 37vw;
             height: 10vh;
+            margin-bottom: 2vh;
             padding: 0 10px;
             border:1px solid rgba(100,100,100,0.1);
             background: rgba(255,255,255,0.4);
@@ -120,29 +121,9 @@
             -webkit-animation: rotate 2s infinite linear ;
         }
 
-        .small {
-            text-align: justify;
-        }
-
-        .small x-channel{
-            display:inline-block;
-            margin-right: 1.9vh;
-            font-size: 0;
-        }
-
         .small /deep/ div {
-            width: 17.3vw;
-            height: 16vh;
-            line-height: 16vh;
-            margin: 0;
+            line-height: 20vh;
             text-align: center;
-            cursor: pointer;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .small /deep/ div:hover,.small /deep/ div.active {
         }
 
         .small /deep/ img, .small /deep/ i, .small /deep/ b, .small /deep/ p {
@@ -151,8 +132,8 @@
 
         .small /deep/ h3 {
             position: static;
-            height: 16vh;
-            line-height: 16vh;
+            height: 20vh;
+            line-height: 20vh;
             margin: 0;
             font-size: 12px;
         }
@@ -305,7 +286,7 @@
                         FM.cache.set('CACHE:SEARCHED_CHANNELS', {
                             keyword : self.keyword,
                             total : self.total,
-                            channels : data.channels
+                            channels : self.searchChannels
                         })
                     }
                 })
