@@ -5,7 +5,7 @@
 
     
 ##### download
-- [mac版本](http://pan.baidu.com/s/1lMutS)
+- [mac版本v1.0.5](http://pan.baidu.com/s/1kTkigRX)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
@@ -38,10 +38,10 @@
 
 ##### todo
 - [ ] bug修复，稳定性增强
-- [x] 任务栏图标根据红心变化
-- [x] 界面字体自定义配置
 - [ ] 收听相似歌曲
     
+    
+##### [Release log](https://github.com/sapjax/TimoFM/wiki/release-log)
 
 ##### 贡献 [How-to-run-apps](https://github.com/rogerwang/node-webkit/wiki/How-to-run-apps)
 - 安装node-webkit
