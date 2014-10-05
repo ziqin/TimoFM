@@ -69,6 +69,10 @@
                 vertical-align: 1px;
             }
 
+            .player-ctrl-extra i:nth-last-child(2) {
+                font-size: 11px;
+                vertical-align: 1px;
+            }
 
             .player-ctrl {
                 text-align: center;
@@ -110,14 +114,15 @@
                     <i title="重听上一首歌曲" class="iconfont"  on-click="{{playPrevSong}}">&#xe610;</i>
                 </template>
                 <i title="单曲循环" class="iconfont {{isSingleCycle ? 'enable' : ''}}" on-click="{{singleCycle}}">&#xe60e;</i>
-                <!--<i title="听相似的歌曲" class="iconfont"  on-click="{{playSimilar}}">&#xe60d;</i>-->
+                <i title="听相似歌曲" class="iconfont {{similaring ? 'enable' : ''}}" on-click="{{playSimilarSongs}}">&#xe60d;</i>
+                <i title="显示播放列表" class="iconfont {{isPlaylistShow ? 'enable' : ''}}" on-click="{{togglePlaylist}}">&#xe61d;</i>
                 <i title="显示歌词" class="iconfont {{lyric ? 'enable' : ''}}" on-click="{{toggleLyric}}">&#xe613;</i>
             </div>
         </div>
 
         <div class="player-ctrl c2">
           <span title="不再收听" class="iconfont" on-click="{{neverPlayAgain}}">&#xe624;</span>
-          <span title="{{song.like? '取消红心':'加红心'}}" class="{{song.like ? 'star':''}} iconfont" on-click="{{star}}">&#xe631 </span>
+          <span title="{{song.like? '取消红心':'加红心'}}" class="{{song.like ? 'star':''}} iconfont" on-click="{{star}}">&#xe631; </span>
           <span title="{{playing? '暂停' : '播放'}}" class="iconfont" on-click="{{togglePlay}}">{{playing ? '&#xe60b;' : '&#xe603;'}}</span>
           <span title="下一首" class="iconfont" on-click="{{skip}}">&#xe607;</span>
         </div>
@@ -139,6 +144,7 @@
                 //是否显示上一首按钮
                 self.hasPrev = FM.playlist.index >= 1
                 self.song = e
+                self.similaring = false
             })
 
             //同步歌词显示状态
@@ -188,6 +194,8 @@
             FM.obs.on('KEY:STOP', self.togglePlay.bind(self))
             FM.obs.on('KEY:PAUSE', self.togglePlay.bind(self))
             FM.obs.on('KEY:NOPLAY', self.neverPlayAgain.bind(self))
+            FM.obs.on('KEY:PLAY_SIMILAR', self.playSimilarSongs.bind(self))
+            FM.obs.on('KEY:PLAYLIST_SHOW', self.togglePlaylist.bind(self))
         },
 
         //格式化时间
@@ -243,12 +251,35 @@
             })
         },
 
+        //听相似歌曲
+        playSimilarSongs : function() {
+            var self = this
+            var sid = self.song.sid
+            var cid = parseInt(sid)+2000000
+            if(self.similaring) return
+            self.similaring = true
+            FM.appSDK.songs({
+                sid : sid,
+                channel_id : cid
+            }, function(err, songs) {
+                if(err) return console.error(err)
+                FM.playlist.reset(songs)
+            })
+        },
+
         //切换歌词显示
         toggleLyric : function() {
             FM.config.lyric = !FM.config.lyric
             FM.obs.emit('CONFIG:UPDATE', {
                 type : 'lyric'
             })
+        },
+
+        //切换播放列表显示
+        togglePlaylist : function() {
+            var self = this
+            self.isPlaylistShow = !self.isPlaylistShow
+            FM.obs.emit('PLAYLIST:SHOW', self.isPlaylistShow)
         },
 
         //听上一首歌曲

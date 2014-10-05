@@ -5,7 +5,7 @@
 
     
 ##### download
-- [mac版本v1.0.5](http://pan.baidu.com/s/1kTkigRX)
+- [mac版本v1.0.6](http://pan.baidu.com/s/1c0AKOaG)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
@@ -16,10 +16,12 @@
 - 支持用户创建的兆赫搜索
 - 支持专辑模糊搜索（专辑名称，艺术家名称）
 - 支持频道收藏（暂时只能收藏在本地，未同步服务器）
+- 支持收听相似歌曲
 - 支持全局快捷键
 - 支持单曲循环
 - 支持播放上一首 (咦？)
 - 支持歌词显示
+- 支持查看当前播放列表
 - 支持桌面通知
 
 
@@ -38,7 +40,6 @@
 
 ##### todo
 - [ ] bug修复，稳定性增强
-- [ ] 收听相似歌曲
     
     
 ##### [Release log](https://github.com/sapjax/TimoFM/wiki/release-log)

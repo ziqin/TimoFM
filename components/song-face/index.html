@@ -1,11 +1,12 @@
 <link rel="import" href="../song-lyric/index.html">
+<link rel="import" href="../song-playlist/index.html">
 <polymer-element name="song-face" attributes="info">
     <template>
         <style>
             :host {
                 position: relative;
                 box-shadow: 0 0 5px rgba(100,100,100,0.5);
-                background: rgba(255,255,255,1)
+                background: rgba(255,255,255,1);
             }
             a, img {
                 display: block;
@@ -19,6 +20,11 @@
                 top: 0;
                 opacity: 1;
                 cursor: pointer;
+                transition: -webkit-filter 0.2s ease-in;
+            }
+
+            a.blur {
+                -webkit-filter: blur(5px)
             }
 
             song-lyric {
@@ -38,10 +44,11 @@
             .c2, body /deep/ .c2 {color: %(c2)}
             .cb, body /deep/ .cb {color: %(bg)}
         </div>
-        <a url="http://music.douban.com{{info.album}}" on-click={{jump2douban}}>
+        <a url="http://music.douban.com{{info.album}}"  class="{{enableBlur ? 'blur' : ''}}">
             <img src={{info.picture}} />
         </a>
         <song-lyric></song-lyric>
+        <song-playlist></song-playlist>
     </template>
     <script src="./colibri.js"></script>
     <script>
@@ -53,15 +60,13 @@
                 var self = this
 
                 //切换class hover, 触发css动画滑动
-                this.addEventListener('mouseover', function() {
-                    self.delay && clearTimeout(self.delay)
-                    self.delay = setTimeout(function() {
-                        self.classList.toggle('hover')
-                    },500)
+                this.addEventListener('click', function() {
+                    self.classList.toggle('hover')
                 })
 
-                this.addEventListener('mouseout', function() {
-                    self.delay && clearTimeout(self.delay)
+                //双击封面，跳转到豆瓣专辑详情页
+                this.addEventListener('dblclick', function() {
+                    self.jump2douban()
                 })
 
                 //歌曲更新后，更新颜色
@@ -79,6 +84,19 @@
                         document.body.appendChild(colorStyle)
                     }
                     colorStyle.innerHTML = self.getColorText(colors)
+                })
+
+                //显示播放表后，模糊封面
+                FM.obs.on('PLAYLIST:SHOW', function(show) {
+                    self.playListSHow = show
+                    self.enableBlur = show || FM.config.lyric
+                })
+
+                //显示歌词后，模糊封面
+                FM.obs.on('CONFIG:UPDATE', function(e) {
+                    if(e.type == 'lyric') {
+                        self.enableBlur = self.playListShow || FM.config.lyric
+                    }
                 })
             },
 
@@ -111,8 +129,8 @@
             },
 
             //跳出到豆瓣
-            jump2douban : function(e) {
-                var a = e.currentTarget
+            jump2douban : function() {
+                var a = this.shadowRoot.querySelector('a')
                 var open = require('open')
                 open(a.getAttribute('url'))
             }

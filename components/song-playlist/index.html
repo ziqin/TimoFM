@@ -1,0 +1,149 @@
+<polymer-element name="song-playlist" attributes="">
+    <template>
+        <style>
+            div {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255,255,255,0.7);
+                color: rgba(0,0,0,0.9);
+                text-align: left;
+                font-size: 4vh;
+                overflow: hidden;
+                opacity: 0;
+                cursor: pointer;
+                transition : opacity 0.5s ease-in;
+            }
+
+            div.show {
+                opacity : 1;
+            }
+
+            ul {
+                margin: 2vh 1vw 0 1vw;
+                padding: 0;
+                height: 100vh;
+                overflow: auto;
+            }
+            
+            li {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+                border-top: 1px solid rgba(255,255,255,0.1);
+                cursor: pointer;
+                text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
+            }
+            
+            li.playing {
+                color: #f00;
+                text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
+                cursor: default;
+            }
+
+            span {
+                display: inline-block;
+                height: 10vh;
+                line-height: 11.5vh;
+                vertical-align: middle;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .title {
+                width: 26vw;
+                text-indent: 1vw;
+            }
+
+            .time {
+                width: 10vw;
+            }
+
+            .artist {
+                width: 10vw;
+            }
+        </style>
+        <div class="{{show? 'show' : ''}}">
+            <ul>
+                <template repeat="{{song,index in playlist}}">
+                    <li id={{song.sid}} data-index={{index}} class="{{song.playing ? 'playing' : ''}}" on-click="{{play}}">
+                        <span class="title">{{song.title}}</span>
+                        <span class="time">{{song.mtime}}:{{song.stime}}</span>
+                        <span class="artist">{{song.artist}}</span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </template>
+    <script>
+        Polymer('song-playlist',{
+            show : false,
+            ready : function() {
+                var self = this
+
+                //播放列表更新后，更新列表内容
+                FM.obs.on('PLAYLIST:UPDATE', function() {
+                    if(self.show) {
+                        self.renderList()
+                    }
+                })
+
+                //监听切换动作
+                FM.obs.on('PLAYLIST:SHOW', function(show) {
+                    self.show = show
+                    if(show) {
+                        self.renderList()
+                    }
+                })
+            },
+
+            //设置播放列表当前播放项目
+            renderList : function() {
+                var self = this
+                self.delay && clearTimeout(self.delay)
+                //加上延时避免网络慢或者操作快的情况下，执行次数过多
+                self.delay = setTimeout(function() {
+                    var playlist = JSON.parse(JSON.stringify(FM.playlist.list))
+                    var song = FM.playlist.current
+                    if(!song) return
+                    playlist.forEach(function (item) {
+                        item.playing = item.sid == song.sid
+                        item.mtime = Math.floor(item.length / 60)
+                        var stime = Math.ceil(item.length % 60)
+                        item.stime = stime < 10 ? '0' + stime : stime
+                    })
+                    self.playlist = playlist
+                    //加上延时，是因为组件渲染需要时间
+                    setTimeout(function() {
+                        self.scrollList()
+                    },100)
+                },200)
+            },
+
+            //滚动当前选中项到可是区域
+            scrollList : function() {
+                var self = this
+                var current = self.shadowRoot.querySelector('.playing')
+                if(current) {
+                    var rect = current.getBoundingClientRect()
+                    if(rect.top < 0 || rect.top > window.innerHeight - 10) {
+                        current.scrollIntoView(true)
+                    }
+                }
+            },
+
+            //播放选中歌曲
+            play : function(e) {
+                if(!this.show) return
+                e.stopPropagation()
+                var target = e.currentTarget
+                var index = target.dataset.index * 1
+                FM.playlist.moveTo(index)
+            }
+        })
+    </script>
+</polymer-element>

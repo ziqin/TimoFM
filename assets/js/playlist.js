@@ -14,6 +14,11 @@ Playlist.prototype = {
 	//当前索引
 	index : 0,
 
+	//返回列表项
+	get list() {
+		return this._list
+	},
+
 	//列表当前项
 	get current() {
 		return this._list[this.index]
@@ -46,20 +51,22 @@ Playlist.prototype = {
 		return this.current
 	},
 
-	//移动当前索引到下一个位置
-	next : function() {
-		this.index = this.index+1
+	//移动当前索引位置
+	moveTo : function(i) {
+		this.index = i
 		this.obs.emit(this.updateEvent, this._list)
 		this.obs.emit(this.moveEvent, this.current)
 		return this.current
 	},
 
+	//移动当前索引到下一个位置
+	next : function() {
+		return this.moveTo(this.index + 1)
+	},
+
 	//移动当前索引到前一个位置
 	prev : function() {
-		this.index = this.index - 1
-		this.obs.emit(this.updateEvent, this._list)
-		this.obs.emit(this.moveEvent, this.current)
-		return this.current
+		return this.moveTo(this.index - 1)
 	},
 
 	//追加列表内容
@@ -67,13 +74,6 @@ Playlist.prototype = {
 		this._list = this._list.concat(list)
 		this.obs.emit(this.updateEvent, this._list)
 		this.obs.emit(this.moveEvent, this.current)
-		return this._list
-	},
-
-	//替换当前元素后面的列表内容
-	replaceRest : function(list) {
-		this._list = this._list.slice(0, this.index).concat(list)
-		this.obs.emit(this.updateEvent, this._list)
 		return this._list
 	},
 
