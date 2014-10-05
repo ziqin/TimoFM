@@ -5,7 +5,7 @@
 
     
 ##### download
-- [mac版本v1.0.6](http://pan.baidu.com/s/1c0AKOaG)
+- [mac版本v1.0.6](http://pan.baidu.com/s/1c0kwu0S)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
@@ -35,6 +35,8 @@
 <img src="assets/images/capture4.png" width="400" height=200 title="频道搜索" />
 
 <img src="assets/images/capture5.png" width="400" height=200 title="频道收藏" />
+
+<img src="assets/images/capture11.png" width="400" height=200 title="播放列表" />
 
 <img src="assets/images/capture7.png" width="400" height=200 title="快捷键设置" />
 
