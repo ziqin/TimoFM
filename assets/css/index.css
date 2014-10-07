@@ -113,6 +113,20 @@ x-view {
     top: 5px;
 }
 
+x-mask {
+    position: absolute;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    line-height: 100vh;
+    text-align: center;
+    background: #fff;
+    transition: opacity 1s ease-in;
+    pointer-events:none;
+}
+
 @font-face {
     font-family: 'iconfont';
     /*src:url('../fonts/font.woff') format('woff');*/

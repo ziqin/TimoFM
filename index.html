@@ -20,6 +20,7 @@
     <script src="assets/js/index.js"></script>
   </head>
   <body style="-webkit-app-region: drag" class="bg c1">
+
     <div id="wrapper">
       <x-switchTab class="sidebar">
         <ul class="nav">
@@ -43,7 +44,9 @@
       </main>
       <song-face></song-face>
       <x-view></x-view>
-      <x-mask></x-mask>
+      <x-mask>
+        <img src="assets/images/mask-loading.gif" width="80" />
+      </x-mask>
     </div>
   </body>
 </html>
