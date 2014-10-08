@@ -97,7 +97,34 @@
                 color: #f00;
             }
 
+            .volume-percent {
+                position: fixed;
+                top: 40vh;
+                right: 40vh;
+                width: 20vh;
+                height: 20vh;
+                line-height: 20vh;
+                text-align: center;
+                background: rgba(255,255,255,0.2);
+                color: rgba(0,0,0,0.5);
+                font-size: 16px;
+                opacity: 0;
+                pointer-events : none;
+                transition: opacity 0.4s ease-in;
+                padding: {{volumePercent}}px;
+                margin: -{{volumePercent}}px -{{volumePercent}}px 0 0;
+                border-radius: 100vh;
+                box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            }
 
+            .volume-percent-show {
+                opacity: 1;
+            }
+
+            .volume-percent i {
+                font-style: normal;
+                margin-right: 5px;
+            }
 		</style>
 
 		<x-audio></x-audio>
@@ -126,6 +153,7 @@
           <span title="{{playing? '暂停' : '播放'}}" class="iconfont" on-click="{{togglePlay}}">{{playing ? '&#xe60b;' : '&#xe603;'}}</span>
           <span title="下一首" class="iconfont" on-click="{{skip}}">&#xe607;</span>
         </div>
+        <div class="volume-percent {{showVolumePercent? 'volume-percent-show' : ''}}"><i class="iconfont">&#xe61b;</i>{{volumePercent }}</div>
     </template>
     <script>
     Polymer('song-player', {
@@ -186,6 +214,9 @@
                 console.log('playing')
                 self.playing = true
             })
+
+            //音量调节
+            self.bindVolumeEvent()
 
             //监听快捷键事件
             FM.obs.on('KEY:STAR', self.star.bind(self))
@@ -304,6 +335,30 @@
                 this.player.currentTime = this.player.duration*(e.offsetX/fullWidth)
             }
             FM.obs.emit('SONG:FAST_FORWARD', this.song)
+        },
+
+        //设置音量调节事件
+        bindVolumeEvent : function() {
+            var self = this
+            var hideDelay = null
+            document.addEventListener('mousewheel', function(e) {
+                var distance = e.wheelDelta
+                var volume = self.player.volume*300
+                volume = volume + distance
+                if(volume < 0) {
+                    volume = 0
+                } else if(volume > 300) {
+                    volume = 300
+                }
+                self.player.volume = volume/300
+
+                self.showVolumePercent = true
+                self.volumePercent = Math.round(volume/3)
+                hideDelay && clearTimeout(hideDelay)
+                hideDelay = setTimeout(function() {
+                    self.showVolumePercent = false
+                },400)
+            })
         }
     })
     </script>

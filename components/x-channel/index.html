@@ -140,6 +140,19 @@
                     channel_id : self.channel.id
                 }
 
+                //红心频道需要登录
+                if(self.channel.id == -3) {
+                    if(!FM.cache.get('CACHE:USER')) {
+                        self.channel.originName = self.channel.name
+                        self.channel.name = self.channel.name + '(未登录)'
+
+                        FM.obs.on('LOGIN:UPDATE', function() {
+                            self.channel.name = self.channel.originName
+                            FM.obs.emit('CHANNEL:UPDATE', self.channel)
+                        })
+                    }
+                }
+
                 //是否是可收听的专辑兆赫
                 if(self.channel.subject) {
                     option.context = 'channel:0|subject_id:' + self.channel.id
