@@ -99,6 +99,7 @@
 
             .volume-percent {
                 position: fixed;
+                z-index: 1009;
                 top: 40vh;
                 right: 40vh;
                 width: 20vh;
@@ -342,6 +343,7 @@
             var self = this
             var hideDelay = null
             document.addEventListener('mousewheel', function(e) {
+                if(!FM.config.wheelVolume) return
                 var distance = e.wheelDelta
                 var volume = self.player.volume*300
                 volume = volume + distance

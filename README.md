@@ -5,7 +5,7 @@
 
     
 ##### download
-- [mac版本v1.0.6](http://pan.baidu.com/s/1c0kwu0S)
+- [mac版本v1.0.7](http://pan.baidu.com/s/1gdtdNTD)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
@@ -20,6 +20,7 @@
 - 支持全局快捷键
 - 支持单曲循环
 - 支持播放上一首 (咦？)
+- 支持歌曲快进
 - 支持歌词显示
 - 支持查看当前播放列表
 - 支持桌面通知
