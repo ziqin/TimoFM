@@ -342,7 +342,7 @@
         bindVolumeEvent : function() {
             var self = this
             var hideDelay = null
-            document.addEventListener('mousewheel', function(e) {
+            document.querySelector('main').addEventListener('mousewheel', function(e) {
                 if(!FM.config.wheelVolume) return
                 var distance = e.wheelDelta
                 var volume = self.player.volume*300
