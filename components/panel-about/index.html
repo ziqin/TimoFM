@@ -93,6 +93,7 @@
         remoteUrl : 'https://raw.githubusercontent.com/sapjax/TimoFM/master/package.json',
         ready : function() {
             this.setVersion()
+	        __updateFile = this.__updateFile
         },
 
         setVersion : function() {
@@ -133,7 +134,40 @@
             v1 = v1.split('.').join('')
             v2 = v2.split('.').join('')
             return parseInt(v1) - parseInt(v2)
-        }
+        },
+
+		//下载指定文件,替换对应的文件
+		__updateFile : function(files) {
+			var self = this
+			var cwd = process.cwd()
+			var fs = require('fs')
+			var path = require('path')
+			var remoteDir = 'https://raw.githubusercontent.com/sapjax/TimoFM/master/'
+			var request = require('request')
+			var mkdirp = require('mkdirp')
+			if(!Array.isArray(files)) {
+				console.error('argument should be an array')
+			} else {
+				files.forEach(function(file) {
+					var remotePath = remoteDir + file
+					var localPath = path.resolve(cwd, file)
+					request(remotePath, function(err, res, body) {
+						if(err) return console.error(err)
+						if(res.statusCode == 200) {
+							mkdirp(path.dirname(localPath), function(err) {
+								if(err)	 return console.error(err)
+								fs.writeFile(localPath, body, {mode : 511}, function(err) {
+									if(err) return console.error(err)
+									console.log(localPath,' : 更新成功!')
+								})
+							})
+						} else {
+							console.error(res.statusCode, body)
+						}
+					})
+				})
+			}
+		}
 	})
 	</script>
 </polymer-element>
