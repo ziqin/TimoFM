@@ -342,20 +342,21 @@
         bindVolumeEvent : function() {
             var self = this
             var hideDelay = null
+	        var MAX_WHEEL = 300
             document.querySelector('main').addEventListener('mousewheel', function(e) {
                 if(!FM.config.wheelVolume) return
                 var distance = e.wheelDelta
-                var volume = self.player.volume*300
+                var volume = self.player.volume*MAX_WHEEL
                 volume = volume + distance
                 if(volume < 0) {
                     volume = 0
-                } else if(volume > 300) {
-                    volume = 300
+                } else if(volume > MAX_WHEEL) {
+                    volume = MAX_WHEEL
                 }
-                self.player.volume = volume/300
+                self.player.volume = volume/MAX_WHEEL
 
                 self.showVolumePercent = true
-                self.volumePercent = Math.round(volume/3)
+                self.volumePercent = Math.round(volume*100/MAX_WHEEL)
                 hideDelay && clearTimeout(hideDelay)
                 hideDelay = setTimeout(function() {
                     self.showVolumePercent = false
