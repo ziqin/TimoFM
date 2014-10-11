@@ -14,6 +14,13 @@
                     body : song.artist + '    ' + song.albumtitle
                 })
 
+	            //自动隐藏
+	            if(FM.config.notiTime) {
+		            setTimeout(function() {
+			            noti.close()
+		            },FM.config.notiTime*1000)
+	            }
+
                 noti.onclick = function() {
                     FM.obs.emit('NOTI:CLICK')
                 }
