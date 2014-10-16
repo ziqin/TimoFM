@@ -1,6 +1,6 @@
 <polymer-element name="panel-about" attributes="version">
-	<template>
-		<style>
+    <template>
+        <style>
             :host {
                 display: block;
                 width: 100%;
@@ -65,8 +65,8 @@
                 background: rgba(255,255,255,0.8);
             }
 
-		</style>
-		<ul class="about">
+        </style>
+        <ul class="about">
             <li>版本：TimoFM v{{version}}</li>
             <li>源码：<span on-click="{{goToLink}}"  href="{{github}}">Github</span></li>
             <li>作者：<span on-click="{{goToLink}}" href="{{weibo}}">{{weiboNick}}</span></li>
@@ -81,10 +81,10 @@
             <template if="{{newVersion && !checking}}">
                 <li><span on-click="{{goToLink}}" href="{{download}}">发现新版本{{newVersion}}</span></li>
             </template>
-		</ul>
-	</template>
-	<script>
-	Polymer('panel-about',{
+        </ul>
+    </template>
+    <script>
+    Polymer('panel-about',{
         version : '0.0.0',
         github : 'https://github.com/sapjax/TimoFM',
         weibo : 'http://weibo.com/sapjax',
@@ -93,7 +93,7 @@
         remoteUrl : 'https://raw.githubusercontent.com/sapjax/TimoFM/master/package.json',
         ready : function() {
             this.setVersion()
-	        __updateFile = this.__updateFile
+            __updateFile = this.__updateFile
         },
 
         setVersion : function() {
@@ -136,38 +136,38 @@
             return parseInt(v1) - parseInt(v2)
         },
 
-		//下载指定文件,替换对应的文件
-		__updateFile : function(files) {
-			var self = this
-			var cwd = process.cwd()
-			var fs = require('fs')
-			var path = require('path')
-			var remoteDir = 'https://raw.githubusercontent.com/sapjax/TimoFM/master/'
-			var request = require('request')
-			var mkdirp = require('mkdirp')
-			if(!Array.isArray(files)) {
-				console.error('argument should be an array')
-			} else {
-				files.forEach(function(file) {
-					var remotePath = remoteDir + file
-					var localPath = path.resolve(cwd, file)
-					request(remotePath, function(err, res, body) {
-						if(err) return console.error(err)
-						if(res.statusCode == 200) {
-							mkdirp(path.dirname(localPath), function(err) {
-								if(err)	 return console.error(err)
-								fs.writeFile(localPath, body, {mode : 511}, function(err) {
-									if(err) return console.error(err)
-									console.log(localPath,' : 更新成功!')
-								})
-							})
-						} else {
-							console.error(res.statusCode, body)
-						}
-					})
-				})
-			}
-		}
-	})
-	</script>
+        //下载指定文件,替换对应的文件
+        __updateFile : function(files) {
+            var self = this
+            var cwd = process.cwd()
+            var fs = require('fs')
+            var path = require('path')
+            var remoteDir = 'https://raw.githubusercontent.com/sapjax/TimoFM/master/'
+            var request = require('request')
+            var mkdirp = require('mkdirp')
+            if(!Array.isArray(files)) {
+                console.error('argument should be an array')
+            } else {
+                files.forEach(function(file) {
+                    var remotePath = remoteDir + file
+                    var localPath = path.resolve(cwd, file)
+                    request(remotePath, function(err, res, body) {
+                        if(err) return console.error(err)
+                        if(res.statusCode == 200) {
+                            mkdirp(path.dirname(localPath), function(err) {
+                                if(err)     return console.error(err)
+                                fs.writeFile(localPath, body, {mode : 511}, function(err) {
+                                    if(err) return console.error(err)
+                                    console.log(localPath,' : 更新成功!')
+                                })
+                            })
+                        } else {
+                            console.error(res.statusCode, body)
+                        }
+                    })
+                })
+            }
+        }
+    })
+    </script>
 </polymer-element>

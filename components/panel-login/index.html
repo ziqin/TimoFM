@@ -1,6 +1,6 @@
 <polymer-element name="panel-login">
-	<template>
-		<style>
+    <template>
+        <style>
             :host {
                 display: block;
                 width: 100%;
@@ -43,7 +43,7 @@
                 background: rgba(255,255,255,0.8);
             }
 
-		    input {
+            input {
                 width: 70%;
                 height:30px;
                 margin-bottom: 10px;
@@ -86,7 +86,7 @@
                 margin-top: 10vh;
                 font-size: 12px;
             }
-		</style>
+        </style>
         <template if={{userInfo}}>
             <div class="user-info">
                 <img src="{{userInfo.icon}}" />
@@ -105,9 +105,9 @@
                 <div class="errTip">{{err}}</div>
             </div>
         </template>
-	</template>
-	<script>
-	Polymer('panel-login',{
+    </template>
+    <script>
+    Polymer('panel-login',{
         userInfo : null,
         ready : function() {
             var self = this
@@ -215,6 +215,6 @@
             var open = require('open')
             open(btn.getAttribute('href'))
         }
-	})
-	</script>
+    })
+    </script>
 </polymer-element>

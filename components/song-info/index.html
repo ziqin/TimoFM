@@ -1,6 +1,6 @@
 <polymer-element name="song-info" attributes="song channel">
-	<template>
-		<style>
+    <template>
+        <style>
             :host {
                 text-align: center;
             }
@@ -35,16 +35,16 @@
                 line-height: 1.8;
                 font-size: 1.5vw;
             }
-		</style>
+        </style>
         <div>
             <h4>MHZ：{{channel.name}}</h4>
             <h1>{{song.title}}</h1>
             <h2>{{song.artist}}</h2>
             <h3>{{song.albumtitle}}</h3>
         </div>
-	</template>
-	<script>
-	Polymer('song-info',{
+    </template>
+    <script>
+    Polymer('song-info',{
         song : FM.status.song,
         channel : FM.status.channel,
         ready : function() {
@@ -57,6 +57,6 @@
                self.channel.name = channel.name
            })
         }
-	})
-	</script>
+    })
+    </script>
 </polymer-element>

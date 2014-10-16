@@ -1,9 +1,9 @@
 <polymer-element name="x-switchTab" attributes="eventType activeClass">
-	<template>
-		<content id="nav" select=".nav"></content>
+    <template>
+        <content id="nav" select=".nav"></content>
         <content id="content" select=".content"></content>
-	</template>
-	<script>
+    </template>
+    <script>
         Polymer('x-switchTab',{
             eventType : 'click',
             activeClass : 'active',
@@ -30,5 +30,5 @@
                 })
             }
         })
-	</script>
+    </script>
 </polymer-element>

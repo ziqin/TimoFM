@@ -3,8 +3,8 @@
 <link rel="import" href="../song-noti/index.html">
 
 <polymer-element name="song-player" attributes="song">
-	<template>
-		<style>
+    <template>
+        <style>
             .progress {
                 position: relative;
                 height: 2px;
@@ -126,12 +126,12 @@
                 font-style: normal;
                 margin-right: 5px;
             }
-		</style>
+        </style>
 
-		<x-audio></x-audio>
+        <x-audio></x-audio>
         <x-hotkey></x-hotkey>
         <song-noti></song-noti>
-		<div class="progress c1 bg2">
+        <div class="progress c1 bg2">
             <time class="pt">{{time.pmt}}</time>
             <time class="dt">{{time.dmt }}</time>
             <div class="outer" on-click="{{jumpToHere}}">
@@ -342,7 +342,7 @@
         bindVolumeEvent : function() {
             var self = this
             var hideDelay = null
-	        var MAX_WHEEL = 300
+            var MAX_WHEEL = 300
             document.querySelector('main').addEventListener('mousewheel', function(e) {
                 if(!FM.config.wheelVolume) return
                 var distance = e.wheelDelta

@@ -20,7 +20,7 @@
     "plugin": true
   },
   "dependencies": {
-    "dbfm-app-sdk": "0.0.7",
+    "dbfm-app-sdk": "0.0.8",
     "dbfm-web-sdk": "0.0.5",
     "open": "0.0.5",
     "request": "^2.44.0"

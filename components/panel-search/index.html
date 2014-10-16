@@ -1,6 +1,6 @@
 <polymer-element name="panel-search" attributes="actived">
-	<template>
-		<style>
+    <template>
+        <style>
             :host {
                 display: block;
                 height: 100vh;
@@ -58,7 +58,7 @@
                 font-size: 16px;
                 vertical-align: 0;
             }
-		</style>
+        </style>
         <div class="search" id="search">
            <input type="search" id="searchInput" placeholder="搜索专辑"  on-keyup="{{keySearch}}" value="{{oldKeyword}}" />
             <template repeat="{{item in channels}}">
@@ -71,9 +71,9 @@
                 <div class="loading"><i class="iconfont">&#xe618;</i></div>
             </template>
         </div>
-	</template>
-	<script>
-	Polymer('panel-search',{
+    </template>
+    <script>
+    Polymer('panel-search',{
         //专辑频道列表
         channels : [],
         //总数量
@@ -166,6 +166,6 @@
             }
             this.$.searchInput.focus()
         }
-	})
-	</script>
+    })
+    </script>
 </polymer-element>
