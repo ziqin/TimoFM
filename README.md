@@ -5,7 +5,7 @@
 
     
 ##### download
-- [mac版本v1.0.8](http://pan.baidu.com/s/1pJwRql1#path=%252FAPP)
+- [mac版本v1.0.9](http://pan.baidu.com/s/1pJwRql1#path=%252FAPP)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
     
@@ -41,11 +41,17 @@
 
 <img src="assets/images/capture7.png" width="400" height=200 title="快捷键设置" />
 
+
+##### 使用说明
+- 单击专辑封面，使封面划开，可以看到其他界面，再次单击可以让封面回来原位
+- 双击封面可以跳转到专辑详情页
+
 ##### todo
-- [ ] bug修复，稳定性增强
+- [ ] 支持桌面歌词
     
     
 ##### [Release log](https://github.com/sapjax/TimoFM/wiki/release-log)
+
 
 ##### 贡献 [How-to-run-apps](https://github.com/rogerwang/node-webkit/wiki/How-to-run-apps)
 - 安装node-webkit
