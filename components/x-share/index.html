@@ -49,7 +49,7 @@
 				FM.obs.on('SONG:UPDATE',function(song) {
 					self.title = song.title
 					self.pic = song.picture
-					self.desc = '分享 ' + song.artist + '的单曲《' + song.title + '》 分享自 @TimoFM）'
+					self.desc = '分享 ' + song.artist + '的单曲《' + song.title + '》 '
 					self.url = 'http://douban.fm/?start=' + song.sid + 'g' + song.ssid + 'g'
 				})
 			},
