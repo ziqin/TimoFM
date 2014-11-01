@@ -1,5 +1,6 @@
 <link rel="import" href="../x-audio/index.html">
 <link rel="import" href="../x-hotkey/index.html">
+<link rel="import" href="../x-share/index.html">
 <link rel="import" href="../song-noti/index.html">
 
 <polymer-element name="song-player" attributes="song">
@@ -56,7 +57,6 @@
 
             .player-ctrl-extra i {
                 cursor: pointer;
-                margin-right: 5px;
             }
 
             .player-ctrl-extra i.enable {
@@ -65,13 +65,16 @@
 
             .player-ctrl-extra i:last-child {
                 font-size: 13px;
-                margin-right: 0;
                 vertical-align: 1px;
             }
 
             .player-ctrl-extra i:nth-last-child(2) {
                 font-size: 11px;
                 vertical-align: 1px;
+            }
+
+            .player-ctrl-extra i:nth-last-child(3) {
+                margin-left: -2px;
             }
 
             .player-ctrl {
@@ -138,6 +141,7 @@
                 <span class="bg" style="width:{{time.percent}}%;"></span>
             </div>
             <div class="player-ctrl-extra">
+                <x-share></x-share>
                 <template if="{{hasPrev}}">
                     <i title="重听上一首歌曲" class="iconfont"  on-click="{{playPrevSong}}">&#xe610;</i>
                 </template>

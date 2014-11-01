@@ -129,7 +129,8 @@ x-mask {
 
 @font-face {
     font-family: 'iconfont';
-    src:url('../fonts/iconfont.woff') format('woff');
+    /*src:url('../fonts/iconfont.woff') format('woff');*/
+    src:url('http://at.alicdn.com/t/font_1414812587_4916766.woff') format('woff');
 }
 
 body /deep/ .iconfont{

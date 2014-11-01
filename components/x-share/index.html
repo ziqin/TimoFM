@@ -1,0 +1,65 @@
+<polymer-element name="x-share">
+	<template>
+		<style>
+			span {
+				cursor: pointer;
+			}
+
+			div {
+				display: inline-block;
+			}
+
+			div span {
+				display: none;
+			}
+
+			div span:last-child {
+				font-size: 14px;
+			}
+
+			div .trigger {
+				display: inline-block;
+			}
+
+			div:hover span {
+				display: inline-block;
+			}
+
+			div:hover .trigger {
+				display: none;
+			}
+		</style>
+		<div>
+			<span class="iconfont trigger" title="分享">&#xe62c;</span>
+			<span class="iconfont" title="分享到豆瓣" on-click="{{share}}" data-link="http://shuo.douban.com/!service/share?href={{url}}&name={{title}} &text={{desc}}&image={{pic}}&starid=0&aid=0&style=11&stime=&sig=';">&#xe628;</span>
+			<span class="iconfont" title="分享到微博" on-click="{{share}}" data-link="http://service.weibo.com/share/share.php?url={{url}}&title={{desc}}&pic={{pic}}">&#xe62a;</span>
+			<span class="iconfont" title="分享到腾讯微博" on-click="{{share}}" data-link="http://share.v.t.qq.com/index.php?c=share&a=index&url={{url}}&title={{desc}}&pic={{pic}}">&#xe629;</span>
+			<span class="iconfont" title="分享到qq空间" on-click="{{share}}" data-link="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url={{url}}&title={{title}}&desc={{desc}} &summary={{desc}}&site=TimoFM{{pic}}">&#xe61e;</span>
+			<span class="iconfont" title="分享到人人" on-click="{{share}}" data-link="http://widget.renren.com/dialog/share?resourceUrl={{url}}&title={{title}}&description={{desc}}{{url}}&pic={{pic}}">&#xe620;</span>
+		</div>
+	</template>
+	<script>
+		Polymer('x-share',{
+			url    : '',
+			title  : '',
+			desc   : '',
+			pic    : '',
+			ready: function() {
+				var self = this
+				FM.obs.on('SONG:UPDATE',function(song) {
+					self.title = song.title
+					self.pic = song.picture
+					self.desc = '分享 ' + song.artist + '的单曲《' + song.title + '》 分享自 @TimoFM）'
+					self.url = 'http://douban.fm/?start=' + song.sid + 'g' + song.ssid + 'g'
+				})
+			},
+
+			share : function(e) {
+				var btn = e.currentTarget
+				var link = btn.dataset.link
+				var open = require('open')
+				open(link)
+			}
+		})
+	</script>
+</polymer-element>
