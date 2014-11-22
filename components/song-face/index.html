@@ -69,6 +69,11 @@
                     self.jump2douban()
                 })
 
+                //快捷键打开豆瓣详情页
+                FM.obs.on('KEY:GOTO_DOUBAN', function(e) {
+                    self.jump2douban()
+                })
+
                 //歌曲更新后，更新颜色
                 FM.obs.on('SONG:UPDATE', function(song) {
                     self.info = song

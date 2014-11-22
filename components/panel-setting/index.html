@@ -138,6 +138,10 @@
                         <input name="SHOW_LRC" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.SHOW_LRC}} " />
                     </p>
                     <p>
+                        <label>打开豆瓣页面</label>
+                        <input name="GOTO_DOUBAN" placeholder="无" on-keydown="{{recordKey}}" on-blur="{{setKey}}" value="{{config.hotKey.GOTO_DOUBAN}} " />
+                    </p>
+                    <p>
                         <label for="mideaKey">启用媒体键</label><input type="checkbox" name="mediaKey"  checked="{{config.mediaKey}}" on-change="{{toggle}}" />
                     </p>
                 </div>

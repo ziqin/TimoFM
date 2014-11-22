@@ -86,8 +86,8 @@
                 FM.obs.on('SONG:UPDATE', function(song) {
                     self.lrc = []
                     if(!self.isShow) return
-                    //单曲循环时
-                    if(self.song.id == song.id && self.lrc.length) {
+                    //单曲循环时, 重置歌词
+                    if(self.song.sid == song.sid && self.lrc.length) {
                         self.reset()
                     } else {
                         self.song = song
