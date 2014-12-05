@@ -46,6 +46,13 @@
                 FM.obs.on('SONG:STAR', function(song) {
                     self.updateTray(song)
                 })
+
+                window.addEventListener('beforeunload', function() {
+                    if(self.tray) {
+                        self.tray.remove()
+                        self.tray = null
+                    }
+                })
             },
 
             //最小化
