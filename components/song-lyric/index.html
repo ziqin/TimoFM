@@ -1,76 +1,5 @@
 <polymer-element name="song-lyric">
    <template>
-       <style>
-           div {
-               position: absolute;
-               left: 0;
-               top: 100vh;
-               width: 100%;
-               height: 100%;
-               text-shadow: 1px 1px 5px #000;
-               text-align: center;
-               letter-spacing: 1px;
-               color: #fff;
-               opacity: 0;
-               background: rgba(0,0,0,0);
-               transition: all 0.5s ease-in;
-               pointer-events:none;
-           }
-
-           .show {
-               top: 0;
-               opacity: 1;
-               background: rgba(0,0,0,0.4);
-           }
-
-           p {
-               position: absolute;
-               top: 70vh;
-               width: 44vw;
-               margin: 0;
-               padding: 0 3vw;
-               line-height: 1.1;
-               font-size: 13px;
-               text-align: center;
-               word-spacing: 0.1em;
-               opacity: 0;
-               transition: all 0.5s ease-in;
-           }
-
-           p.no-lrc {
-               top: 47vh;
-               opacity: 0.5;
-           }
-
-           p.prev {
-               top: 35vh;
-               opacity: 0.6;
-           }
-
-           p.current {
-               top: 47vh;
-               font-size: 15px;
-               opacity: 1;
-           }
-
-           p.next {
-               top: 59vh;
-               opacity: 0.6;
-           }
-
-           p.pass {
-               top: 20vh;
-           }
-
-       </style>
-        <div class="{{isShow ? 'show' : ''}}">
-            <template if="{{!lrc.length}}">
-                <p class="no-lrc">暂无歌词</p>
-            </template>
-            <template repeat="{{lrc}}">
-                <p data-time="{{time}}" class="{{class}}">{{word}}</p>
-            </template>
-        </div>
    </template>
     <script>
         Polymer('song-lyric', {
@@ -80,20 +9,16 @@
             lrc : [],
             ready : function() {
                 var self = this
-                self.isShow = FM.config.lyric
 
                 //歌曲更新后，更换歌词
                 FM.obs.on('SONG:UPDATE', function(song) {
-                    self.lrc = []
-                    if(!self.isShow) return
-                    //单曲循环时, 重置歌词
-                    if(self.song.sid == song.sid && self.lrc.length) {
-                        self.reset()
-                    } else {
+                    if(!FM.config.lyric) return
+                    if(self.song.sid != song.sid) {
+                        self.lrc = []
                         self.song = song
-                        process.nextTick(function() {
+                        setTimeout(function() {
                             self.fetchLrc(song)
-                        })
+                        },0)
                     }
                 })
 
@@ -112,53 +37,50 @@
                     }
                 })
 
-                //歌曲快进后，重新调整歌词位置
-                FM.obs.on('SONG:FAST_FORWARD', self.reset.bind(self))
-
                 //歌词滚动
                 FM.obs.on('TIME:UPDATE', self.render.bind(self))
+
+                window.addEventListener('beforeunload', function() {
+                    self.win && self.win.close()
+                })
+
+                self.toggleLyric()
             },
 
-            //重置歌词位置到初始状态
-            reset: function() {
-                var self = this
-                if(self.lrc.length) {
-                    self.lrc.forEach(function(line) {
-                        line.class = ''
-                    })
-                }
-            },
-
-            //更新歌词位置
+            //更新歌词
             render: function(playTime) {
                 var self = this
-                if(self.lrc.length && self.isShow) {
-                    var lines = self.lrc
-                    for(i = 0; i<lines.length; i++) {
-                        if(playTime < lines[i].time) {
-                            lines[i].class = 'next'
-                            if(lines[i-1]) {
-                                lines[i-1].class = 'current'
+                if(FM.config.lyric) {
+                    if (self.lrc.length) {
+                        var lines = self.lrc
+                        for (i = 0; i < lines.length; i++) {
+                            if (playTime < lines[i].time) {
+                                FM.obs.emit('LYRIC_TEXT:UPDATE', lines[i-1 < 0 ? 0 : i -1].text || '~~~~')
+                                return
                             }
-                            if(lines[i-2]) {
-                                lines[i-2].class = 'prev'
-                            }
-                            if(lines[i-3]) {
-                                lines[i-3].class = 'pass'
-                            }
-                            return
                         }
+                    } else {
+                        FM.obs.emit('LYRIC_TEXT:UPDATE', '暂无歌词')
                     }
                 }
             },
 
-            //切换歌词显示
+            //切换歌词是否显示
             toggleLyric : function() {
                 var self = this
-                self.isShow = FM.config.lyric
-                if(self.isShow && !self.lrc.length) {
-                    self.fetchLrc(self.song)
+                if(FM.config.lyric) {
+                    if(self.win) {
+                        self.win.show()
+                    } else {
+                        self.win = self.createWindow()
+                    }
+                    if(!self.lrc.length) {
+                        self.fetchLrc(self.song)
+                    }
+                } else {
+                    self.win && self.win.hide()
                 }
+
                 FM.cache.set('CACHE:CONFIG', FM.config)
             },
 
@@ -188,7 +110,7 @@
                     times.forEach(function(time, i) {
                         result.push({
                             time : time,
-                            word : line
+                            text : line
                         })
                     })
                 })
@@ -196,6 +118,76 @@
                     return a.time - b.time
                 })
                 return result
+            },
+
+            //创建歌词窗口
+            createWindow : function() {
+                var self = this
+                var status = FM.cache.get('CACHE:DESKTOP_LYRIC',{})
+                var win = require('nw.gui').Window.open('components/song-lyric/desktop.html', {
+                    position: 'center',
+                    width: status.width || 800,
+                    height: status.height || 50,
+                    x : status.x || (window.screen.width - 800)/2,
+                    y : status.y || (window.screen.height - 50 - 80),
+                    "frame": false,
+                    "transparent": true
+                });
+
+                win.on('move', function(x, y) {
+                    status.x = x
+                    status.y = y
+                    FM.cache.set('CACHE:DESKTOP_LYRIC', status)
+                })
+
+                win.on('resize', function(w, h) {
+                    status.width = w
+                    status.height = h
+                    FM.cache.set('CACHE:DESKTOP_LYRIC', status)
+                })
+
+                win.setAlwaysOnTop(true)
+
+                win.on('loaded', function() {
+                    var doc = win.window.document
+                    var h1 = doc.querySelector('h1')
+                    var btns = doc.querySelectorAll('.toolbar i')
+
+                    if (status.fontSize) {
+                        h1.style.fontSize = status.fontSize + 'px'
+                    }
+
+                    FM.obs.on('LYRIC_TEXT:UPDATE', function (text) {
+                        h1.textContent = text
+                    })
+
+                    //加大字体
+                    btns[0].addEventListener('click', function () {
+                        fontSize = parseFloat(h1.style.fontSize) * 1.2
+                        h1.style.fontSize = fontSize + 'px'
+                        status.fontSize = fontSize
+                        FM.cache.set('CACHE:DESKTOP_LYRIC', status)
+                    })
+
+                    //减小字体
+                    btns[1].addEventListener('click', function () {
+                        fontSize = parseFloat(h1.style.fontSize) / 1.2
+                        h1.style.fontSize = fontSize + 'px'
+                        status.fontSize = fontSize
+                        FM.cache.set('CACHE:DESKTOP_LYRIC', status)
+                    })
+
+                    //关闭歌词
+                    btns[2].addEventListener('click', function () {
+                        win.hide()
+                        FM.config.lyric = !FM.config.lyric
+                        FM.obs.emit('CONFIG:UPDATE', {
+                            type: 'lyric'
+                        })
+                    })
+                },0)
+
+                return win
             }
         })
     </script>

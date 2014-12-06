@@ -2,6 +2,7 @@
 <link rel="import" href="../x-hotkey/index.html">
 <link rel="import" href="../x-share/index.html">
 <link rel="import" href="../song-noti/index.html">
+<link rel="import" href="../song-lyric/index.html">
 
 <polymer-element name="song-player" attributes="song">
     <template>
@@ -50,7 +51,7 @@
             
             .player-ctrl-extra {
                 position: absolute;
-                top: -8.6vh;
+                top: -6.6vh;
                 right: 6vw;
                 text-align: center;
             }
@@ -134,6 +135,7 @@
         <x-audio></x-audio>
         <x-hotkey></x-hotkey>
         <song-noti></song-noti>
+        <song-lyric></song-lyric>
         <div class="progress c1 bg2">
             <time class="pt">{{time.pmt}}</time>
             <time class="dt">{{time.dmt }}</time>

@@ -5,11 +5,13 @@
 
     
 ##### download
-- [mac版本v1.0.9](http://pan.baidu.com/s/1pJwRql1#path=%252FAPP)
+- [mac版本v1.0.10](http://pan.baidu.com/s/1pJwRql1#path=%252FAPP)
 - linux版 (敬请期待)
 - windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
-    
-    
+
+##### 更新日志
+- [Release log](https://github.com/sapjax/TimoFM/wiki/release-log)
+
 ##### 特点
 - 界面高度抄袭KFStorm的客户端 (嗯，就是这样)
 - 基于HTML5，NodeJS, Polymer开发，理论上可以跨平台，前端同学有需求也可以自己改
@@ -21,7 +23,7 @@
 - 支持单曲循环
 - 支持播放上一首 (咦？)
 - 支持歌曲快进
-- 支持歌词显示
+- 支持桌面歌词
 - 支持查看当前播放列表
 - 支持桌面通知
 
@@ -45,12 +47,10 @@
 ##### 使用说明
 - 单击专辑封面，使封面划开，可以看到其他界面，再次单击可以让封面回来原位
 - 双击封面可以跳转到专辑详情页
+- 无法检测Command组合键，设置快捷键时请选择CTRL/ALT作为主按键, 如果按键中有CTRL键，在使用时需要按Command键调用
 
 ##### todo
-- [ ] 支持桌面歌词
-    
-    
-##### [Release log](https://github.com/sapjax/TimoFM/wiki/release-log)
+- [x] 支持桌面歌词
 
 
 ##### 贡献 [How-to-run-apps](https://github.com/rogerwang/node-webkit/wiki/How-to-run-apps)

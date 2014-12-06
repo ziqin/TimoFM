@@ -1,4 +1,3 @@
-<link rel="import" href="../song-lyric/index.html">
 <link rel="import" href="../song-playlist/index.html">
 <polymer-element name="song-face" attributes="info">
     <template>
@@ -26,15 +25,6 @@
             a.blur {
                 -webkit-filter: blur(5px)
             }
-
-            song-lyric {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 50vw;
-                height: 100vh;
-                pointer-events: none;
-            }
         </style>
         <div id="cssTmpl" style="display: none">
             .bg,.active,body /deep/ .bg { background: %(bg)}
@@ -47,7 +37,6 @@
         <a url="http://music.douban.com{{info.album}}"  class="{{enableBlur ? 'blur' : ''}}">
             <img src={{info.picture}} />
         </a>
-        <song-lyric></song-lyric>
         <song-playlist></song-playlist>
     </template>
     <script src="./colibri.js"></script>
@@ -94,14 +83,7 @@
                 //显示播放表后，模糊封面
                 FM.obs.on('PLAYLIST:SHOW', function(show) {
                     self.playListSHow = show
-                    self.enableBlur = show || FM.config.lyric
-                })
-
-                //显示歌词后，模糊封面
-                FM.obs.on('CONFIG:UPDATE', function(e) {
-                    if(e.type == 'lyric') {
-                        self.enableBlur = self.playListShow || FM.config.lyric
-                    }
+                    self.enableBlur = show
                 })
             },
 

@@ -1,6 +1,6 @@
 {
   "name": "TimoFM",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "download" : "http://pan.baidu.com/s/1pJwRql1#path=%252FAPP",
   "main": "index.html",
   "window": {
@@ -9,13 +9,10 @@
     "height": 300,
     "min-width": 300,
     "min-height": 150,
-    "transparent": true,
     "resizable": false
   },
   "as_desktop": true,
-  "resizable": false,
   "chromium-args": "--ignore-gpu-blacklist",
-  "js-flags": "--harmony_proxies --harmony_collections",
   "webkit": {
     "plugin": true
   },
