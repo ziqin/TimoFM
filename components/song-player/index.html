@@ -175,6 +175,9 @@
             var self = this
             self.player = self.shadowRoot.querySelector('x-audio').player
 
+            self.gui = require('nw.gui')
+            self.win = self.gui.Window.get()
+
             FM.obs.on('SONG:UPDATE', function(e) {
                 //是否显示上一首按钮
                 self.hasPrev = FM.playlist.index >= 1
@@ -199,6 +202,9 @@
                     dmt : self.formatTime(dt)
                 }
                 FM.obs.emit('TIME:UPDATE', pt)
+
+                //在任务栏显示mini进度条
+                self.win.setProgressBar(self.time.percent/100)
             })
 
             //歌曲播放结束
@@ -206,7 +212,7 @@
                 if(self.isSingleCycle) {
                     self.player.load()
                 } else {
-                    FM.playlist.next()
+                    self.skip()
                 }
             })
 
@@ -259,18 +265,24 @@
         //下一首
         skip : function() {
             var self = this
-            FM.playlist.next()
+            if(self.starRecommendSongs) {
+                FM.playlist.reset(self.starRecommendSongs)
+                self.starRecommendSongs = null
+            } else {
+                FM.playlist.next()
+            }
         },
 
         //不再播放
         neverPlayAgain : function() {
             var self = this
-            FM.playlist.removeCurrent()
+//            FM.playlist.removeCurrent()
             FM.appSDK.never_play_again({
                 channel_id : FM.status.channel.id,
                 sid : FM.status.song.sid
             },function(err, songs) {
                 if(err) return console.error(err)
+                FM.playlist.reset(songs)
             })
         },
 
@@ -286,6 +298,7 @@
                 self.song.like = !self.song.like
                 FM.status.song = JSON.parse(JSON.stringify(self.song))
                 FM.obs.emit('SONG:STAR', self.song)
+                self.starRecommendSongs = songs
             })
         },
 

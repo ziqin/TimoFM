@@ -12,12 +12,11 @@
 
                 //歌曲更新后，更换歌词
                 FM.obs.on('SONG:UPDATE', function(song) {
-                    if(!FM.config.lyric) return
                     if(self.song.sid != song.sid) {
                         self.lrc = []
                         self.song = song
                         setTimeout(function() {
-                            self.fetchLrc(song)
+                            FM.config.lyric && self.fetchLrc(song)
                         },0)
                     }
                 })
@@ -73,6 +72,7 @@
                         self.win.show()
                     } else {
                         self.win = self.createWindow()
+                        FM.lyricWindow = self.win
                     }
                     if(!self.lrc.length) {
                         self.fetchLrc(self.song)
@@ -163,7 +163,7 @@
 
                     //加大字体
                     btns[0].addEventListener('click', function () {
-                        fontSize = parseFloat(h1.style.fontSize) * 1.2
+                        var fontSize = parseFloat(h1.style.fontSize) * 1.2
                         h1.style.fontSize = fontSize + 'px'
                         status.fontSize = fontSize
                         FM.cache.set('CACHE:DESKTOP_LYRIC', status)
@@ -171,7 +171,7 @@
 
                     //减小字体
                     btns[1].addEventListener('click', function () {
-                        fontSize = parseFloat(h1.style.fontSize) / 1.2
+                        var fontSize = parseFloat(h1.style.fontSize) / 1.2
                         h1.style.fontSize = fontSize + 'px'
                         status.fontSize = fontSize
                         FM.cache.set('CACHE:DESKTOP_LYRIC', status)

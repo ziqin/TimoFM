@@ -16,6 +16,7 @@ FM.appSDK = new appSDK()
 FM.cache = new cache(localStorage)
 //播放列表
 FM.playlist = new playlist(FM.obs)
+
 //播放器状态
 FM.status = FM.cache.get('CACHE:STATUS', { channel : { id : 0}, playlist: [], song : {}})
 //播放器配置

@@ -29,6 +29,7 @@
                 var self = this
                 self.gui = require('nw.gui')
                 self.win = self.gui.Window.get()
+
                 FM.obs.on('NOTI:CLICK', self.show.bind(self))
 
                 FM.obs.on('KEY:SHOW_DEV_TOOLS', self.showDevTools.bind(self))
@@ -58,6 +59,7 @@
             //最小化
             min : function() {
                 this.win.minimize()
+                this.win.hide()
                 this.isMin = true
             },
 
@@ -72,6 +74,7 @@
                     this.tray.remove()
                     this.tray = null
                 }
+                FM.lyricWindow && FM.lyricWindow.close()
                 this.win.close()
             },
 

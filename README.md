@@ -5,15 +5,13 @@
 
     
 ##### download
-- [mac版本v1.0.10](http://pan.baidu.com/s/1pJwRql1#path=%252FAPP)
-- linux版 (敬请期待)
-- windows版 (不提供，强烈推荐使用[KFStorm](http://www.kfstorm.com/blog/doubanfm)客户端)
+- [mac版本v1.0.11](http://pan.baidu.com/disk/home#path=%252FAPP)
 
 ##### 更新日志
 - [Release log](https://github.com/sapjax/TimoFM/wiki/release-log)
 
 ##### 特点
-- 界面高度抄袭KFStorm的客户端 (嗯，就是这样)
+- 界面高度抄袭KFStorm的客户端
 - 基于HTML5，NodeJS, Polymer开发，理论上可以跨平台，前端同学有需求也可以自己改
 - 支持用户创建的兆赫搜索
 - 支持专辑模糊搜索（专辑名称，艺术家名称）
@@ -21,7 +19,7 @@
 - 支持收听相似歌曲
 - 支持全局快捷键
 - 支持单曲循环
-- 支持播放上一首 (咦？)
+- 支持播放上一首 
 - 支持歌曲快进
 - 支持桌面歌词
 - 支持查看当前播放列表
@@ -50,8 +48,8 @@
 - 无法检测Command组合键，设置快捷键时请选择CTRL/ALT作为主按键, 如果按键中有CTRL键，在使用时需要按Command键调用
 
 ##### todo
-- [x] 支持桌面歌词
-
+- [x] 专辑搜索结果应该是专辑曲目列表，而不是专辑相似歌曲
+- [x] 隐藏任务栏右侧的激活缩略图
 
 ##### 贡献 [How-to-run-apps](https://github.com/rogerwang/node-webkit/wiki/How-to-run-apps)
 - 安装node-webkit
