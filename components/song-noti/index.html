@@ -23,6 +23,7 @@
 
                 noti.onclick = function() {
                     FM.obs.emit('NOTI:CLICK')
+                    FM.obs.emit('SONG:UPDATE', song)
                 }
             }
         })

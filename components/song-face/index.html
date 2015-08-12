@@ -5,21 +5,21 @@
             :host {
                 position: relative;
                 box-shadow: 0 0 5px rgba(100,100,100,0.5);
-                background: rgba(255,255,255,1);
-            }
-            a, img {
-                display: block;
-                width: 100%;
-                height: 100%;
+                /*background: rgba(255,255,255,1);*/
             }
 
             a {
                 position: absolute;
                 left: 0;
                 top: 0;
+                right: 0;
+                bottom: 0;
                 opacity: 1;
                 cursor: pointer;
-                transition: -webkit-filter 0.2s ease-in;
+                transition: all 0.4s ease-in;
+                background-repeat: no-repeat;
+                background-center: center center;
+                background-size: cover;
             }
 
             a.blur {
@@ -27,15 +27,14 @@
             }
         </style>
         <div id="cssTmpl" style="display: none">
-            .bg,.active,body /deep/ .bg { background: %(bg)}
-            .bg1,body /deep/ .bg1 { background: %(c1)}
-            .bg2,body /deep/ .bg2 { background: %(c2)}
+            .bg,.active,body /deep/ .bg { background-color: %(bg)}
+            .bg1,body /deep/ .bg1 { background-color: %(c1)}
+            .bg2,body /deep/ .bg2 { background-color: %(c2)}
             .c1, body /deep/ .c1 {color: %(c1)}
             .c2, body /deep/ .c2 {color: %(c2)}
             .cb, body /deep/ .cb {color: %(bg)}
         </div>
-        <a url="http://music.douban.com{{info.album}}"  class="{{enableBlur ? 'blur' : ''}}">
-            <img src={{info.picture}} />
+        <a url="http://music.douban.com{{info.album}}"  class="bg {{enableBlur ? 'blur' : ''}}" style="background-image:url({{info.picture}})">
         </a>
         <song-playlist></song-playlist>
     </template>
@@ -100,12 +99,13 @@
             //图片变换后，获取主要颜色
             updateColor : function(src) {
                 if(!src) return
-                var img = this.shadowRoot.querySelector('img')
+                var img = new Image()
                 img.onload = function () {
                     var colors =  Colibri.extractImageColors( img, 'css' )
                     FM.obs.emit('COLOR:UPDATE', colors)
                 }
                 img.crossOrigin = 'Anonymous'
+                img.src= src
             },
 
             //替换字符串模板
