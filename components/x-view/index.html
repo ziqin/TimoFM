@@ -116,11 +116,11 @@
 
             //获取任务栏图标
             getIcon : function(song) {
+                var path =  __dirname + '/assets/images/'
                 if(song.like) {
-                    return './assets/images/red_tray.png'
-
+                    return path + 'red_tray.png'
                 } else {
-                    return  './assets/images/blank_tray.png'
+                    return  path + 'blank_tray.png'
                 }
             }
         })
