@@ -1,0 +1,12 @@
+{
+    "osx" : {
+        "title": "TimoFM",
+        "background": "assets/images/installer.png",
+        "icon": "assets/images/TimoFM.icns",
+        "icon-size": 80,
+        "contents": [
+            { "x": 280, "y": 126, "type": "link", "path": "/Applications" },
+            { "x": 50, "y": 126, "type": "file" }
+        ]
+    }
+}

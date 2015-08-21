@@ -13,6 +13,7 @@ ul, li {
 
 body {
     font-family: Skia, STKaiti, sans-serif;
+    background: #fff;
     transition: background 0.4s ease-in;
 }
 
@@ -100,12 +101,12 @@ song-face {
     top: 0;
     bottom: 0;
     width: 50%;
+    transform-origin: right center 0px;
     transition: all 0.4s ease-in;
 }
 
 song-face.hover {
-    left: 50%;
-    transform: rotateY(180deg);
+    transform: matrix3d(-1,0,0.00,0,0.00,1,0.00,0,0,0,-1,0,0,0,0,1);
 }
 
 x-view {
@@ -130,8 +131,8 @@ x-mask {
 
 @font-face {
     font-family: 'iconfont';
-    /*src:url('../fonts/iconfont.woff') format('woff');*/
-    src:url('http://at.alicdn.com/t/font_1414812587_4916766.woff') format('woff');
+    src:url('../fonts/iconfont.woff') format('woff');
+    /*src:url('http://at.alicdn.com/t/font_1414812587_4916766.woff') format('woff');*/
 }
 
 body /deep/ .iconfont{

@@ -48,7 +48,7 @@
             .progress .dt {
                 right: 0
             }
-            
+
             .player-ctrl-extra {
                 position: absolute;
                 top: -6.6vh;
@@ -175,9 +175,6 @@
             var self = this
             self.player = self.shadowRoot.querySelector('x-audio').player
 
-            self.gui = require('nw.gui')
-            self.win = self.gui.Window.get()
-
             FM.obs.on('SONG:UPDATE', function(e) {
                 //是否显示上一首按钮
                 self.hasPrev = FM.playlist.index >= 1
@@ -202,9 +199,6 @@
                     dmt : self.formatTime(dt)
                 }
                 FM.obs.emit('TIME:UPDATE', pt)
-
-                //在任务栏显示mini进度条
-                self.win.setProgressBar(self.time.percent/100)
             })
 
             //歌曲播放结束
@@ -230,6 +224,7 @@
 
             //音量调节
             self.bindVolumeEvent()
+            self.setDockMenu()
 
             //监听快捷键事件
             FM.obs.on('KEY:STAR', self.star.bind(self))
@@ -240,6 +235,8 @@
             FM.obs.on('KEY:NOPLAY', self.neverPlayAgain.bind(self))
             FM.obs.on('KEY:PLAY_SIMILAR', self.playSimilarSongs.bind(self))
             FM.obs.on('KEY:PLAYLIST_SHOW', self.togglePlaylist.bind(self))
+            FM.obs.on('KEY:VOLUP', self.volUp.bind(self))
+            FM.obs.on('KEY:VOLDOWN', self.volDown.bind(self))
         },
 
         //格式化时间
@@ -381,6 +378,48 @@
                     self.showVolumePercent = false
                 },400)
             })
+        },
+
+        //增加音量
+        volUp : function() {
+            this.player.volume = Math.min(this.player.volume + 0.1, 1)
+        },
+
+        //减少音量
+        volDown : function() {
+            this.player.volume = Math.max(this.player.volume - 0.1, 0)
+        },
+
+        //设置dock栏菜单
+        setDockMenu : function() {
+            var self = this
+            var remote = require('remote')
+            var app = remote.require('app')
+            var Menu = remote.require('menu')
+            var dockMenu = Menu.buildFromTemplate([
+                {
+                    label: '下一首',
+                    click : self.skip.bind(self)
+                },
+                {
+                    label : '上一首',
+                    click : self.playPrevSong.bind(self)
+                },
+                {
+                    label : '暂停/播放',
+                    click : self.togglePlay.bind(self)
+                },
+                {
+                    label : '加红心',
+                    click : self.star.bind(self)
+                },
+                {
+                    label : '不再播放',
+                    click : self.neverPlayAgain.bind(self)
+                }
+            ])
+
+            app.dock.setMenu(dockMenu)
         }
     })
     </script>

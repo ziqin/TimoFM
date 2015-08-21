@@ -3,11 +3,8 @@
     </template>
     <script>
         Polymer('x-hotkey',{
-            //缓存注册过的键
-            keys: {},
             ready : function() {
                 var self = this
-                this.gui = require('nw.gui');
                 this.registerMediaKey()
                 this.registerHotKey(FM.config.hotKey)
 
@@ -28,10 +25,10 @@
 
             //媒体键
             mediaKeys : {
-                MediaPrevTrack : "PREV",
-                MediaNextTrack : "NEXT",
-                MediaStop : "STOP",
-                MediaPlayPause : "PAUSE"
+                mediaprevioustrack : "PREV",
+                medianexttrack : "NEXT",
+                mediastop : "STOP",
+                mediaplaypause : "PAUSE"
             },
 
             //注册媒体键
@@ -44,28 +41,14 @@
             },
 
             //调用node-webkit注册接口
-            register : function(name, key, active, failed) {
-                var shortcut = new this.gui.Shortcut({
-                    key : key,
-                    active : active || function () {
-                        FM.obs.emit('KEY:' + name)
-                    },
-                    failed : failed || function (msg) {
-                        FM.obs.emit('KEY:REGISTER_FAIL',{
-                            name : name,
-                            key : key
-                        })
-                        console.error(this, msg)
-                    }
+            register : function(name, key) {
+                var remote = require('remote')
+                var globalShortcut = remote.require('global-shortcut')
+
+                globalShortcut.unregister(key)
+                globalShortcut.register(key, function() {
+                    FM.obs.emit('KEY:' + name)
                 })
-                //如果之前注册过同样动作的键，则取消之前的注册，媒体键除外
-                if(this.keys[name] && !this.mediaKeys[this.keys[name].key]) {
-                    this.gui.App.unregisterGlobalHotKey(this.keys[name])
-                    delete this.keys[name]
-                }
-                this.gui.App.unregisterGlobalHotKey(shortcut)
-                this.gui.App.registerGlobalHotKey(shortcut)
-                this.keys[name] = shortcut
             }
         })
     </script>

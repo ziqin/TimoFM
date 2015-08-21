@@ -25,7 +25,14 @@
             .user-info img {
                 margin-bottom: 5px;
                 border-radius: 24px;
+                width: 48px;
+                height: 48px;
                 box-shadow: 0 0 1px #fff;
+                transition : all 0.4s;
+            }
+
+            .user-info img:hover {
+                transform: rotate(360deg);
             }
 
             button {
@@ -81,7 +88,7 @@
                 text-decoration: underline;
                 cursor: pointer;
             }
-            
+
             .errTip {
                 margin-top: 10vh;
                 font-size: 12px;

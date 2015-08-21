@@ -18,17 +18,19 @@
             }
         </style>
         <div>
-            <a class="iconfont" title="最小化" on-click="{{min}}">&#xe635;</a>
-            <a class="iconfont" title="打开控制台" on-click="{{showDevTools}}">&#xe638;</a>
-            <a class="iconfont" title="关闭" on-click="{{close}}">&#xe619;</a>
+            <a class="iconfont c1" title="最小化" on-click="{{min}}">&#xe635;</a>
+            <!--<a class="iconfont" title="打开控制台" on-click="{{showDevTools}}">&#xe638;</a>-->
+            <a class="iconfont c1" title="关闭" on-click="{{close}}">&#xe619;</a>
         </div>
     </template>
     <script>
         Polymer('x-view',{
             ready : function() {
                 var self = this
-                self.gui = require('nw.gui')
-                self.win = self.gui.Window.get()
+
+                var remote = require('remote')
+                var app = remote.require('app')
+                self.win = remote.getCurrentWindow()
 
                 FM.obs.on('NOTI:CLICK', self.show.bind(self))
 
@@ -42,15 +44,17 @@
                 self.addTray()
                 FM.obs.on('SONG:UPDATE', function(song) {
                     self.updateTray(song)
+                    app.dock.setBadge(song.like ? '♡' : '')
                 })
 
                 FM.obs.on('SONG:STAR', function(song) {
                     self.updateTray(song)
+                    app.dock.setBadge(song.like ? '♡' : '')
                 })
 
-                window.addEventListener('beforeunload', function() {
+                self.win.on('close', function() {
                     if(self.tray) {
-                        self.tray.remove()
+                        self.tray.destroy()
                         self.tray = null
                     }
                 })
@@ -65,13 +69,13 @@
 
             //切换控制台显示
             showDevTools : function() {
-                this.win.isDevToolsOpen() ? this.win.closeDevTools() : this.win.showDevTools()
+                this.win.isDevToolsOpened() ? this.win.closeDevTools() : this.win.openDevTools()
             },
 
             //关闭
             close : function() {
                 if(this.tray) {
-                    this.tray.remove()
+                    this.tray.destroy()
                     this.tray = null
                 }
                 FM.lyricWindow && FM.lyricWindow.close()
@@ -92,45 +96,31 @@
             //增加任务栏图标
             addTray : function() {
                 var self = this
-                self.tray && self.tray.remove()
-                var gui = self.gui
-                var icon = self.getIcon(FM.status.song)
-                var tray = new gui.Tray({
-                    title : '',
-                    icon : icon.icon,
-                    alticon: icon.alticon
-                })
+                self.tray && self.tray.destroy()
+                var remote = require('remote')
+                var app = remote.require('app')
+                var Tray = remote.require('tray')
 
-                var menu = new gui.Menu()
-                menu.append(new gui.MenuItem({ label: 'Open' }));
-                menu.append(new gui.MenuItem({ label: 'Quit' }));
-
-                menu.items[0].click = self.show.bind(self)
-                menu.items[1].click = self.close.bind(self)
+                var tray = new Tray(self.getIcon(FM.status.song))
+                tray.setToolTip('This is TimoFM')
 
 
-                tray.menu = menu
-                tray.on('click',self.show.bind(self))
+                tray.on('clicked',self.show.bind(self))
                 self.tray = tray
             },
 
             updateTray : function(song) {
                 var self = this
-                self.tray.icon = self.getIcon(song).icon
+                self.tray.setImage(self.getIcon(song))
             },
 
             //获取任务栏图标
             getIcon : function(song) {
                 if(song.like) {
-                    return {
-                        icon : './assets/images/red_tray.png',
-                        alticon: './assets/images/red_tray@2x.png'
-                    }
+                    return './assets/images/red_tray.png'
+
                 } else {
-                    return {
-                        icon : './assets/images/blank_tray.png',
-                        alticon: './assets/images/blank_tray@2x.png'
-                    }
+                    return  './assets/images/blank_tray.png'
                 }
             }
         })

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>TimoFM</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="assets/css/index.css" />
@@ -18,35 +18,37 @@
     <link rel="import" href="components/panel-about/index.html" />
     <link rel="import" href="components/x-mask/index.html" />
     <link rel="import" href="components/x-view/index.html" />
-  </head>
-  <body style="-webkit-app-region: drag" class="bg c1">
+</head>
+<!--<body  style="-webkit-app-region: drag" class="bg c1">-->
+<body   class="bg c1">
 
-    <div id="wrapper">
-      <x-switchTab class="sidebar">
+<div id="wrapper">
+    <x-switchTab class="sidebar">
         <ul class="nav">
-          <li title="频道" class="iconfont active">&#xe61f;</li>
-          <li title="搜索" class="iconfont">&#xe626;</li>
-          <li title="登录" class="iconfont">&#xe616;</li>
-          <li title="设置" class="iconfont">&#xe601;</li>
-          <li title="关于" class="iconfont">&#xe608;</li>
+            <li title="频道" class="iconfont active">&#xe61f;</li>
+            <li title="搜索" class="iconfont">&#xe626;</li>
+            <li title="登录" class="iconfont">&#xe616;</li>
+            <li title="设置" class="iconfont">&#xe601;</li>
+            <li title="关于" class="iconfont">&#xe608;</li>
         </ul>
         <div class="content">
-          <panel-channel class="active"></panel-channel>
-          <panel-search></panel-search>
-          <panel-login></panel-login>
-          <panel-setting></panel-setting>
-          <panel-about></panel-about>
+            <panel-channel class="active"></panel-channel>
+            <panel-search></panel-search>
+            <panel-login></panel-login>
+            <panel-setting></panel-setting>
+            <panel-about></panel-about>
         </div>
-      </x-switchTab>
-      <main>
+    </x-switchTab>
+    <main>
         <song-info></song-info>
         <song-player></song-player>
-      </main>
-      <song-face></song-face>
-      <x-view></x-view>
-      <x-mask>
-        <img src="assets/images/mask-loading.gif" width="80" />
-      </x-mask>
-    </div>
-  </body>
+    </main>
+    <song-face></song-face>
+    <x-view></x-view>
+    <x-mask></x-mask>
+    <script>
+        require('electron-drag')('body')
+    </script>
+</div>
+</body>
 </html>
