@@ -5,10 +5,10 @@
 
 
 ##### download
-- [mac版本v1.0.11](http://pan.baidu.com/s/1ntHoBwP#path=%252FAPP)
+- [mac版本](http://pan.baidu.com/s/1ntHoBwP#path=%252FAPP)
 
 ##### 更新日志
-- [Release log](https://github.com/sapjax/TimoFM/wiki/release-log)
+- [Release page](https://github.com/sapjax/TimoFM/releases)
 
 ##### 特点
 - 界面高度抄袭KFStorm的客户端
