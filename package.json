@@ -22,5 +22,9 @@
         "electron-builder": "git://github.com/loopline-systems/electron-builder.git",
         "electron-packager": "git://github.com/maxogden/electron-packager.git",
         "electron-prebuilt": "git://github.com/mafintosh/electron-prebuilt.git"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sapjax/TimoFM"
     }
 }
