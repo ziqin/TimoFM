@@ -1,3 +1,5 @@
+**因为豆瓣封停了第三方的API接口，并且我现在主要使用网易云音乐的电台，这个项目已经不再维护了**
+
 # TimoFM
 > An full-featured DoubanFM client
 
