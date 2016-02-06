@@ -121,9 +121,13 @@
         },
 
         compareVersion: function(v1, v2) {
-            v1 = v1.split('.').join('')
-            v2 = v2.split('.').join('')
-            return parseInt(v1) - parseInt(v2)
+            v1 = v1.split('.')
+            v2 = v2.split('.')
+            var versionDiff
+            for(i = 0; i < v1.length; i++) {
+                if(v1[i] > v2[i])  return 1
+            }
+            return -1
         },
 
         //下载指定文件,替换对应的文件

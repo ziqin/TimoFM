@@ -83,6 +83,7 @@
                 }
 
                 FM.cache.set('CACHE:CONFIG', FM.config)
+                
             },
 
             //获取歌词
@@ -138,7 +139,7 @@
                 })
 
                 self.win = win
-                win.loadUrl('file://' + __dirname + '/components/song-lyric/desktop.html')
+                win.loadURL('file://' + __dirname + '/components/song-lyric/desktop.html')
 
                 win.on('move', function(e) {
                     var pos = win.getPosition()

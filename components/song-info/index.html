@@ -3,6 +3,7 @@
         <style>
             :host {
                 text-align: center;
+                -webkit-user-select: none;
             }
             h1 {
                 display: -webkit-box;
@@ -12,6 +13,7 @@
                 padding: 0 2vw;
                 font-size: 3.5vw;
                 overflow: hidden;
+                cursor: default;
             }
             h2 {
                 margin: 2vh 0 2vh 0;
@@ -20,11 +22,13 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                cursor: pointer;
             }
             h3 {
                 margin: 8vh 0 0 0;
                 padding: 0 2vw;
                 font-size: 2vw;
+                cursor: pointer;
             }
 
             h4 {
@@ -34,13 +38,14 @@
                 margin: 4vh 12vw 0 12vw;
                 line-height: 1.8;
                 font-size: 1.5vw;
+                cursor: pointer;
             }
         </style>
         <div>
-            <h4>MHZ：{{channel.name}}</h4>
+            <h4 on-dblclick="{{openChanels}}">MHZ：{{channel.name}}</h4>
             <h1>{{song.title}}</h1>
-            <h2>{{song.artist}}</h2>
-            <h3>{{song.albumtitle}}</h3>
+            <h2 on-dblclick="{{search}}">{{song.artist}}</h2>
+            <h3 on-dblclick="{{search}}">{{song.albumtitle}}</h3>
         </div>
     </template>
     <script>
@@ -56,6 +61,16 @@
            FM.obs.on('CHANNEL:UPDATE', function(channel) {
                self.channel.name = channel.name
            })
+        },
+        search : function(e) {
+            document.querySelector('song-face').classList.add('hover')
+            document.querySelectorAll('.nav li')[1].click()
+            var keyword = e.path[0].innerHTML
+            document.querySelector('panel-search').search(keyword,0)
+        },
+        openChanels : function() {
+            document.querySelector('song-face').classList.add('hover')
+            document.querySelectorAll('.nav li')[0].click()
         }
     })
     </script>

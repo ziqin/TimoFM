@@ -1,31 +1,30 @@
 {
-    "name": "TimoFM",
-    "version": "1.1.00",
-    "main": "main.js",
-    "scripts": {
-        "start": "electron main.js",
-        "clean": "rm -rf ../dist",
-        "build": "npm run build:osx",
-        "build:osx": "npm run clean && electron-packager ./ TimoFM --out=../dist/osx --platform=darwin --arch=x64 --version=0.30.4 --icon=assets/images/TimoFM.icns",
-        "pack": "npm run pack:osx",
-        "pack:osx": "npm run build:osx && electron-builder \"../dist/osx/TimoFM-darwin-x64/TimoFM.app\" --platform=osx --out=\"../dist/osx\" --config=packager.json"
-    },
-    "download" : "http://pan.baidu.com/s/1pJwRql1#path=%252FAPP",
-    "dependencies": {
-        "dbfm-app-sdk": "0.0.8",
-        "dbfm-web-sdk": "0.0.5",
-        "open": "0.0.5",
-        "request": "^2.44.0",
-        "electron-drag" : "1.0.0"
-    },
-    "devDependencies": {
-        "electron-builder": "git://github.com/loopline-systems/electron-builder.git",
-        "electron-packager": "git://github.com/maxogden/electron-packager.git",
-        "electron-prebuilt": "git://github.com/mafintosh/electron-prebuilt.git"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/sapjax/TimoFM"
-    },
-    "license": "MIT"
+  "name": "TimoFM",
+  "version": "1.1.1",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "clean": "rm -rf ../dist",
+    "build": "npm run build:osx",
+    "build:osx": "npm run clean && electron-packager ./ TimoFM --out=../dist/osx --platform=darwin --arch=x64 --version=0.36.7 --icon=assets/images/TimoFM.icns",
+    "pack": "npm run pack:osx",
+    "pack:osx": "npm run build:osx && electron-builder \"../dist/osx/TimoFM-darwin-x64/TimoFM.app\" --platform=osx --out=\"../dist/osx\" --config=packager.json"
+  },
+  "download": "http://pan.baidu.com/s/1pJwRql1#path=%252FAPP",
+  "dependencies": {
+    "dbfm-app-sdk": "*",
+    "dbfm-web-sdk": "*",
+    "open": "0.0.5",
+    "request": "^2.44.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^2.6.0",
+    "electron-packager": "^5.2.1",
+    "electron-prebuilt": "^0.36.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sapjax/TimoFM"
+  },
+  "license": "MIT"
 }

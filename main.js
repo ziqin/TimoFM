@@ -15,7 +15,7 @@ app.on('ready', function() {
         resizeable : false
     })
 
-    mainWindow.loadUrl('file://' + __dirname + '/index.html')
+    mainWindow.loadURL('file://' + __dirname + '/index.html')
 
     mainWindow.on('closed', function() {
         mainWindow = null

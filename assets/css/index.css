@@ -124,7 +124,7 @@ x-mask {
     bottom: 0;
     line-height: 100vh;
     text-align: center;
-    background: #fff;
+    background: #ddd;
     transition: opacity 1s ease-in;
     pointer-events:none;
 }

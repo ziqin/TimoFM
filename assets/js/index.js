@@ -45,6 +45,7 @@ FM.obs.on('PLAYLIST:UPDATE', function(list) {
         },function(err, songs) {
             if(err) return console.error(err)
             FM.playlist.concat(songs)
+            if(!songs.length) FM.cache.remove('CACHE:STATUS')
         })
     }
 })

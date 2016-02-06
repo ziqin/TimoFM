@@ -139,7 +139,7 @@
                     if (result.subjects) {
                         self.channels = self.channels.concat(result.subjects)
                         self.count = result.count
-                        self.keyword = keyword
+                        self.oldKeyword = self.keyword = keyword
                         self.noSearchResult = result.subjects.length < 1
                         self.cacheSearch()
                     }
