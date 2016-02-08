@@ -12,7 +12,13 @@ app.on('ready', function() {
         width: 600,
         height: 300,
         frame : false,
-        resizeable : false
+        resizeable : false,
+        //for linux don't support resizeable:false
+        icon: "./assets/images/TimoFM.png",
+        maxWidth:600,
+        minWIdth:600,
+        maxHeight:300,
+        minHeight:300
     })
 
     mainWindow.loadURL('file://' + __dirname + '/index.html')

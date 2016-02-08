@@ -5,7 +5,7 @@
 
 
 ## Download
-- [mac](http://pan.baidu.com/s/1ntHoBwP#path=%252FAPP)
+- [mac/linux](http://pan.baidu.com/s/1ntHoBwP#path=%252FAPP)
 
 ## Release Page
 
@@ -44,7 +44,7 @@
 
 - `npm install`
 - `npm start`
-- build & pack : `npm run pack`
+- pack : `npm run pack:osx` or `npm run pack:linux`
 
 ## License
 

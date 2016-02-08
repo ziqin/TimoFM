@@ -15,6 +15,20 @@ body {
     font-family: Skia, STKaiti, sans-serif;
     background: #fff;
     transition: background 0.4s ease-in;
+    -webkit-app-region: drag;
+    -webkit-user-select:none;
+}
+
+body.not-osx /deep/ a,
+body.not-osx /deep/  span,
+body.not-osx /deep/  button,
+body.not-osx /deep/  input,
+body.not-osx /deep/  i,
+body.not-osx /deep/  song-player,
+body.not-osx /deep/  x-channel,
+body.not-osx /deep/  li
+{
+    -webkit-app-region:no-drag;
 }
 
 #wrapper {
@@ -84,7 +98,6 @@ main {
     right: 0;
     top: 0;
     bottom: 0;
-    -webkit-app-region: drag;
 }
 
 main song-player {
@@ -93,7 +106,6 @@ main song-player {
     right: 0;
     bottom: 10vh;
     text-align: center;
-    -webkit-app-region: no-drag;
 }
 
 song-face {
@@ -105,7 +117,6 @@ song-face {
     width: 50%;
     transform-origin: right center 0px;
     transition: all 0.4s ease-in;
-    -webkit-app-region: no-drag;
 }
 
 song-face.hover {
@@ -116,7 +127,6 @@ x-view {
     position: absolute;
     right: 6px;
     top: 5px;
-    -webkit-app-region: no-drag;
 }
 
 x-mask {
