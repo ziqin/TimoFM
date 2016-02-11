@@ -6,9 +6,11 @@
     "start": "electron .",
     "clean": "rm -rf ../dist",
     "pack:osx": "npm run clean && electron-packager ./ TimoFM --out=../dist/osx --platform=darwin --arch=x64 --version=0.36.7 --icon=assets/images/TimoFM.icns",
-    "pack:linux":"npm run clean && electron-packager ./ TimoFM --out=../dist/linux --platform=linux --arch=x64 --version=0.36.7",
+    "pack:linux": "npm run clean && electron-packager ./ TimoFM --out=../dist/linux --platform=linux --arch=x64 --version=0.36.7",
+    "pack:win64": "electron-packager ./ TimoFM --out=../ --platform=win32 --arch=x64 --version=0.36.7 --icon=assets/images/TimoFM.ico --asar --version-string.CompanyName=sapjax --version-string.ProductName=TimoFM --version-string.FileDescription=TimoFM --version-string.LegalCopyright=\"The MIT License\" --version-string.OriginalFilename=TimoFM.exe --build-version=1.1.1 --app-version=1.1.1",
+    "pack:win32": "electron-packager ./ TimoFM --out=../ --platform=win32 --arch=ia32 --version=0.36.7 --icon=assets/images/TimoFM.ico --asar --version-string.CompanyName=sapjax --version-string.ProductName=TimoFM --version-string.FileDescription=TimoFM --version-string.LegalCopyright=\"The MIT License\" --version-string.OriginalFilename=TimoFM.exe --build-version=1.1.1 --app-version=1.1.1",
     "build:osx": "npm run pack:osx && electron-builder \"../dist/osx/TimoFM-darwin-x64/TimoFM.app\" --platform=osx --out=\"../dist/osx\" --config=packager.json",
-    "build:linux":"npm run pack:linux &&  electron-builder \"../dist/linux/TimoFM-linux-x64\" --platform=linux --out=\"../dist/linux\" --config=packager.json"
+    "build:linux": "npm run pack:linux &&  electron-builder \"../dist/linux/TimoFM-linux-x64\" --platform=linux --out=\"../dist/linux\" --config=packager.json"
   },
   "download": "http://pan.baidu.com/s/1pJwRql1#path=%252FAPP",
   "dependencies": {
