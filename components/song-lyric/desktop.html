@@ -9,29 +9,29 @@
 		body {
 			height: 100%;
 			margin: 0;
-			color: #fff;
+			/*color: #fff;*/
 			border-radius: 5px;
-			background: rgba(0,0,0, 0.5);
-			-webkit-app-region: drag;
+			background-color: rgba(0,0,0,0);
+			/*-webkit-app-region: drag;*/
 		}
 
 		h1 {
 			line-height: 100vh;
 			margin: 0;
 			text-align: center;
-			font-family: Papyrus,Skia, STKaiti, sans-serif;
+			font-family: Papyrus, Skia, STKaiti, sans-serif;
 			color: #fff;
             /*color: #000;*/
 			text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
 		}
 
-		body:hover {
-			background: rgba(0,0,0,0.5)
-		}
+		/*body:hover {
+			background-color: rgba(0,0,0,0.5)
+		}*/
 
 		@font-face {
 			font-family: 'iconfont';
-            src: url('http://at.alicdn.com/t/font_1417803989_9863071.woff') format('woff')
+            src: url('../../assets/fonts/lyric_iconfont.woff') format('woff')
 		}
 
 		.toolbar i {
@@ -45,22 +45,27 @@
 			text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
 		}
 
+		.toolbar i#drag-btn {
+			cursor: move;
+			-webkit-app-region: drag;
+		}
+
 		.toolbar {
 			position: absolute;
 			display: none;
-			opacity: 0.1;
+			opacity: 0;
 			right: 0;
 			top: 3px;
 		}
 
 		body:hover .toolbar {
 			display: block;
-			opacity:1;
+			opacity: 0.9;
 		}
 
 		body.not-osx .toolbar {
 			display: block;
-			-webkit-app-region: no-drag;	
+			-webkit-app-region: no-drag;
 		}
 
 	</style>
@@ -68,9 +73,10 @@
 <body>
 <h1 style="font-size:18px;">歌词加载中...</h1>
 <div class="toolbar" style="-webkit-app-region: no-drag">
-	<i>&#xe605;</i>
-	<i>&#xe604;</i>
-	<i>&#xe602;</i>
+	<i id="drag-btn">&#xe655;</i>
+	<i>&#xe688;</i>
+	<i>&#xe67f;</i>
+	<i>&#xe611;</i>
 </div>
 <script>
 if(process.platform != 'darwin') {
@@ -97,21 +103,21 @@ if(process.platform != 'darwin') {
     })
 
     //加大字体
-    btns[0].addEventListener('click', function () {
+    btns[1].addEventListener('click', function () {
         var fontSize = parseFloat(h1.style.fontSize) * 1.2
         h1.style.fontSize = fontSize + 'px'
         ipc.send('DESKTOP_LYRIC:fontSize', fontSize)
     })
 
     //减小字体
-    btns[1].addEventListener('click', function () {
+    btns[2].addEventListener('click', function () {
         var fontSize = parseFloat(h1.style.fontSize) / 1.2
         h1.style.fontSize = fontSize + 'px'
         ipc.send('DESKTOP_LYRIC:fontSize', fontSize)
     })
 
     //关闭歌词
-    btns[2].addEventListener('click', function () {
+    btns[3].addEventListener('click', function () {
         win.hide()
         ipc.send('DESKTOP_LYRIC:HIDE')
     })
