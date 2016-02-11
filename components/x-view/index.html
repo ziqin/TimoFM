@@ -63,7 +63,8 @@
             //最小化
             min : function() {
                 this.win.minimize()
-                this.win.hide()
+                if (require('os').type() !== 'Windows_NT')
+                    this.win.hide()
                 this.isMin = true
             },
 
@@ -105,7 +106,7 @@
                 tray.setToolTip('This is TimoFM')
 
 
-                tray.on('clicked',self.show.bind(self))
+                tray.on('click',self.show.bind(self))
                 self.tray = tray
             },
 

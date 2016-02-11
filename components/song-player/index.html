@@ -210,21 +210,50 @@
                 }
             })
 
-            //暂停
-            self.player.addEventListener('pause', function() {
-                console.log('pause')
-                self.playing = false
-            })
+            switch (require('os').type()) {
+            case 'Darwin':
+                //暂停
+                self.player.addEventListener('pause', function() {
+                    console.log('pause')
+                    self.playing = false
+                })
 
-            //播放
-            self.player.addEventListener('playing', function() {
-                console.log('playing')
-                self.playing = true
-            })
+                //播放
+                self.player.addEventListener('playing', function() {
+                    console.log('playing')
+                    self.playing = true
+                })
+
+                self.setDockMenu()
+                break
+
+            case 'Windows_NT':
+                //暂停
+                self.player.addEventListener('pause', function() {
+                    console.log('pause')
+                    self.playing = false
+                    self.setThumbarButtons()
+                })
+ 
+                //播放
+                self.player.addEventListener('playing', function() {
+                    console.log('playing')
+                    self.playing = true
+                    self.setThumbarButtons()
+                })
+
+                FM.obs.on('SONG:UPDATE', function() {
+                    self.setThumbarButtons()
+                })
+                FM.obs.on('SONG:STAR', function() {
+                    self.setThumbarButtons()
+                })
+                self.setThumbarButtons()
+                break
+            }
 
             //音量调节
             self.bindVolumeEvent()
-            self.setDockMenu()
 
             //监听快捷键事件
             FM.obs.on('KEY:STAR', self.star.bind(self))
@@ -420,6 +449,34 @@
             ])
 
             app.dock.setMenu(dockMenu)
+        },
+        
+        // 设置任务栏缩略图按钮 (Windows 7+)
+        setThumbarButtons : function() {
+            var self = this
+            var path = __dirname + '/assets/images/'
+            require('remote').getCurrentWindow().setThumbarButtons([
+                {
+                    tooltip: '加红心',
+                    icon: path + (self.song.like ? 'red_tray@2x.png' : 'blank_tray@2x.png'),
+                    click: self.star.bind(self)
+                },
+                {
+                    tooltip: self.playing ? '暂停' : '播放',
+                    icon: path + (self.playing ? 'pause.png' : 'play.png'),
+                    click: self.togglePlay.bind(self)
+                },
+                {
+                    tooltip: '下一首',
+                    icon: path + 'next.png',
+                    click: self.skip.bind(self)
+                },
+                {
+                    tooltip: '不再收听',
+                    icon: path + 'trash_bin.png',
+                    click: self.neverPlayAgain.bind(self)
+                }
+            ])
         }
     })
     </script>
