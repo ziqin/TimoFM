@@ -121,7 +121,8 @@
                 if(song.like) {
                     return path + 'red_tray.png'
                 } else {
-                    return  path + 'blank_tray.png'
+                    return  path + (require('os').type() === 'Windows_NT' ?
+                                   'white_tray.png' : 'blank_tray.png')
                 }
             },
             showSetting : function() {
