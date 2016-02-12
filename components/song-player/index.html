@@ -210,24 +210,8 @@
                 }
             })
 
-            switch (require('os').type()) {
-            case 'Darwin':
-                //暂停
-                self.player.addEventListener('pause', function() {
-                    console.log('pause')
-                    self.playing = false
-                })
-
-                //播放
-                self.player.addEventListener('playing', function() {
-                    console.log('playing')
-                    self.playing = true
-                })
-
-                self.setDockMenu()
-                break
-
-            case 'Windows_NT':
+            switch (process.platform) {
+            case 'win32':
                 //暂停
                 self.player.addEventListener('pause', function() {
                     console.log('pause')
@@ -250,6 +234,22 @@
                 })
                 self.setThumbarButtons()
                 break
+
+            case 'darwin':
+                self.setDockMenu()
+
+            default:
+                //暂停
+                self.player.addEventListener('pause', function() {
+                    console.log('pause')
+                    self.playing = false
+                })
+
+                //播放
+                self.player.addEventListener('playing', function() {
+                    console.log('playing')
+                    self.playing = true
+                })
             }
 
             //音量调节

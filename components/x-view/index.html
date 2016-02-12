@@ -63,7 +63,7 @@
             //最小化
             min : function() {
                 this.win.minimize()
-                if (require('os').type() !== 'Windows_NT')
+                if (process.platform !== 'win32')
                     this.win.hide()
                 this.isMin = true
             },
@@ -121,7 +121,7 @@
                 if(song.like) {
                     return path + 'red_tray.png'
                 } else {
-                    return  path + (require('os').type() === 'Darwin' ?
+                    return  path + (process.platform === 'darwin' ?
                                     'blank_tray.png' : 'white_tray.png')
                 }
             },
